@@ -211,7 +211,7 @@
                         </t>
                         <t>
                             If present, it contains the two-octet Address Family Identifier (AFI) for which the relation between the customer and provider is authorized.
-                            AFI values are specified in <xref target="IANA-AF"/>.
+                            Only permitted AFI values are the IPv4 and IPv6 AFI values as specified in <xref target="IANA-AF"/>.
                         </t>
                         <t>
                             If omitted, the authorization is valid for both IPv4 and IPv6 announcements.
@@ -338,7 +338,7 @@
 
         <section anchor="Acknowledgments" title="Acknowledgments">
             <t>
-                The authors would like to thank Ben Maddison for substantial review and contributions to the ASN.1 specification.
+                The authors would like to thank Ben Maddison for substantial review and contributions to the ASN.1 specification and Ties de Kock for pointing out the need for proper canonicalisation of the ProviderASSet.
             </t>
         </section>
 
