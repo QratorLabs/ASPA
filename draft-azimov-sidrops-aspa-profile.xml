@@ -203,7 +203,7 @@
                     In addition to the constraints described by the formal ASN.1 definition, the contents of the providers field MUST satisfy the following constraints:
                   <list style="symbols">
                     <t>
-                        The elements of providers MUST be ordered by the value of the providerASID field.
+                        The elements of providers MUST be ordered in ascending numerical order by the value of the providerASID field.
                     </t>
                     <t>
                         Each value of providerASID MUST be unique (with respect to the other elements of providers).
