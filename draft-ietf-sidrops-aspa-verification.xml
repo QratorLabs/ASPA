@@ -544,12 +544,16 @@ hop(AS(i), AS(j)) =  / Else, "Provider+" if the VAP-SPAS entry
 	<strong>Valid and Unknown</strong>: 
 	Any Valid or Unknown AS_PATH SHOULD not be distinguished in the route selection process because of the ASPA validation outcome, but prefered over an Invalid AS_PATH.
       </t>
+    </section>
+
+    <section title="Logging" anchor="logging">
       <t>
-	For any route with an Invalid or Unknown AS_PATH, the cause of the Invalid or Unknown state SHOULD be logged for monitoring and diagnostic purposes. 
-	The cause of the Invalid state can be in the form of listing the AS hops which were evaluated by the hop-check function to be &quot;Not Provider+&quot;, or &quot;No Attestation&quot; or &quot;Not Provider+&quot; in case of Unknown. 
+	For any route with an Invalid AS_PATH, the cause of the Invalid state SHOULD be logged for monitoring and diagnostic purposes. 
+	The cause of the Invalid state can be in the form of listing the AS hops which were evaluated by the hop-check function to be &quot;Not Provider+&quot;.
 	The logging router, however, cannot necessarily determine the origin of the route leak.
       </t>
     </section>
+
     <section title="Only to Customer (OTC) Attribute" anchor="otc">
       <t>
         While the ASPA-based AS_PATH verification method (<xref target="ingress"/>) detects and mitigates route leaks that were created by preceding ASes listed in the AS_PATH, 
