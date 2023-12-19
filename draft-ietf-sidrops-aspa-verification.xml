@@ -511,8 +511,9 @@ hop(AS(i), AS(j)) =  / Else, "Provider+" if the VAP-SPAS entry
   <section title="Deployment Recommendations"> 
     <t>This section describes practical deployment recommendations related to implemenation and operation of ASPA.</t>
 
-    <section anchor="ingress" title="Ingress eBGP Router vs. Internal BGP">
-      <t>ASPA can run on any BGP router. However, procedures for ASPA-based AS_PATH verification and mitigation described in this document are NOT RECOMMENDED for use on eBGP links internal to the Confederation.</t>
+    <section anchor="ingress" title="Running ASPA on Inter-AS Border Routers">
+      <t>ASPA SHOULD run on any eBGP router.</t>
+      <t>Procedures for ASPA-based AS_PATH verification and mitigation described in this document are NOT RECOMMENDED for use within an AS, including eBGP links internal to a BGP Confederation.</t>
     </section>
 
     <section title="Address Families">
