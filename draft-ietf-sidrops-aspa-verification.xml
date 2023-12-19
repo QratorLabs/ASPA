@@ -545,7 +545,7 @@ hop(AS(i), AS(j)) =  / Else, "Provider+" if the VAP-SPAS entry
       </t>
       <t>
 	For any route with an Invalid or Unknown AS_PATH, the cause of the Invalid or Unknown state SHOULD be logged for monitoring and diagnostic purposes. 
-	The cause of the Invalid state can be in the form of listing the AS hops which were evaluated by the hop-check function to be &quot;Not Provider+&quot;, or &quot;No Attestation&quot; or &quot;Not Provider+&quot; in case of Unkown. 
+	The cause of the Invalid state can be in the form of listing the AS hops which were evaluated by the hop-check function to be &quot;Not Provider+&quot;, or &quot;No Attestation&quot; or &quot;Not Provider+&quot; in case of Unknown. 
 	The logging router, however, cannot necessarily determine the origin of the route leak.
       </t>
     </section>
