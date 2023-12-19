@@ -516,18 +516,38 @@ hop(AS(i), AS(j)) =  / Else, "Provider+" if the VAP-SPAS entry
     </section>
 
     <section title="Address Families">
-      <t>The verification procedures described in this document MUST be applied to BGP routes with {AFI, SAFI} combinations {AFI 1 (IPv4), SAFI 1} and {AFI 2 (IPv6), SAFI 1} [IANA-AF]. The procedures MUST NOT be applied to other address families by default.</t>
+      <t>
+	The verification procedures described in this document MUST be applied to BGP routes with {AFI, SAFI} combinations {AFI 1 (IPv4), SAFI 1} and {AFI 2 (IPv6), SAFI 1} [IANA-AF]. 
+	The procedures MUST NOT be applied to other address families by default.
+      </t>
     </section>
 
     <section title="Implementation of Verification Algorithm">
-      <t>Implementations of this specification are not required to implement the AS_PATH verification procedures exactly as described in Section XX but MUST provide functionality equivalent to the external behavior resulting from those procedures. Therefore, implementation may differ, for example, for computational efficiency purposes.</t>
+      <t>
+	Implementations of this specification are not required to implement the AS_PATH verification procedures exactly as described in Section XX but MUST provide functionality equivalent to the external behavior resulting from those procedures. 
+	Therefore, implementation may differ, for example, for computational efficiency purposes.
+      </t>
     </section>
 
     <section anchor="mitigation" title="Configuration of a Route Leak Mitigation Policy">
-      <t>The specific configuration of mitigation policies based on AS_PATH verification using ASPA is at the discretion of the network operator. The following policies are highly recommended, though.</t>
-      <t><strong>Invalid</strong>: If the AS_PATH is determined to be Invalid, then the route SHOULD be considered ineligible for route selection (see Section 1.2). The route SHOULD not be considered further but MUST be kept in the Adj-RIB-In for potential future re-evaluation (see [RFC9324]).</t>
-      <t><strong>Valid and Unknown</strong>: Any Valid or Unknown AS_PATH SHOULD not be distinguished in the route selection process because of the ASPA validation outcome, but prefered over an Invalid AS_PATH.</t>
-      <t>For any route with an Invalid or Unknown AS_PATH, the cause of the Invalid or Unknown state SHOULD be logged for monitoring and diagnostic purposes. The cause of the Invalid state can be in the form of listing the AS hops which were evaluated by the hop-check function to be &quot;Not Provider+&quot;, or &quot;No Attestation&quot; or &quot;Not Provider+&quot; in case of Unkown. The logging router, however, cannot necessarily determine the origin of the route leak.</t>
+      <t>
+	The specific configuration of mitigation policies based on AS_PATH verification using ASPA is at the discretion of the network operator. 
+	The following policies are highly recommended, though.
+      </t>
+      <t>
+	<strong>Invalid</strong>: 
+	If the AS_PATH is determined to be Invalid, then the route SHOULD be considered ineligible for route selection (see Section 1.2). 
+	The route SHOULD not be considered further but MUST be kept in the Adj-RIB-In for potential future re-evaluation (see [RFC9324]).
+      </t>
+      <t>
+	<strong>Valid and Unknown</strong>: 
+	Any Valid or Unknown AS_PATH SHOULD not be distinguished in the route selection process because of the ASPA validation outcome, but prefered over an Invalid AS_PATH.
+      </t>
+      <t>
+	For any route with an Invalid or Unknown AS_PATH, the cause of the Invalid or Unknown state SHOULD be logged for monitoring and diagnostic purposes. 
+	The cause of the Invalid state can be in the form of listing the AS hops which were evaluated by the hop-check function to be &quot;Not Provider+&quot;, or &quot;No Attestation&quot; or &quot;Not Provider+&quot; in case of Unkown. 
+	The logging router, however, cannot necessarily determine the origin of the route leak.
+      </t>
     </section>
   </section>
 <!--
