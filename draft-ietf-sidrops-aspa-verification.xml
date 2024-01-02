@@ -552,7 +552,7 @@ hop(AS(i), AS(j)) =  / Else, "Provider+" if the VAP-SPAS entry
    <section title="Only to Customer (OTC) Attribute" anchor="otc">
    <t>
      While the ASPA-based AS_PATH verification method (<xref target="ingress"/>) detects and mitigates route leaks that were created by preceding ASes listed in the AS_PATH, 
-	 it lacks the ability to prevent route leaks from occuring at the local AS. 
+	 it lacks the ability to prevent route leaks from occurring at the local AS. 
 	 The use of the Only to Customer (OTC) Attribute <xref target="RFC9234"/> fills in that gap. 
 	 The procedures utilizing the OTC Attribute set out in <xref target="RFC9234"/> complement those described in this document. 
 	 Implementation of those procedures in addition to ASPA-based AS_PATH verification is encouraged.
