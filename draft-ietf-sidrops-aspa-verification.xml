@@ -300,7 +300,7 @@ hop(AS(i), AS(j)) =  / Else, "Provider+" if the VAP-SPAS entry
       <t>
         <xref target="I-D.ietf-idr-deprecate-as-set-confed-set"/> specifies that "treat-as-withdraw" error handling <xref target="RFC7606"/> SHOULD be applied to routes with AS_SET in the AS_PATH.
         In the current document, routes with AS_SET are given Invalid evaluation in the AS_PATH verification procedures (<xref target="Upflow"/> and <xref target="Downflow"/>).
-        See <xref target="mitig"/> for how routes with Invalid AS_PATH are handled.
+        See <xref target="mitigation"/> for how routes with Invalid AS_PATH are handled.
       </t>
       <t>
         In <xref target="Upflow"/> and <xref target="Downflow"/> below, the terms "upstream path" and "downstream path" generally refer to AS paths received in the upstream direction (from a customer or a lateral peer) and in the downstream direction (from a provider or a mutual-transit neighbor), respectively.
@@ -508,56 +508,61 @@ hop(AS(i), AS(j)) =  / Else, "Provider+" if the VAP-SPAS entry
       </section>
     </section>
   </section>
+  <section title="Deployment Recommendations"> 
+    <t>This section describes practical deployment recommendations related to implemenation and operation of ASPA.</t>
 
-  <section title="AS_PATH Verification and Anomaly Mitigation Recommendations" anchor="mitig">
-    <t>
-      AS_PATH verification and anomaly mitigation recommendations for eBGP routers are specified in this section.
-      The recommendations apply to eBGP routers in general, including those on the boundary of an AS Confederation facing external ASes.
-      However, the procedures for ASPA-based AS_PATH verification in this document are NOT RECOMMENDED for use on eBGP links internal to the Confederation.
-    </t>
-    <t>
-      The verification procedures described in this document MUST be applied to BGP routes with {AFI, SAFI} combinations {AFI 1 (IPv4), SAFI 1} and {AFI 2 (IPv6), SAFI 1} <xref target="IANA-AF"/>.
-      The procedures MUST NOT be applied to other address families by default.
-    </t>
-    <section title="Verification and Mitigation at Ingress eBGP Router" anchor="ingress">
+    <section anchor="ingress" title="Running ASPA on Inter-AS Border Routers">
+      <t>ASPA SHOULD run on any eBGP router.</t>
+      <t>Procedures for ASPA-based AS_PATH verification and mitigation described in this document are NOT RECOMMENDED for use within an AS, including eBGP links internal to a BGP Confederation.</t>
+    </section>
+
+    <section title="Address Families">
       <t>
-      <strong>Verification:</strong> Conforming implementations of this specification are not required to implement the AS_PATH verification procedures (step-wise lists) exactly as described in <xref target="Upflow"/> and <xref target="Downflow"/> but MUST provide functionality equivalent to the external behavior resulting from those procedures.
-      In other words, the algorithms used in a specific implementation may differ, for example, for computational efficiency purposes, but the AS_PATH verification outcomes MUST be identical to those obtained by the procedures described in <xref target="Upflow"/> and <xref target="Downflow"/>.
-    </t>
-    <t>
-      <strong>Mitigation:</strong> Mitigation recommendations are provided here with the understanding that the deployed mitigation policy is set by network operator discretion.
-      If the AS_PATH is determined to be Invalid, then the route SHOULD be considered ineligible for route selection
-      (see <xref target="terminology"/>) and MUST be kept in the Adj-RIB-In for potential future re-evaluation (see <xref target="RFC9324"/>).
-      Also, for any route with an Invalid AS_PATH, the cause of the Invalid state SHOULD be logged for monitoring and diagnostic purposes.
-      The cause of the Invalid state can be in the form of listing the AS hops which were evaluated by the hop-check function to be "Not Provider+".
-      For any route with an Unknown AS_PATH, the cause of the Unknown state SHOULD be logged for monitoring and diagnostic purposes.
-      The cause of the Unknown state can be in the form of listing the AS hops which were evaluated by the hop-check function to be "No Attestation" or "Not Provider+".
-    </t>
-  </section>
-  <!--
-  <section title="Verification and Mitigation at Egress eBGP Router" anchor="egress">
-    <t>	
-      <strong>Verification:</strong> The procedures for AS_PATH verification (<xref target="verif"/>) are also applicable at egress eBGP routers for preventing an AS from sending routes with Invalid AS_PATH to its eBGP neighbors (see <xref target="RFC8893"/> for a comparable idea for the RPKI-ROV case).
-      An egress eBGP router MUST add the AS of the router's BGP configuration (see <xref target="RFC8481"/> <xref target="RFC8893"/>) to the received AS_PATH (received in iBGP) and then apply the path verification procedures.
-      When redistributing into BGP from any source (e.g., IGP, iBGP, or from static or connected routes), there is no AS_PATH in the input route.
-      In such cases, the egress eBGP router MUST use the AS of the router's BGP configuration to form the AS_PATH for verification (see <xref target="RFC8481"/>).
-   </t>
-   <t>
-     <strong>Mitigation:</strong> Again, mitigation recommendations are provided here with the understanding that the deployed mitigation policy is set by network operator discretion.
-     If the outcome of applying the upstream algorithm (<xref target="Upflow"/>) is Invalid, then the route SHOULD NOT be propagated to a transit provider, lateral peer, RS (local AS has RS-client role), or RS-client (local AS has RS role).
-     If the outcome of applying the downstream algorithm (<xref target="Downflow"/>) is Invalid, then the route SHOULD NOT be propagated to an eBGP neighbor regardless of its BGP role (<xref target="role"/>).
-   </t>
-  </section>
-  -->
-   <section title="Only to Customer (OTC) Attribute" anchor="otc">
-   <t>
-     While the ASPA-based AS_PATH verification method (<xref target="ingress"/>) detects and mitigates route leaks that were created by preceding ASes listed in the AS_PATH, 
-	 it lacks the ability to prevent route leaks from occuring at the local AS. 
-	 The use of the Only to Customer (OTC) Attribute <xref target="RFC9234"/> fills in that gap. 
-	 The procedures utilizing the OTC Attribute set out in <xref target="RFC9234"/> complement those described in this document. 
-	 Implementation of those procedures in addition to ASPA-based AS_PATH verification is encouraged.
-   </t>
-   </section>
+	The verification procedures described in this document MUST be applied to BGP routes with {AFI, SAFI} combinations {AFI 1 (IPv4), SAFI 1} and {AFI 2 (IPv6), SAFI 1} [IANA-AF]. 
+	The procedures MUST NOT be applied to other address families by default.
+      </t>
+    </section>
+
+    <section title="Implementation of Verification Algorithm">
+      <t>
+	Implementations of this specification are not required to implement the AS_PATH verification procedures exactly as described in Section XX but MUST provide functionality equivalent to the external behavior resulting from those procedures. 
+	Therefore, implementation may differ, for example, for computational efficiency purposes.
+      </t>
+    </section>
+
+    <section anchor="mitigation" title="Configuration of a Route Leak Mitigation Policy">
+      <t>
+	The specific configuration of mitigation policies based on AS_PATH verification using ASPA is at the discretion of the network operator. 
+	The following policies are highly recommended, though.
+      </t>
+      <t>
+	<strong>Invalid</strong>: 
+	If the AS_PATH is determined to be Invalid, then the route SHOULD be considered ineligible for route selection (see Section 1.2). 
+	The route SHOULD not be considered further but MUST be kept in the Adj-RIB-In for potential future re-evaluation (see [RFC9324]).
+      </t>
+      <t>
+	<strong>Valid and Unknown</strong>: 
+	Any Valid or Unknown AS_PATH SHOULD not be distinguished in the route selection process because of the ASPA validation outcome, but prefered over an Invalid AS_PATH.
+      </t>
+    </section>
+
+    <section title="Logging" anchor="logging">
+      <t>
+	For any route with an Invalid AS_PATH, the cause of the Invalid state SHOULD be logged for monitoring and diagnostic purposes. 
+	The cause of the Invalid state can be in the form of listing the AS hops which were evaluated by the hop-check function to be &quot;Not Provider+&quot;.
+	The logging router, however, cannot necessarily determine the origin of the route leak.
+      </t>
+    </section>
+
+    <section title="Only to Customer (OTC) Attribute" anchor="otc">
+      <t>
+        While the ASPA-based AS_PATH verification method (<xref target="ingress"/>) detects and mitigates route leaks that were created by preceding ASes listed in the AS_PATH, 
+	it lacks the ability to prevent route leaks from occuring at the local AS. 
+	The use of the Only to Customer (OTC) Attribute <xref target="RFC9234"/> fills in that gap. 
+	The procedures utilizing the OTC Attribute set out in <xref target="RFC9234"/> complement those described in this document. 
+	Implementation of those procedures in addition to ASPA-based AS_PATH verification is encouraged.
+      </t>
+    </section>
   </section>
 <!--
 	<t>
