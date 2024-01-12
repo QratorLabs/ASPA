@@ -190,15 +190,15 @@
                 </t>
 
                 <t hangText="SPAS:">
-                  A Set of Provider ASes, see <xref target="I-D.ietf-sidrops-aspa-profile" sectionFormat="comma" section="3">.
+		   A Set of Provider ASes, see <xref target="I-D.ietf-sidrops-aspa-profile" sectionFormat="comma" section="3"/>.
                 </t>
 
                 <t hangText="VAP:">
-                  A verified ASPA payload, see <xref target="ASPA">.
+		   A verified ASPA payload, see <xref target="ASPA"/>.
                 </t>
 
                 <t hangText="VAP-SPAS:">
-                  A verified ASPA payload of a set of provider ASes, see <xref target="ASPA">.
+		   A verified ASPA payload of a set of provider ASes, see <xref target="ASPA"/>.
                 </t>
            </list>
          </t>
