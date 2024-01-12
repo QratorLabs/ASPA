@@ -194,11 +194,11 @@
                 </t>
 
                 <t hangText="VAP:">
-		   A validated ASPA payload, see <xref target="ASPA"/>.
+		   A Validated ASPA Payload, see <xref target="ASPA"/>.
                 </t>
 
                 <t hangText="VAP-SPAS:">
-		   A verified ASPA payload of a set of provider ASes, see <xref target="ASPA"/>.
+		   A Validated ASPA Payload of a set of provider ASes, see <xref target="ASPA"/>.
                 </t>
            </list>
          </t>
