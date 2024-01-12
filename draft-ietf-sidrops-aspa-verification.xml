@@ -152,14 +152,6 @@
         The ability to constrain the propagation of BGP anomalies to transit providers and lateral peers - without requiring support from the source of the anomaly (which is critical if the source has malicious intent) - should significantly improve the robustness of the global inter-domain routing system.
       </t>
     </section>
-    <section title="Terminology" anchor="terminology">
-      <t>
-        The use of the term "route is ineligible" in this document has the same meaning as in <xref target="RFC4271"/>, i.e., "route is ineligible to be installed in Loc-RIB and will be excluded from the next phase of route selection."
-      </t>
-      <t>
-        For brevity, the term "provider" is often used instead of "transit provider" in this document; they mean the same.
-      </t>
-    </section>
     <section title="Requirements Language" anchor="req">
         <t>
     The key words "<bcp14>MUST</bcp14>", "<bcp14>MUST NOT</bcp14>", "<bcp14>REQUIRED</bcp14>", "<bcp14>SHALL</bcp14>", "<bcp14>SHALL
@@ -170,6 +162,47 @@
         </t>
     </section>
   </section>
+
+      <section title="Terminology" anchor="terminology">
+         <t>
+           The following terms are used with special meanings.
+         </t>
+         <t>
+           <list style="hanging">
+                <t hangText="Provider:">
+                   The term "provider" is synonymously with "transit provider", see <xref target="I-D.ietf-sidrops-aspa-profile" sectionFormat="comma" section="1"/>.
+                </t>
+
+                <t hangText="Customer:">
+                   An autonomous system uses a provider for transit, see <xref target="I-D.ietf-sidrops-aspa-profile" sectionFormat="comma" section="1"/>.
+                </t>
+
+                <t hangText="CAS:">
+                  A Customer AS, see <xref target="I-D.ietf-sidrops-aspa-profile" sectionFormat="comma" section="1"/>.
+                </t>
+
+                <t hangText="PAS:">
+                  A Provider AS, see  <xref target="I-D.ietf-sidrops-aspa-profile" sectionFormat="comma" section="1"/>.
+                </t>
+
+                <t hangText="Route is ineligible:">
+                   The term has the same meaning as in <xref target="RFC4271"/>, i.e., "route is ineligible to be installed in Loc-RIB and will be excluded from the next phase of route selection."
+                </t>
+
+                <t hangText="SPAS:">
+                  A Set of Provider ASes, see <xref target="I-D.ietf-sidrops-aspa-profile" sectionFormat="comma" section="3">.
+                </t>
+
+                <t hangText="VAP:">
+                  A verified ASPA payload, see <xref target="ASPA">.
+                </t>
+
+                <t hangText="VAP-SPAS:">
+                  A verified ASPA payload of a set of provider ASes, see <xref target="ASPA">.
+                </t>
+           </list>
+         </t>
+      </section>
 
       <section title="BGP Roles" anchor="role">
         <t>
