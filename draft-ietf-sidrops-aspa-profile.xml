@@ -314,8 +314,8 @@
 
     <section anchor="Implementation" title="Implementation Considerations">
       <t>
-        While the ASN.1 profile specified in <xref target="content"/> formally allows infinite Provider ASes to be listed for a given Customer ASID, consideration will need to be given to limitations existing in validators and elsewhere in the RPKI supply chain.
-        For example, the RPKI-To-Router protocol ASPA PDU (<xref target="I-D.ietf-sidrops-8210bis" section="5.12"/>) contains an unsigned 32-bit length field specifying the total number of bytes for the entire PDU; which won't fit what can be maximally encoded in an ASPA object.
+        While the ASN.1 profile specified in <xref target="content"/> imposes no limit on the number of Provider ASes that can be listed for a given Customer ASID, consideration will need to be given to limitations existing in validators and elsewhere in the RPKI supply chain.
+        For example, the number of Providers ASes that can be listed in a single RPKI-To-Router protocol ASPA PDU (<xref target="I-D.ietf-sidrops-8210bis" section="5.12"/>) is constrained to 2^16.
         In addition to protocol limitations in the supply chain, locally defined restrictions could exist for the maximum file size a Relying Party implementation is willing to accept for a signed object.
       </t>
       <t>
