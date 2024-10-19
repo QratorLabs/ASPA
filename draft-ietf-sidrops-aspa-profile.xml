@@ -11,7 +11,7 @@
 
 <rfc xmlns:xi="http://www.w3.org/2001/XInclude"
      category="std"
-     docName="draft-ietf-sidrops-aspa-profile-18"
+     docName="draft-ietf-sidrops-aspa-profile-19"
      ipr="trust200902"
      consensus="true"
      submissionType="IETF">
@@ -116,7 +116,7 @@
         An ASPA contains a list of one or more ASes, each listing meaning the listed AS is authorized to act as Provider network.
         When the CAS has multiple Providers, all Provider ASes are listed in the ASPA, including any non-transparent Internet Exchange Point (IXP) Route Server (RS) ASes.
         The common case for RS ASes at IXPs is to operate transparently (see Section 2.2.2.1 <xref target="RFC7947"/>), and in those instances the ASNs of IXP Route Servers are not listed as PAS in ASPAs.
-	  </t>
+      </t>
       <t>
         The BGP Roles that an Autonomous System (AS) may have in its peering relationships with eBGP neighbors are discussed in <xref target="I-D.ietf-sidrops-aspa-verification"/>.
         The details of ASPA registration requirements for ASes in different scenarios are also specified in that document.
@@ -153,7 +153,7 @@
         The content of an ASPA identifies the Customer AS (CAS) as well as the Set of Provider ASes (SPAS) that are authorized by the CAS to be its Providers.
       </t>
       <t>
-        A user registering ASPA(s) must be cognizant of Sections 2, 3, and 4 of <xref target="I-D.ietf-sidrops-aspa-verification"/> and the user (or their software tool) must comply with the ASPA registration recommendations in Section 4 of that document.
+        A user registering ASPA(s) must be cognizant of Sections 3, 4, and 5 of <xref target="I-D.ietf-sidrops-aspa-verification"/> and the user (or their software tool) must comply with the ASPA registration recommendations in Section 4 of that document.
       </t>
       <t>
         It is highly recommended that for a given Customer AS, a single ASPA object be maintained which contains all providers, including any non-transparent RS ASes.
@@ -165,9 +165,7 @@
       <t>
         The eContent of an ASPA is an instance of ASProviderAttestation, formally defined by the following ASN.1 <xref target="X.680"/> module:
       </t>
-
       <sourcecode type="asn.1" src="RPKI-ASPA-2023.asn"/>
-
       <t>
         Note that this content appears as the eContent within the encapContentInfo as specified in <xref target="RFC6488"/>.
       </t>
@@ -196,7 +194,7 @@
           In addition to the constraints described by the formal ASN.1 definition, the contents of the providers field MUST satisfy the following constraints:
         <list style="symbols">
           <t>
-            The CustomerASID value MUST NOT appear in any ASID in the providers field.
+            The customerASID value MUST NOT appear in any ASID in the providers field.
           </t>
           <t>
             The elements of providers MUST be ordered in ascending numerical order.
@@ -215,7 +213,7 @@
         To validate an ASPA, the relying party MUST perform all the validation checks specified in <xref target="RFC6488"/> as well as the following additional ASPA-specific validation steps.
         <list style="symbols">
           <t>
-            The Autonomous System Identifier Delegation Extension <xref target="RFC3779"/> MUST be present in the end-entity (EE) certificate (contained within the ASPA), and the Customer ASID in the ASPA eContent MUST be contained within the set of AS numbers specified by the EE certificate's Autonomous System Identifier Delegation Extension.
+            The Autonomous System Identifier Delegation Extension <xref target="RFC3779"/> MUST be present in the end-entity (EE) certificate (contained within the ASPA), and the Customer ASID (customerASID) in the ASPA eContent MUST be contained within the set of AS numbers specified by the EE certificate's Autonomous System Identifier Delegation Extension.
           </t>
           <t>
             The EE certificate's Autonomous System Identifier Delegation Extension MUST NOT contain any "inherit" elements.
@@ -257,9 +255,11 @@
       </t>
       <figure>
 <artwork type="text">
-    Name                                     | OID                         | Specification
-    --------------------------------------------------------------------------------------
-    Autonomous System Provider Authorization | 1.2.840.113549.1.9.16.1.49  | [RFC-to-be]
+    Name                  | OID                       | Specification
+    -----------------------------------------------------------------
+    Autonomous System     | 1.2.840.113549.1.9.16.1.49| [RFC-to-be]
+    Provider Authorization|                           | 
+    -----------------------------------------------------------------
 </artwork>
       </figure>
     </section>
@@ -271,9 +271,9 @@
         <artwork>
 <![CDATA[
    Filename
-   Extension  RPKI Object                               Reference
-   --------------------------------------------------------------------------------------
-      .asa    Autonomous System Provider Authorization  [RFC-to-be]
+   Extension | RPKI Object                              |Reference
+   -----------------------------------------------------------------
+      .asa   | Autonomous System Provider Authorization |[RFC-to-be]
 ]]>
                 </artwork>
       </figure>
@@ -298,7 +298,7 @@
    Additional information:
      Content: This media type is a signed object, as defined
          in [RFC6488], which contains a payload of a list of
-         AS identifers as defined in [RFC-to-be].
+         AS identifiers as defined in [RFC-to-be].
      Magic number(s): None
      File extension(s): .asa
      Macintosh file type code(s):
@@ -317,6 +317,9 @@
         While the ASN.1 profile specified in <xref target="content"/> imposes no limit on the number of Provider ASes that can be listed for a given Customer ASID, consideration will need to be given to limitations existing in validators and elsewhere in the RPKI supply chain.
         For example, the number of Provider ASes that can be listed in a single RPKI-To-Router protocol ASPA PDU (<xref target="I-D.ietf-sidrops-8210bis" section="5.12"/>) is constrained to be 2^30-12.
         In addition to protocol limitations in the supply chain, locally defined restrictions could exist for the maximum file size a Relying Party implementation is willing to accept for a signed object.
+      </t>
+      <t>
+        [Sriram comment] In the above, 2^30-12 seems strange! It is a huge number ~ 1 billion! What is the rationale. What does the -12 mean? Or is it a typo?
       </t>
       <t>
         Relying Party implementations are RECOMMENDED to impose an upper bound on the number of Provider ASes for a given Customer ASID.
@@ -378,7 +381,7 @@
         and Claudio Jeker &amp; Martin Hoffman for review and several suggestions for improvements.
       </t>
     </section>
-	
+
     <section title="Contributors" numbered="no">
       <t>
         The following people made significant contributions to this document:
