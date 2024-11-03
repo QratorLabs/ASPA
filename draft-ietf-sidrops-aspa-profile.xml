@@ -11,7 +11,7 @@
 
 <rfc xmlns:xi="http://www.w3.org/2001/XInclude"
      category="std"
-     docName="draft-ietf-sidrops-aspa-profile-17"
+     docName="draft-ietf-sidrops-aspa-profile-18"
      ipr="trust200902"
      consensus="true"
      submissionType="IETF">
@@ -312,6 +312,23 @@
       </section>
     </section>
 
+    <section anchor="Implementation" title="Implementation Considerations">
+      <t>
+        While the ASN.1 profile specified in <xref target="content"/> imposes no limit on the number of Provider ASes that can be listed for a given Customer ASID, consideration will need to be given to limitations existing in validators and elsewhere in the RPKI supply chain.
+        For example, the number of Provider ASes that can be listed in a single RPKI-To-Router protocol ASPA PDU (<xref target="I-D.ietf-sidrops-8210bis" section="5.12"/>) is constrained to be 2^30-12.
+        In addition to protocol limitations in the supply chain, locally defined restrictions could exist for the maximum file size a Relying Party implementation is willing to accept for a signed object.
+      </t>
+      <t>
+        Relying Party implementations are RECOMMENDED to impose an upper bound on the number of Provider ASes for a given Customer ASID.
+        An upper bound value between 4,000 and 10,000 Provider ASes is suggested.
+        If this threshold is exceeded, Relying Party implementations SHOULD treat all ASPA objects related to the Customer ASID invalid; e.g. not emit a partial list of Provider ASes.
+        Additionally, an error SHOULD be logged in the local system, indicating the Customer ASID for which the threshold was exceeded.
+      </t>
+      <t>
+        Implementers and operators SHOULD periodically review whether imposed upper bounds still are reasonable in context of the global Internet routing system.
+      </t>
+    </section>
+
     <section anchor="Security" title="Security Considerations">
       <t>
         The security considerations of <xref target="RFC6481"/>, <xref target="RFC6485"/>, and <xref target="RFC6488"/> also apply to ASPAs.
@@ -391,6 +408,7 @@
       <?rfc include="reference.RFC.8174.xml"?>
 
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-sidrops-aspa-verification.xml"/>
+      <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-sidrops-8210bis.xml"/>
 
       <reference anchor="X.680">
         <front>
