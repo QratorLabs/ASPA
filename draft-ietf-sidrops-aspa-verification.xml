@@ -11,7 +11,7 @@
 <?rfc subcompact="no" ?>
 
 <rfc category="std"
-     docName="draft-ietf-sidrops-aspa-verification-18"
+     docName="draft-ietf-sidrops-aspa-verification-19"
      submissionType="IETF"
      consensus="true"
      ipr="trust200902">
@@ -175,7 +175,6 @@
       <t>
         For path verification purposes in this document, the peering relationships an AS can have in relation to a neighbor AS are Customer, Provider, Peer, Route Server (RS), RS-client, and Complex.
         These peering relationships are defined in <xref target="RFC9234"/>.
-        A special case of the Complex relation is mutual-transit when ASes MAY export everything (both customer and non-customer routes) to each other, i.e., customer-to-provider relationship applies in each direction.
         All peering relationships are defined locally.
       </t>
     </section>
@@ -224,7 +223,7 @@
       </t>
       <t>
         In the Complex relationship case (<xref target="terminology"/>), an AS MUST include the neighbor AS in its SPAS if neighbor plays Provider role for a subset of received or sent prefixes.
-        Each of the two ASes in a mutual-transit pair MUST register its ASPA including the other AS in its SPAS.
+        If two ASes are exporting both customer and non-customer routes to each other, they MUST register its ASPA including the other AS in its SPAS.
       </t>
       <t>
         The ASes on the boundary of an AS Confederation MUST register ASPAs using the Confederation's global AS number (ASN) as the CAS.
@@ -235,7 +234,7 @@
       <t>
         Let AS x and AS y represent two unique ASes.
         A provider authorization function, authorized(AS x, AS y), checks if the ordered pair of ASNs, (AS x, AS y), has the property that AS y is an attested provider of AS x per U-SPAS of AS x.
-        By term "Provider+" the function should signal if AS y plays role of Provider, non-transparent RS, or mutual-transit neighbor.
+        By term "Provider+" the function signals if AS y plays the role of Provider, or non-transparent RS.
         This function is specified as follows:
       </t>
       <t>
@@ -334,27 +333,28 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
 
         <t>
           Determine the maximum up-ramp length as I, where I is the minimum index for which authorized(A(I), A(I+1)) returns "Not Provider+".
-          If there is no such I, the maximum up-ramp length is set equal to the AS_PATH length N. This parameter is defined as max_up_ramp.
+          If there is no such I, the maximum up-ramp length is set equal to the AS_PATH length N.
+          This parameter is abbreviated as max_up_ramp.
           The minimum up-ramp length can be determined as I, where I is the minimum index for which authorized(A(I), A(I+1)) returns "No Attestation" or "Not Provider+".
           If there is no such I, the AS_PATH consists of only "Provider+" pairs; so the minimum up-ramp length is set equal to the AS_PATH length N.
-          This parameter is defined as min_up_ramp.
+          This parameter is abbreviated as min_up_ramp.
         </t>
         <t>
           Similarly, the maximum down-ramp length can be determined as N - J + 1 where J is the maximum index for which authorized(A(J), A(J-1)) returns "Not Provider+".
           If there is no such J, the maximum down-ramp length is set equal to the AS_PATH length N.
-          This parameter is defined as max_down_ramp.
+          This parameter is abbreviated as max_down_ramp.
           The minimum down-ramp length can be determined as N - J + 1 where J is the maximum index for which authorized(A(J), A(J-1)) returns "No Attestation" or "Not Provider+". If there is no such J, the minimum down-ramp length is set equal to the AS_PATH length N.
-          This parameter is defined as min_down_ramp.
+          This parameter is abbreviated as min_down_ramp.
         </t>
 
         <t>
-          If the sum of max_up_ram and max_down_ramp is less than N, the AS path is Invalid.
-          Else, if the sum of min_up_ram and min_down_ramp is less than N, enough information is not available to perform full AS path verification, and the outcome is set to Unknown.
+          If the sum of max_up_ramp and max_down_ramp is less than N, the AS path is Invalid.
+          Else, if the sum of min_up_ramp and min_down_ramp is less than N, enough information is not available to perform full AS path verification, and the outcome is set to Unknown.
           Else, the AS path is Valid.
         </t>
 
         <t>
-          Below are formal procedures for path verification depending on the peering relationship between the receiving AS and its neighbour.
+          Below are formal procedures for path verification depending on the peering relationship between the receiving AS and its neighbor.
           These procedures use the compressed sequence representation of AS_PATH {AS(N), AS(N-1),..., AS(2), AS(1)} and the above-defined parameters max_up_ramp, min_up_ramp, max_down_ramp, and min_up_ramp
         </t>
       </section>
@@ -466,8 +466,8 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
           If multiple eBGP sessions can segregate the Complex peering relationship into eBGP sessions with normal peering relationships the receiving/verifying AS SHOULD select the algorithm (per <xref target="Upflow"/> or <xref target="Downflow"/>) for each of the normal sessions based on its peering relation type.
         </t>
         <t>
-          If Complex peering relation can't be segregated (i.e., when a Complex BGP relationship occurs within one single BGP session), an operator may want to achieve an equivalent outcome by configuring policies on a per-prefix basis corresponding to the peering relation for the prefix.
-          If this option is not feasible, the operator MAY apply <xref target="Downflow"/>.
+          If a Complex peering relation can't be segregated (i.e., when a Complex BGP relationship occurs within one single BGP session),an operator may want to achieve an equivalent outcome by applying an appropriate algorithm (<xref target="Upflow"/> or <xref target="Downflow"/>) on a per-prefix basis corresponding to the peering relation for the prefix.
+          If this option is not feasible, the operator MAY apply <xref target="Downflow"/> to avoid false positive outcomes..
         </t>
       </section>
 
@@ -508,8 +508,8 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
 
       <section title="Correctness of the ASPA">
         <t>
-          ASPA issuers should be aware of the implications of ASPA-based AS path verification.
-          Network operators must keep their ASPA objects correct and up to date.
+          Network operators registering ASPAs should be aware of the implications of the ASPA-based AS path verification.
+          They must keep their ASPA objects correct and up to date.
           Otherwise, for example, if a provider AS is left out of the SPAS, then routes containing the CAS (in the ASPA) and said provider AS may be incorrectly labeled as Invalid and considered ineligible for route selection (see <xref target="verif" />, <xref target="mitigation" />).
         </t>
       </section>
@@ -518,7 +518,7 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
     <section title="Comparison to Other Technologies">
       <section title="BGPsec">
         <t>
-          BGPsec <xref target="RFC8205"/> was designed to solve the problem of AS_PATH verification by including cryptographic signatures in BGP Update messages.
+          The BGPsec <xref target="RFC8205"/> protocol was designed to solve the problem of AS_PATH verification by including cryptographic signatures in BGP Update messages.
           It offers protection against unauthorized path modifications and assures that the BGPsec Update traveled the path shown in the BGPsec_PATH Attribute.
           However, it does not detect route leaks (valley-free violations).
           Thus, BGPsec and ASPA are complementary technologies.
