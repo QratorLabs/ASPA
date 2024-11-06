@@ -107,8 +107,7 @@
     <abstract>
       <t>
         This document describes procedures that make use of Autonomous System Provider Authorization (ASPA) objects in the Resource Public Key Infrastructure (RPKI) to verify the Border Gateway Protocol (BGP) AS_PATH attribute of advertised routes.
-        This type of AS_PATH verification provides detection and mitigation of route leaks and some forms of AS path manipulation.
-        It also provides protection, to some degree, against prefix hijacks with forged-origin or forged-path-segment.
+        This AS_PATH verification enhances routing security by adding means to detect and mitigate route leaks and AS path manipulations.
       </t>
     </abstract>
 
@@ -179,20 +178,6 @@
       </t>
     </section>
 
-    <section title="Autonomous System Provider Authorization" anchor="ASPA">
-      <t>
-        An ASPA record is a digitally signed object that binds a set of PAS numbers to a CAS number and is signed by the CAS <xref target="I-D.ietf-sidrops-aspa-profile"/>.
-        The ASPA attests that the CAS indicated a Set of Provider ASes (SPAS), which applies only to the IPv4 and IPv6 address families (i.e., AFI = 1 and AFI = 2) and only to Network Layer Reachability Information used for unicast forwarding (SAFI = 1).
-      </t>
-      <t>
-        The notation (AS x, {AS y1, AS y2, ...}), is used to represent an ASPA object for a CAS denoted as AS x <xref target="I-D.ietf-sidrops-aspa-notation"/>.
-        In this notation, the comma-separated set {AS y1, AS y2, ...} represents the Set of Provider ASes (SPAS) of the CAS (AS x).
-        A CAS is expected to register a single ASPA listing all its Provider ASes (see <xref target="rec1"/>).
-        If a CAS has a single cryptographically valid ASPA, then the Union SPAS (U-SPAS) for the CAS equals to SPAS.
-        In case a CAS has multiple cryptographically valid ASPAs, then the U-SPAS for the CAS is the union of AS listed in all SPAS of these ASPAs.
-      </t>
-    </section>
-
     <section title="ASPA Registration Recommendations" anchor="rec1">
       <t>
         A compliant AS or Route Server AS (RS AS) MUST have an ASPA.
@@ -219,7 +204,7 @@
         During a transition process between different certificate authority (CA) registries, the ASPA records SHOULD be kept identical in all relevant registries.
       </t>
       <t>
-        Normally, a U-SPAS (see <xref target="ASPA"/>) is not expected to contain both an AS 0 and other Provider ASes, but an unexpected presence of AS 0 has no influence on the AS path verification procedures (see <xref target="pair-validation"/>, <xref target="verif"/>).
+        Normally, a SPAS (see <xref target="terminology"/>) is not expected to contain both an AS 0 and other Provider ASes, but an unexpected presence of AS 0 has no influence on the AS path verification procedures (see <xref target="pair-validation"/>, <xref target="verif"/>).
       </t>
       <t>
         In the Complex relationship case (<xref target="terminology"/>), an AS MUST include the neighbor AS in its SPAS if neighbor plays Provider role for a subset of received or sent prefixes.
@@ -231,6 +216,12 @@
     </section>
 
     <section title="Provider Authorization Function" anchor="pair-validation">
+      <t>
+        A CAS is expected to register a single ASPA listing all its Provider ASes (see <xref target="rec1"/>).
+        If a CAS has a single cryptographically valid ASPA, then the Union SPAS (U-SPAS) for the CAS equals to SPAS.
+        In case a CAS has multiple cryptographically valid ASPAs, then the U-SPAS for the CAS is the union of AS listed in all SPAS of these ASPAs.
+      </t>
+
       <t>
         Let AS x and AS y represent two unique ASes.
         A provider authorization function, authorized(AS x, AS y), checks if the ordered pair of ASNs, (AS x, AS y), has the property that AS y is an attested provider of AS x per U-SPAS of AS x.
@@ -508,9 +499,8 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
 
       <section title="Correctness of the ASPA">
         <t>
-          Network operators registering ASPAs should be aware of the implications of the ASPA-based AS path verification.
-          They must keep their ASPA objects correct and up to date.
-          Otherwise, for example, if a provider AS is left out of the SPAS, then routes containing the CAS (in the ASPA) and said provider AS may be incorrectly labeled as Invalid and considered ineligible for route selection (see <xref target="verif" />, <xref target="mitigation" />).
+          Network operators must keep their ASPA objects correct and up to date <xref target="rec1"/>.
+          The outdated and incorrect CAS may affect route propagation or limit route leak detection capabilities.
         </t>
       </section>
     </section>
