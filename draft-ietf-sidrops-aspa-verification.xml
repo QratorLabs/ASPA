@@ -181,9 +181,15 @@
     <section title="ASPA Registration Recommendations" anchor="rec1">
       <t>
         A compliant AS or Route Server AS (RS AS) MUST have an ASPA.
-        An AS SHOULD NOT have more than one ASPA.
         An AS MUST list in its SPAS the union of all its Provider AS(es) and non-transparent RS AS(es) at which it is an RS-client.
         An AS MUST include a Provider AS in its SPAS regardless of whether it provides connectivity for only IPv4 or only IPv6 or both.
+      </t>
+      <t>
+        In the Complex relationship case, an AS MUST include the neighbor AS in its SPAS if neighbor plays Provider role for a subset of received or sent prefixes.
+        If two ASes are exporting both customer and non-customer routes to each other, they MUST register its ASPA including the other AS in its SPAS.
+      </t>
+      <t>
+        The ASes on the boundary of an AS Confederation MUST register ASPAs using the Confederation's global AS number (ASN) as the CAS.
       </t>
       <t>
         An ASPA object showing only AS 0 as a provider AS is referred to as an AS0 ASPA.
@@ -192,9 +198,12 @@
         If that statement is true, then the AS MUST register an AS0 ASPA.
       </t>
       <t>
+        Normally, a SPAS (see <xref target="terminology"/>) is not expected to contain both an AS 0 and other Provider ASes, but an unexpected presence of AS 0 has no influence on the AS path verification procedures (see <xref target="pair-validation"/>, <xref target="verif"/>).
+      </t>
+      <t>
         A compliant AS SHOULD register a single ASPA object.
         A single ASPA record for an AS ought to prevent race conditions during ASPA updates that might affect prefix propagation.
-        The software that provides hosting for ASPA records SHOULD support enforcement of this practice.
+        The CA software that provides hosting for ASPA records SHOULD support enforcement of this practice.
       </t>
       <t>
         An AS may have providers that may be used on certain occasions, for an example in case of a DDoS attack.
@@ -202,16 +211,6 @@
       </t>
       <t>
         During a transition process between different certificate authority (CA) registries, the ASPA records SHOULD be kept identical in all relevant registries.
-      </t>
-      <t>
-        Normally, a SPAS (see <xref target="terminology"/>) is not expected to contain both an AS 0 and other Provider ASes, but an unexpected presence of AS 0 has no influence on the AS path verification procedures (see <xref target="pair-validation"/>, <xref target="verif"/>).
-      </t>
-      <t>
-        In the Complex relationship case (<xref target="terminology"/>), an AS MUST include the neighbor AS in its SPAS if neighbor plays Provider role for a subset of received or sent prefixes.
-        If two ASes are exporting both customer and non-customer routes to each other, they MUST register its ASPA including the other AS in its SPAS.
-      </t>
-      <t>
-        The ASes on the boundary of an AS Confederation MUST register ASPAs using the Confederation's global AS number (ASN) as the CAS.
       </t>
     </section>
 
@@ -259,6 +258,10 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
         The procedures described in this document are applicable only to four-octet AS number compatible BGP speakers <xref target="RFC6793"/>.
         If such a BGP speaker receives both AS_PATH and AS4_PATH attributes in an UPDATE, then the procedures are applied on the reconstructed AS path (Section 4.2.3 of <xref target="RFC6793"/>).
         So, the term AS_PATH is used in this document to refer to the usual AS_PATH <xref target="RFC4271"/> as well as the reconstructed AS path.
+      </t>
+<!--      rephrase-->
+      <t>
+        The <xref target="RFC4271"/> defines
       </t>
       <t>
         If an attacker creates a route leak intentionally, they may try to strip their AS from the AS_PATH.
@@ -474,7 +477,7 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
     <section anchor="security" title="Security Considerations">
       <section title="Incongruence in IPv4 and IPv6 Connectivity">
         <t>
-          The U-SPAS contain the union of Providers for a CAS for both IPv4 and IPv6 unicast connectivity.
+          The U-SPAS contains the union of Providers for a CAS for both IPv4 and IPv6 unicast connectivity.
           This design choice consequently means that if a customer-provider relationship exists for one address family but doesn't exist for the other address family, AS_PATH verification outcomes for the latter AFI will be as permissive as verification outcomes for the former AFI.
           That is believed to be a reasonable compromise as both the ASPA registration and verification processes are simplified, and no false positive outcomes are yielded (e.g. inadvertent Invalid evaluation).
         </t>
@@ -506,6 +509,14 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
     </section>
 
     <section title="Comparison to Other Technologies">
+      <section title="ROA">
+        <t>
+          ROAs <xref target="RFC6482"/> are digitally signed objects that bind an address to an AS number, and are signed by the address holder.
+          ROV procedure <xref target="RFC6483"/> works by verifying that an AS is authorized to originate a specific prefix.
+          The joint use of ROA and ASPA records and their corresponding verification procedures may establish security trusted chain capable to detect not only accidental route leaks but also AS_PATH manipulations <xref target="bgp-cycling"/>.
+        </t>
+      </section>
+
       <section title="BGPsec">
         <t>
           The BGPsec <xref target="RFC8205"/> protocol was designed to solve the problem of AS_PATH verification by including cryptographic signatures in BGP Update messages.
@@ -601,6 +612,7 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
       <?rfc include="reference.RFC.8205.xml"?>
       <?rfc include="reference.RFC.7942.xml"?>
       <?rfc include="reference.RFC.9319.xml"?>
+      <?rfc include="reference.RFC.6483.xml"?>
       <?rfc include="reference.I-D.ietf-grow-route-leak-detection-mitigation.xml"?>
       <?rfc include="reference.I-D.ietf-idr-deprecate-as-set-confed-set.xml"?>
       <?rfc include="reference.I-D.ietf-sidrops-aspa-notation.xml"?>
@@ -629,6 +641,16 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
           <date month="November" year="2020"/>
         </front>
       </reference>
+
+      <reference anchor="bgp-cycling" target="https://pc.nanog.org/static/published/meetings/NANOG76/1978/20190611_Azimov_Bgp_Route_Security_v1.pdf">
+        <front>
+          <title>BGP Route Security Cycling to the Future!</title>
+          <author initials="A." surname="Azimov"><organization /></author>
+          <date month="October" year="2019"/>
+        </front>
+        <seriesInfo name="NANOG-76, North American Network Operator Group Meeting," value="Slides archives from NANOG" />
+      </reference>
+
       <reference anchor="nanog-aspa" target="https://storage.googleapis.com/site-media-prod/meetings/NANOG89/4809/20231017_Sriram_Aspa-Based_Bgp_As_Path_v1.pdf (slides)  https://www.youtube.com/watch?v=GdVnZGd7jMo (video)">
         <front>
           <title>ASPA-based BGP AS_PATH Verification and Route Leaks Solution</title>
