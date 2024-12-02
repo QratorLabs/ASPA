@@ -11,7 +11,7 @@
 <?rfc subcompact="no" ?>
 
 <rfc category="std"
-     docName="draft-ietf-sidrops-aspa-verification-19"
+     docName="draft-ietf-sidrops-aspa-verification-20"
      submissionType="IETF"
      consensus="true"
      ipr="trust200902">
@@ -185,8 +185,14 @@
         An AS MUST include a Provider AS in its SPAS regardless of whether it provides connectivity for only IPv4 or only IPv6 or both.
       </t>
       <t>
-        In the Complex relationship case, an AS MUST include the neighbor AS in its SPAS if neighbor plays Provider role for a subset of received or sent prefixes.
-        If two ASes are exporting both customer and non-customer routes to each other, they MUST register its ASPA including the other AS in its SPAS.
+        In the Complex relationship case (<xref target="terminology"/> and <xref target="RFC9234"/>), a compliant AS MUST include the neighbor AS in its SPAS if the neighbor plays Provider role for all or a subset of received or sent prefixes.
+        Thus, if two compliant ASes are exporting both customer and non-customer routes to each other (i.e., mutual transit relationship), each AS registers its ASPA including the other AS in its SPAS.
+        It may be noted that mutual transit is a special case of Complex relationship.
+      </t>
+      <t>
+        [xxx KS comment: I think using a MUST in the first sentence is sufficient to also cover the case in the second sentence.
+        So, using MUST again in the second sentence can be avoided. Also, we cannot say "two ASes MUST do foo".
+        Each AS is independent.]
       </t>
       <t>
         The ASes on the boundary of an AS Confederation MUST register ASPAs using the Confederation's global AS number (ASN) as the CAS.
@@ -224,7 +230,7 @@
       <t>
         Let AS x and AS y represent two unique ASes.
         A provider authorization function, authorized(AS x, AS y), checks if the ordered pair of ASNs, (AS x, AS y), has the property that AS y is an attested provider of AS x per U-SPAS of AS x.
-        By term "Provider+" the function signals if AS y plays the role of Provider, or non-transparent RS.
+        By the term "Provider+", the function signals that AS y plays the role of Provider or non-transparent RS.
         This function is specified as follows:
       </t>
       <t>
@@ -259,10 +265,6 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
         If such a BGP speaker receives both AS_PATH and AS4_PATH attributes in an UPDATE, then the procedures are applied on the reconstructed AS path (Section 4.2.3 of <xref target="RFC6793"/>).
         So, the term AS_PATH is used in this document to refer to the usual AS_PATH <xref target="RFC4271"/> as well as the reconstructed AS path.
       </t>
-<!--      rephrase-->
-      <t>
-        The <xref target="RFC4271"/> defines
-      </t>
       <t>
         If an attacker creates a route leak intentionally, they may try to strip their AS from the AS_PATH.
         To partly guard against that, a check is necessary to match the most recently added AS in the AS_PATH to the BGP neighbor's ASN.
@@ -277,7 +279,7 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
         See <xref target="mitigation"/> for how routes with Invalid AS_PATH are handled.
       </t>
 
-	  <section title="Principles" anchor="principles">
+      <section title="Principles" anchor="principles">
         <t>
           Let the sequence {AS(N), AS(N-1),..., AS(2), AS(1)} represent the AS_PATH in terms of unique ASNs, where AS(1) is the origin AS and AS(N) is the most recently added AS and neighbor of the receiving/verifying AS.
           N is the length of the received AS_PATH in unique ASes.
@@ -460,8 +462,8 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
           If multiple eBGP sessions can segregate the Complex peering relationship into eBGP sessions with normal peering relationships the receiving/verifying AS SHOULD select the algorithm (per <xref target="Upflow"/> or <xref target="Downflow"/>) for each of the normal sessions based on its peering relation type.
         </t>
         <t>
-          If a Complex peering relation can't be segregated (i.e., when a Complex BGP relationship occurs within one single BGP session),an operator may want to achieve an equivalent outcome by applying an appropriate algorithm (<xref target="Upflow"/> or <xref target="Downflow"/>) on a per-prefix basis corresponding to the peering relation for the prefix.
-          If this option is not feasible, the operator MAY apply <xref target="Downflow"/> to avoid false positive outcomes..
+          If a Complex peering relation cannot be segregated (i.e., when a Complex BGP relationship occurs within one single BGP session),an operator may want to achieve an equivalent outcome by applying an appropriate algorithm (<xref target="Upflow"/> or <xref target="Downflow"/>) on a per-prefix basis corresponding to the peering relation for the prefix.
+          If this option is not feasible, the operator MAY apply the algorithm for downstream paths (<xref target="Downflow"/>) to avoid false positive outcomes.
         </t>
       </section>
 
@@ -488,6 +490,11 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
           Since an upstream provider becomes a trusted point, in theory, it might be able to propagate some instances of hijacked prefixes with forged-origin or forged-path-segment or even routes with manipulated AS_PATHs, and such attacks might go undetected by its customers or upper providers.
         </t>
         <t>
+          [xxx KS comment: I am a bit uncomfortable here with "Provider as Trusted Point". It is hard to define what that means.
+          Lower tier provider might be motivated by economic incentive or it could be a nation-state actor who wants to manipulate AS path to divert traffic.
+          My thought -- we drop the term "Provider as Trusted Point" and instead use "Manipulation of AS Path by Provider".]
+        </t>
+        <t>
           While such attacks may happen, it does not seem to be a realistic scenario.
           Normally a customer and their transit provider would have a signed agreement, and a policy violation (of the above kind) should have legal consequences or the customer can just drop the relationship with such a provider and remove the corresponding ASPA record.
         </t>
@@ -502,8 +509,14 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
 
       <section title="Correctness of the ASPA">
         <t>
-          Network operators must keep their ASPA objects correct and up to date <xref target="rec1"/>.
-          The outdated and incorrect CAS may affect route propagation or limit route leak detection capabilities.
+          Network operators must keep their ASPA objects correct and up to date (<xref target="rec1"/>).
+          An incorrect or outdated ASPA may affect route propagation or limit route leak detection capabilities.
+        </t>
+        <t>
+          An ASPA-aware AS operator SHOULD periodically monitor all ASPAs in global RPKI repositories to check if their AS number is incorrectly included in the SPAS in an ASPA (cryptographically valid), and if so, they SHOULD report it to the responsible party (or parties) for resolution.
+        </t>
+        <t>
+          An ASPA-aware AS operator SHOULD periodically check if their AS number is incorrectly not included in the U-SPAS of a known CAS, and if so, they SHOULD report it to the CAS for resolution.
         </t>
       </section>
     </section>
@@ -515,6 +528,12 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
           ROV procedure <xref target="RFC6483"/> works by verifying that an AS is authorized to originate a specific prefix.
           The joint use of ROA and ASPA records and their corresponding verification procedures may establish security trusted chain capable to detect not only accidental route leaks but also AS_PATH manipulations <xref target="bgp-cycling"/>.
         </t>
+      <t>
+          [xxx KS comment: This new subsection seems like a brief repeat of what is said already in the first two paragraphs of Introduction (Sec. 1).
+          There we already talked about RPKI-ROV which is obviously based on ROAs.
+          The correct reference for ROV is RFC6811 which is standards track and not RFC6483 which is Informational.
+          I recommend deleting this subsection.]
+      </t>
       </section>
 
       <section title="BGPsec">
@@ -758,10 +777,9 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
         </list>
       </t>
       <t>
-        The above properties show that ASPA-based path verification offers significant benefits to early adopters.
+        The above properties show that ASPA-based path verification offers significant benefits to early adopters (also see <xref target="nanog-aspa"/>).
         Limitations of the method with regard to some forms of malicious AS path manipulations are discussed in <xref target="security"/>.
       </t>
     </section>
   </back>
 </rfc>
-
