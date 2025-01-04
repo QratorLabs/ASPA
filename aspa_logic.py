@@ -1,7 +1,8 @@
 
 IPv4, IPv6 = 4, 6
 AS_SET, AS_SEQUENCE, AS_CONFED_SEQUENCE, AS_CONFED_SET = range(1, 5)
-Valid, Invalid, Unknown, Unverifiable = range(4)
+Valid, Invalid, Unknown = range(3)
+NO_ATTESTATION, PROVIDER, NOT_PROVIDER = range(3)
 
 
 class Segment:
@@ -13,94 +14,79 @@ class ASPA:
     def __init__(self, aspa_records):
         self.aspa_records = aspa_records
 
-    def verify_pair(self, as1, as2, afi):
-        aspa_records_afi = self.aspa_records.get(afi, None)
-        if aspa_records_afi is None:
-            return Unknown
+    def verify_pair(self, as1, as2):
+        if as1 not in self.aspa_records:
+            return NO_ATTESTATION
 
-        aspa_records_as1 = aspa_records_afi.get(as1, None)
-        if aspa_records_as1 is None:
-            return Unknown
+        if as2 not in self.aspa_records[as1]:
+            return NOT_PROVIDER
 
-        if as2 not in aspa_records_as1:
-            return Invalid
-        return Valid
+        return PROVIDER
 
-    def get_indexes(self, aspath, afi):
-        unknown_index = 0
-        unverifiable_flag = False
+    def get_ramp_boundaries(self, aspath):
+        min_ramp = 0
 
         as1 = 0
         index = 1
         for segment in aspath:
-            if segment.type != AS_SEQUENCE:
-                as1 = 0
-                unverifiable_flag = True
-            elif segment.type == AS_SEQUENCE:
-                if not as1:
-                    as1 = segment.value
-                elif as1 != segment.value:
-                    pair_check = self.verify_pair(as1, segment.value, afi)
-                    if pair_check == Invalid:
-                        return index - 1, unknown_index - 1 if unknown_index else index - 1, unverifiable_flag
-                    elif pair_check == Unknown and not unknown_index:
-                        unknown_index = index
+            if not as1:
+                as1 = segment.value
+            elif as1 != segment.value:
+                pair_check = self.verify_pair(as1, segment.value)
+                if pair_check == NOT_PROVIDER:
+                    return index - 1, min_ramp - 1 if min_ramp else index - 1
+                elif pair_check == NO_ATTESTATION and not min_ramp:
+                    min_ramp = index
 
-                    as1 = segment.value
+                as1 = segment.value
 
             index += 1
 
-        return index - 1, unknown_index - 1 if unknown_index else index - 1, unverifiable_flag
+        return index - 1, min_ramp - 1 if min_ramp else index - 1
 
-    def check_upflow_path(self, aspath, neighbor_as, afi):
+    def is_verifiable(self, aspath):
+        for segment in aspath:
+            if segment.type != AS_SEQUENCE:
+                return False
+
+        return True
+
+    def check_upflow_path(self, aspath, neighbor_as, ix_client=False):
         if len(aspath) == 0:
             return Invalid
 
-        if aspath[-1].type == AS_SEQUENCE and aspath[-1].value != neighbor_as:
+        if not self.is_verifiable(aspath):
             return Invalid
 
-        forward_invalid_index, forward_unknown_index, forward_unverifiable = self.get_indexes(aspath, afi)
+        if not ix_client and aspath[-1].value != neighbor_as:
+            return Invalid
+
+        max_up_ramp, min_up_ramp = self.get_ramp_boundaries(aspath)
 
         aspath_len = len(aspath)
-        if forward_invalid_index < aspath_len:
+        if max_up_ramp < aspath_len:
             return Invalid
-        if forward_unverifiable:
-            return Unverifiable
-        if forward_unknown_index < aspath_len:
+        if min_up_ramp < aspath_len:
             return Unknown
         return Valid
 
-    def check_downflow_path(self, aspath, neighbor_as, afi):
+    def check_downflow_path(self, aspath, neighbor_as):
         if len(aspath) == 0:
             return Invalid
 
-        if aspath[-1].type == AS_SEQUENCE and aspath[-1].value != neighbor_as:
+        if not self.is_verifiable(aspath):
             return Invalid
 
-        forward_invalid_index, forward_unknown_index, forward_unverifiable = self.get_indexes(aspath, afi)
-        backward_invalid_index, backward_unknown_index, backward_unverifiable = self.get_indexes(list(reversed(aspath)), afi)
+        if aspath[-1].value != neighbor_as:
+            return Invalid
+
+
+        max_up_ramp, min_up_ramp = self.get_ramp_boundaries(aspath)
+        max_down_ramp, min_down_ramp = self.get_ramp_boundaries(list(reversed(aspath)))
 
         aspath_len = len(aspath)
-        if forward_invalid_index + backward_invalid_index < aspath_len:
+        if max_up_ramp + max_down_ramp < aspath_len:
             return Invalid
-        if forward_unverifiable or backward_unverifiable:
-            return Unverifiable
-        if forward_unknown_index + backward_unknown_index < aspath_len:
+        if min_up_ramp + min_down_ramp < aspath_len:
             return Unknown
         return Valid
-
-    def check_ix_path(self, aspath, neighbor_as, afi):
-        if len(aspath) == 0:
-            return Invalid
-
-        forward_invalid_index, forward_unknown_index, forward_unverifiable = self.get_indexes(aspath, afi)
-
-        aspath_len = len(aspath)
-        if forward_invalid_index < aspath_len:
-            return Invalid
-        if forward_unverifiable:
-            return Unverifiable
-        if forward_unknown_index < aspath_len:
-            return Unknown
-        return Valid
-
