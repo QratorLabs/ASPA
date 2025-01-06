@@ -40,7 +40,7 @@
       </address>
     </author>
     <author fullname="Job Snijders" initials="J." surname="Snijders">
-      <organization>Fastly</organization>
+      <organization/>
       <address>
         <postal>
           <street/>
@@ -48,7 +48,7 @@
           <code/>
           <country>NL</country>
         </postal>
-        <email>job@fastly.com</email>
+        <email>job@sobornost.net</email>
       </address>
     </author>
     <author fullname="Russ Housley" initials="R" surname="Housley">
@@ -303,7 +303,7 @@
      File extension(s): .asa
      Macintosh file type code(s):
    Person & email address to contact for further information:
-     Job Snijders <job@fastly.com>
+     Job Snijders <job@sobornost.net>
    Intended usage: COMMON
    Restrictions on usage: None
    Change controller: IETF
@@ -351,7 +351,7 @@
       </t>
       <ul>
         <li>
-          A validator implementation <xref target="rpki-client"/> (version 8.5 and higher), written in C was provided by Job Snijders from Fastly.
+          A validator implementation <xref target="rpki-client"/> (version 8.5 and higher), written in C was provided by Job Snijders.
         </li>
         <li>
           A validator implementation <xref target="routinator"/>, written in Rust was provided by Martin Hoffman from NLnet Labs.
@@ -440,13 +440,14 @@
       <?rfc include="reference.RFC.6480.xml"?>
       <?rfc include="reference.RFC.7947.xml"?>
 
-      <reference anchor="rpki-client" target="https://marc.info/?l=openbsd-tech&amp;m=168614057916956&amp;w=2">
+      <reference anchor="rpki-client" target="https://www.rpki-client.org/">
         <front>
-          <title>rpki-client</title>
-          <author initials="J." surname="Snijders">
-            <organization>Fastly</organization>
-          </author>
-          <date year="2023"/>
+          <title>OpenBSD rpki-client</title>
+          <author fullname="Claudio Jeker"/>
+          <author fullname="Job Snijders"/>
+          <author fullname="Kristaps Dzonsons"/>
+          <author fullname="Theo Buehler"/>
+          <date year="2023" />
         </front>
       </reference>
 
@@ -507,17 +508,16 @@
       </t>
       <artwork>
 <![CDATA[
-$ echo 301da00302010102023cca301202020b620202205b020300c790020303259e \
+$ echo 301DA003020101020300FE633011020300FC00020301000F020500FA56EA00 \
   | xxd -r -ps | openssl asn1parse -inform DER -dump -i
-    0:d=0  hl=2 l=  29 cons: SEQUENCE
-    2:d=1  hl=2 l=   3 cons:  cont [ 0 ]
-    4:d=2  hl=2 l=   1 prim:   INTEGER           :01
-    7:d=1  hl=2 l=   2 prim:  INTEGER           :3CCA    # Customer ASID 15562
-   11:d=1  hl=2 l=  18 cons:  SEQUENCE
-   13:d=2  hl=2 l=   2 prim:   INTEGER           :0B62   # ProviderAS 2914
-   17:d=2  hl=2 l=   2 prim:   INTEGER           :205B   # ProviderAS 8283
-   21:d=2  hl=2 l=   3 prim:   INTEGER           :C790   # ProviderAS 51088
-   26:d=2  hl=2 l=   3 prim:   INTEGER           :03259E # ProviderAS 206238
+  0:d=0  hl=2 l=  29 cons: SEQUENCE
+  2:d=1  hl=2 l=   3 cons:  cont [ 0 ]
+  4:d=2  hl=2 l=   1 prim:   INTEGER   :01
+  7:d=1  hl=2 l=   3 prim:  INTEGER    :FE63     # Customer ASID 65123
+ 12:d=1  hl=2 l=  17 cons:  SEQUENCE
+ 14:d=2  hl=2 l=   3 prim:   INTEGER   :FC00     # ProviderAS 64512
+ 19:d=2  hl=2 l=   3 prim:   INTEGER   :01000F   # ProviderAS 65551
+ 24:d=2  hl=2 l=   5 prim:   INTEGER   :FA56EA00 # ProviderAS 4200000000
 ]]>
       </artwork>
 
@@ -526,38 +526,39 @@ $ echo 301da00302010102023cca301202020b620202205b020300c790020303259e \
       </t>
       <artwork>
 <![CDATA[
-MIIGoQYJKoZIhvcNAQcCoIIGkjCCBo4CAQMxDTALBglghkgBZQMEAgEwMAYLKoZIhvcNAQkQ
-ATGgIQQfMB2gAwIBAQICPMowEgICC2ICAiBbAgMAx5ACAwMlnqCCBJgwggSUMIIDfKADAgEC
-AgoAocd1L/ix0uAfMA0GCSqGSIb3DQEBCwUAMDMxMTAvBgNVBAMTKGNhYTgwNWRiYWMzNjQ3
-NDliOWIxMTU1OTBhYjZlZjBmOTcwY2RiZDgwHhcNMjMwNjA3MDkwODE0WhcNMjQwNjA2MDkw
-ODE0WjAVMRMwEQYDVQQDDAoxNjg2MTI4MDAzMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIB
-CgKCAQEA9YsEEF6Mb6Rhj7W35W9F8vT9OnGpMopJDL9y05Tms49iQ5hnZKXiabmwPKEn9Uat
-QU4Klff/2XkFXrjnmGcA/jb5C/22JlM1WRZcFfKwJXGWBf9HW2qlz9KTKT07vkFFp8+H6NTu
-MPX/nuEFFMlgWVV/dS5x5gjFuGmhBpXiKhIiNAhTqFdXQwJoI3BCngt4G4rLhu0zHsAH9/El
-s4XWk57HoKScj2mKAoHMWrLJxC9BRiqVXfZ7xAbuYDnrHFuGpZKp+BCB4mVJIT/a5LnUH/kp
-6Dih5833FbWZ0Au9pKqUBYD7J0QT/LGqvHSTX0zS9xGr5z3vg8glCecoAOIylQIDAQABo4IB
-xjCCAcIwDgYDVR0PAQH/BAQDAgeAMB0GA1UdDgQWBBTmbzR/BjCz/cWIUPsmJCMCpnVFhDAf
-BgNVHSMEGDAWgBTKqAXbrDZHSbmxFVkKtu8Plwzb2DAYBgNVHSABAf8EDjAMMAoGCCsGAQUF
-Bw4CMBkGCCsGAQUFBwEIAQH/BAowCKAGMAQCAjzKMGQGCCsGAQUFBwEBBFgwVjBUBggrBgEF
-BQcwAoZIcnN5bmM6Ly9ycGtpLnJpcGUubmV0L3JlcG9zaXRvcnkvREVGQVVMVC95cWdGMjZ3
-MlIwbTVzUlZaQ3JidkQ1Y00yOWcuY2VyMGQGA1UdHwRdMFswWaBXoFWGU3JzeW5jOi8vY2hs
-b2Uuc29ib3Jub3N0Lm5ldC9ycGtpL1JJUEUtbmxqb2JzbmlqZGVycy95cWdGMjZ3MlIwbTVz
-UlZaQ3JidkQ1Y00yOWcuY3JsMG8GCCsGAQUFBwELBGMwYTBfBggrBgEFBQcwC4ZTcnN5bmM6
-Ly9jaGxvZS5zb2Jvcm5vc3QubmV0L3Jwa2kvUklQRS1ubGpvYnNuaWpkZXJzLzVtODBmd1l3
-c18zRmlGRDdKaVFqQXFaMVJZUS5hc2EwDQYJKoZIhvcNAQELBQADggEBADMA9gmyYb+tw623
-Y0hiwMkfh8UIWBLl8TzuE/oV1+lV1vMmoZN2DZvS0DTBGHyDJosSxCfFIVgiBxyZ4Hz+5Kz3
-p+SCiv+W4Xm4/2IR9KZpd4XFldvz0m82rtjadiD9pP2pEoQ7hpv/QjJwWA2Lo8BgSUTF6x/E
-1nIhvLqmQTNyW/McSIyT3zctekg2lJVYUhIgMdO7HI0gzDKY8iPcTTGa9hzQBt5r0j1ukfgy
-9mRnLB6u1v6qa1VKIgxsCO5r4X4ClvQeFdhgx1XqZ2YAB0fhfK+ouIk52gIXnfDD6T3O1wU7
-3bNDRqNBPb3B6fGV+XtAszI4lzQcgmWz1Vel7EExggGqMIIBpgIBA4AU5m80fwYws/3FiFD7
-JiQjAqZ1RYQwCwYJYIZIAWUDBAIBoGswGgYJKoZIhvcNAQkDMQ0GCyqGSIb3DQEJEAExMBwG
-CSqGSIb3DQEJBTEPFw0yMzA2MDcwOTA4NDFaMC8GCSqGSIb3DQEJBDEiBCAJcXvBATD7chRb
-oBj7Kghjf+uaiuybzdAcFPCzBXweYDANBgkqhkiG9w0BAQEFAASCAQDRbk4QaP0AdYgtgxds
-3T/qgz0+m0RT2ue/5vqnhqCIqJBUjjrVOi2kgR3xhXFJfwz0pMuvUD6ikMdb9OsjvkpGqprN
-xepbslSGf2OrrYHa36qF38KsXrPNASslNDCn7eN/TBoOV+8tacOFcPEyC7stuFw5GtvL37RS
-/ZvyDm8NMo06JynhZ2me3sTJVpqTopv0vqVQi0VLCNEq+CQiDPEdqGEVDT9y2dVIVZ3J54Lq
-v76sXvhswso7CpMzTJyEx2VcIXwADMKZF/nWciTrkNzLfahVsL6UzflvMqNo3nVYJIsnF6U3
-O3Niq7vO05r1PyS/pZqe+uwbV2gGQMcXwrvt
+MIIGLAYJKoZIhvcNAQcCoIIGHTCCBhkCAQMxDTALBglghkgBZQMEAgEwMAYLKoZI
+hvcNAQkQATGgIQQfMB2gAwIBAQIDAP5jMBECAwD8AAIDAQAPAgUA+lbqAKCCBCMw
+ggQfMIIDB6ADAgECAgEEMA0GCSqGSIb3DQEBCwUAMA8xDTALBgNVBAMTBHJvb3Qw
+HhcNMjUwMTA2MTAyNjQ4WhcNMjYwMTA2MTAyNjQ4WjAPMQ0wCwYDVQQDEwRyb290
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmgjRVMrjafIK81cxs8GB
+ehcjlP97o3CdlhceX8ogtUE19C1v3VZQttdzaBG1ViI2+TJiyueHm2M6nq7tl7A9
+HfkPWGdvwjTUeF4ynpxNlqqoG5pGPMLuuk6HdVaKbuEeX3ZAYD2daG8qm3zkmmF3
+F7e+xPvr6nCTIQX7nr0WQyX74FmLGwlr6TV+6MGdCnp24A5aCXJo3m1vGlQUKdd/
+bMszpbfzaX1rxBKA0GSdWx/QEOxFb1BPObjF+P/GpDXOq3i0DoZiDB+omgdUAWDZ
+dmskG0l+2EyQaCS/pVCES50Y5zAagTcFabCLKnPvr3qh9tvjD/KlolYc35gNIfoX
+7wIDAQABo4IBhDCCAYAwDgYDVR0PAQH/BAQDAgeAMB0GA1UdDgQWBBQrh8dvXu72
+IET1KLgskpso1VcyrDAfBgNVHSMEGDAWgBQ2mtAZLGdOeDIizTKFZreUErGPJjAY
+BgNVHSABAf8EDjAMMAoGCCsGAQUFBw4CMF8GCCsGAQUFBwEBBFMwUTBPBggrBgEF
+BQcwAoZDcnN5bmM6Ly9sb2NhbGhvc3QvcmVwby8zNjlBRDAxOTJDNjc0RTc4MzIy
+MkNEMzI4NTY2Qjc5NDEyQjE4RjI2LmNlcjBXBgNVHR8EUDBOMEygSqBIhkZyc3lu
+YzovL2xvY2FsaG9zdC9yZXBvL3RhLzM2OUFEMDE5MkM2NzRFNzgzMjIyQ0QzMjg1
+NjZCNzk0MTJCMThGMjYuY3JsMD4GCCsGAQUFBwELBDIwMDAuBggrBgEFBQcwC4Yi
+cnN5bmM6Ly9sb2NhbGhvc3QvdGEvYW4tb2JqZWN0LmFzYTAaBggrBgEFBQcBCAEB
+/wQLMAmgBzAFAgMA/mMwDQYJKoZIhvcNAQELBQADggEBACqgWrD692DUuN1jrriv
+SGqI7JqAtbqOSvnwxNGMlPZ6oTkarf4aDMJNcwqMaOUOzZPQ9VXA48h5R8TgvAub
+s/HJ263DLtPiScwkWqLZZs6Ius2zFothzDwWOoe/rHKiecCF0YpJqFhaa6dw6vsO
+zK77Ze+Gfa1SeeuI1DTwGDjiNBtXCaRxAPmvpYGxSKQmRYCIo6vKPSZlzCPqzEZa
+MVCmxdlaDQjVPUuWLbFV/bbZmS4wM1nbikt5WLZEVHMcAyqWOb7a3KO2GIIw0Ak9
+O6JgUoex/8y0s6smSWcRe2y9d6kAhT0COW1KvFoNM5lFKSe1rYqTtMFY33XfCI7e
+IgsxggGqMIIBpgIBA4AUK4fHb17u9iBE9Si4LJKbKNVXMqwwCwYJYIZIAWUDBAIB
+oGswGgYJKoZIhvcNAQkDMQ0GCyqGSIb3DQEJEAExMBwGCSqGSIb3DQEJBTEPFw0y
+NTAxMDYxMDI2NDhaMC8GCSqGSIb3DQEJBDEiBCCLMweRYDN5u5auRQYv6+Dx+b9X
+m1t5R3gkH9c3aX40gzANBgkqhkiG9w0BAQEFAASCAQATWDI3fYgku2fJPzFXAbnz
+IKabFMRvhp9LAhvl8oPkCp0zQu4SyJsdvoWxkpHKnXGwwdgub/d4GF0weoJgauDr
+ugUsB2e40aQwFoTyPcVuS/BirhlW5j0NwYovmuJ9GiBe67/sCRBaPC5sBKRBpOIv
+IpMpAe2QhaoeDUDc0KYCM42f1kFD+PD8PnlvXRisL3A3OFhB+0LY1Z3xivRAEdtf
+qzobZT0Hq6CIlAjNeocG0gMfJj/lFyElLkJdfGHzCWLnVNX2I+9GbDDdYV13cUTG
+yk5CFeQWetsX7D7XRNSdKwrrW6qWK/KxGF38SsuGeTyDQiNcOhwqvSfFc388ge/G
 ]]>
       </artwork>
     <t>
@@ -565,23 +566,23 @@ O3Niq7vO05r1PyS/pZqe+uwbV2gGQMcXwrvt
     </t>
     <artwork>
 <![CDATA[
-Object SHA256 hash:          s25yLaks3OXBzJcW3ZgvlLDiPUpyZbQk2jDHaPDgn1w=
-EE Subject key identifier:   E6:6F:34:7F:06:30:B3:FD:C5:88:50:FB:26:24:23:02:A6:75:45:84
-EE Certificate issuer:       /CN=caa805dbac364749b9b115590ab6ef0f970cdbd8
-EE Certificate serial:       A1C7752FF8B1D2E01F
-EE Authority key identifier: CA:A8:05:DB:AC:36:47:49:B9:B1:15:59:0A:B6:EF:0F:97:0C:DB:D8
-EE Authority info access:    rsync://rpki.ripe.net/repository/DEFAULT/yqgF26w2R0m5sRVZCrbvD5cM29g.cer
-EE Subject info access:      rsync://chloe.sobornost.net/rpki/RIPE-nljobsnijders/5m80fwYws_3FiFD7JiQjAqZ1RYQ.asa
-CMS Signing time:            Wed 07 Jun 2023 09:08:41 +0000
-EE notBefore:                Wed 07 Jun 2023 09:08:14 +0000
-EE notAfter:                 Thu 06 Jun 2024 09:08:14 +0000
+
+Object SHA256 hash:          S6B+jKOCFXPlRn7ws6Kd5tgpsSx609tJZpw60CVaf9Y=
+EE Subject key identifier:   2B:87:C7:6F:5E:EE:F6:20:44:F5:28:B8:2C:92:9B:28:D5:57:32:AC
+EE Certificate issuer:       /CN=root
+EE Certificate serial:       04
+EE Authority key identifier: 36:9A:D0:19:2C:67:4E:78:32:22:CD:32:85:66:B7:94:12:B1:8F:26
+EE Authority info access:    rsync://localhost/repo/369AD0192C674E783222CD328566B79412B18F26.cer
+EE Subject info access:      rsync://localhost/ta/an-object.asa
+CMS Signing time:            Mon 06 Jan 2025 10:26:48 +0000
+EE notBefore:                Mon 06 Jan 2025 10:26:48 +0000
+EE notAfter:                 Tue 06 Jan 2026 10:26:48 +0000
 
 ASPA eContent:
-  Customer AS:               15562
-  Provider Set:              1: AS: 2914
-                             2: AS: 8283
-                             3: AS: 51088
-                             4: AS: 206238
+  Customer AS:               65123
+  Provider Set:              1: AS: 64512
+                             2: AS: 65551
+                             3: AS: 4200000000
 ]]>
       </artwork>
     </section>
