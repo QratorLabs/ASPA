@@ -315,8 +315,8 @@
     <section anchor="Implementation" title="Implementation Considerations">
       <t>
         While the ASN.1 profile specified in <xref target="content"/> imposes no limit on the number of Provider ASes that can be listed for a given Customer ASID, consideration will need to be given to limitations existing in validators and elsewhere in the RPKI supply chain.
-        For example, the number of Provider ASes that can be listed in a single RPKI-To-Router protocol ASPA PDU (<xref target="I-D.ietf-sidrops-8210bis" section="5.12"/>) is constrained to be 2^30-12.
-        In addition to protocol limitations in the supply chain, locally defined restrictions could exist for the maximum file size a Relying Party implementation is willing to accept for a signed object.
+        For example, the number of Provider ASes that can be listed in a single RPKI-To-Router protocol ASPA PDU (following the Length field constraints in <xref target="I-D.ietf-sidrops-8210bis" section="5.1"/>) is 16,380 providers.
+        In addition to protocol limitations in the supply chain, locally defined restrictions could exist for the maximum file size of signed objects a Relying Party implementation is willing to accept.
       </t>
       <t>
         Relying Party implementations are RECOMMENDED to impose an upper bound on the number of Provider ASes for a given Customer ASID.
