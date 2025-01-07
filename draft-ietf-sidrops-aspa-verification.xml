@@ -73,7 +73,7 @@
       </address>
     </author>
     <author fullname="Job Snijders" initials="J." surname="Snijders">
-      <organization showOnFrontPage="true">Fastly</organization>
+      <organization />
       <address>
         <postal>
           <street/>
@@ -81,7 +81,7 @@
           <city>Amsterdam</city>
           <country>Netherlands</country>
         </postal>
-        <email>job@fastly.com</email>
+        <email>job@sobornost.net</email>
       </address>
     </author>
     <author fullname="Kotikalapudi Sriram" initials="K." surname="Sriram">
