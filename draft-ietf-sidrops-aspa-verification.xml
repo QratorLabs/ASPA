@@ -11,7 +11,7 @@
 <?rfc subcompact="no" ?>
 
 <rfc category="std"
-     docName="draft-ietf-sidrops-aspa-verification-20"
+     docName="draft-ietf-sidrops-aspa-verification-21"
      submissionType="IETF"
      consensus="true"
      ipr="trust200902">
@@ -190,11 +190,6 @@
         It may be noted that mutual transit is a special case of Complex relationship.
       </t>
       <t>
-        [xxx KS comment: I think using a MUST in the first sentence is sufficient to also cover the case in the second sentence.
-        So, using MUST again in the second sentence can be avoided. Also, we cannot say "two ASes MUST do foo".
-        Each AS is independent.]
-      </t>
-      <t>
         The ASes on the boundary of an AS Confederation MUST register ASPAs using the Confederation's global AS number (ASN) as the CAS.
       </t>
       <t>
@@ -243,7 +238,7 @@
                            | "No Attestation" if there is no entry
                            |   in U-SPAS table for CAS = AS x
                            |
-authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
+authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
                            \   for CAS = AS x includes AS y
                            |
                            | Else, "Not Provider+"
@@ -283,7 +278,7 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
         <t>
           Let the sequence {AS(N), AS(N-1),..., AS(2), AS(1)} represent the AS_PATH in terms of unique ASNs, where AS(1) is the origin AS and AS(N) is the most recently added AS and neighbor of the receiving/verifying AS.
           N is the length of the received AS_PATH in unique ASes.
-          Let AS(N+1) represent the receiving/verifying AS.
+          AS(N+1) represents the local (receiving/verifying) AS; it does not explicitly appear in the description of the AS path verification procedures.  
         </t>
         <t>
           <figure anchor="fig2" align="left" suppress-title="false" pn="figure-2">
@@ -306,7 +301,8 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
       Receiving & verifying AS (AS(N+1))
              (Customer)
 
-          Each ramp has consecutive customer-to-provider hops in the bottom-to-top direction
+          Each ramp has consecutive customer-to-provider hops
+          in the bottom-to-top direction
       ]]>
       </artwork>
           </figure>
@@ -416,6 +412,12 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
         </t>
       </section>
 
+      <section title="Examples" anchor="examples">
+        <t>
+         A set of examples of AS path verification using the above procedures (<xref target="principles"/>, <xref target="Upflow"/>, and <xref target="Downflow"/>) for an illustrative network topology are provided online (see <xref target="aspa-examples"/>).
+        </t>
+      </section>
+
       <section title="Mitigation Policy" anchor="mitigation">
         <t>
          The specific configuration of a mitigation policy based on AS_PATH verification using ASPA is at the discretion of the network operator.
@@ -463,7 +465,7 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
         </t>
         <t>
           If a Complex peering relation cannot be segregated (i.e., when a Complex BGP relationship occurs within one single BGP session),an operator may want to achieve an equivalent outcome by applying an appropriate algorithm (<xref target="Upflow"/> or <xref target="Downflow"/>) on a per-prefix basis corresponding to the peering relation for the prefix.
-          If this option is not feasible, the operator MAY apply the algorithm for downstream paths (<xref target="Downflow"/>) to avoid false positive outcomes.
+          If this option is not feasible, then the operator MAY apply the algorithm for downstream paths (<xref target="Downflow"/>) to avoid false positive outcomes.
         </t>
       </section>
 
@@ -485,15 +487,14 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
         </t>
       </section>
 
-      <section title="Provider as Trusted Point">
+      <section title="Manipulation of AS Path by Provider">
         <t>
-          Since an upstream provider becomes a trusted point, in theory, it might be able to propagate some instances of hijacked prefixes with forged-origin or forged-path-segment or even routes with manipulated AS_PATHs, and such attacks might go undetected by its customers or upper providers.
+          An upstream provider is a trusted party in theory. But it might be able to propagate some instances of hijacked prefixes with forged-origin or forged-path-segment or even routes with manipulated AS_PATHs, and such attacks might go undetected by its customers or upper providers.
         </t>
-        <t>
-          [xxx KS comment: I am a bit uncomfortable here with "Provider as Trusted Point". It is hard to define what that means.
-          Lower tier provider might be motivated by economic incentive or it could be a nation-state actor who wants to manipulate AS path to divert traffic.
-          My thought -- we drop the term "Provider as Trusted Point" and instead use "Manipulation of AS Path by Provider".]
-        </t>
+        <!--
+          [xxx KS comment: Alexander was willing to accept my suggestion, so made some edits above. 
+          Replace "Provider as Trusted Point" with "Manipulation of AS Path by Provider".]
+        -->
         <t>
           While such attacks may happen, it does not seem to be a realistic scenario.
           Normally a customer and their transit provider would have a signed agreement, and a policy violation (of the above kind) should have legal consequences or the customer can just drop the relationship with such a provider and remove the corresponding ASPA record.
@@ -524,16 +525,10 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
     <section title="Comparison to Other Technologies">
       <section title="ROA">
         <t>
-          ROAs <xref target="RFC6482"/> are digitally signed objects that bind an address to an AS number, and are signed by the address holder.
-          ROV procedure <xref target="RFC6483"/> works by verifying that an AS is authorized to originate a specific prefix.
-          The joint use of ROA and ASPA records and their corresponding verification procedures may establish security trusted chain capable to detect not only accidental route leaks but also AS_PATH manipulations <xref target="bgp-cycling"/>.
+          A ROA <xref target="RFC6482"/> is a digitally signed object that binds an IP prefix to an AS number and is signed by the prefix holder.
+          The RPKI-ROV procedure <xref target="RFC6483"/> <xref target="RFC6811"/> uses ROAs to verify that an AS is authorized to originate a specific prefix.
+          The joint use of ROA and ASPA records and their corresponding verification procedures can establish a security trusted chain capable of detecting not only route leaks but also AS_PATH manipulations <xref target="bgp-cycling"/>.
         </t>
-      <t>
-          [xxx KS comment: This new subsection seems like a brief repeat of what is said already in the first two paragraphs of Introduction (Sec. 1).
-          There we already talked about RPKI-ROV which is obviously based on ROAs.
-          The correct reference for ROV is RFC6811 which is standards track and not RFC6483 which is Informational.
-          I recommend deleting this subsection.]
-      </t>
       </section>
 
       <section title="BGPsec">
@@ -679,6 +674,16 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
         <seriesInfo name="NANOG-89, North American Network Operator Group Meeting," value="Slides/video archives from NANOG" />
       </reference>
 
+      <reference anchor="aspa-examples" target="https://github.com/ksriram25/IETF/blob/main/ASPA_path_verification_examples.pdf">
+        <front>
+          <title>ASPA-based AS Path Verification Examples</title>
+            <author initials="" surname="">
+              <organization></organization>
+            </author>
+            <date/>
+          </front>
+        </reference>
+
       <reference anchor="IANA-AF" target="https://www.iana.org/assignments/address-family-numbers/address-family-numbers.xhtml" quote-title="true">
         <front>
           <title>Address Family Numbers</title>
@@ -731,7 +736,7 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
 
     <section anchor="Acknowledgments" title="Acknowledgments">
       <t>
-        The authors wish to thank Claudio Jeker, Jakob Heitz, Amir Herzberg, Igor Lubashev, Ben Maddison, Russ Housley, Jeff Haas, Nan Geng, Nick Hilliard, Shunwan Zhuang, Yangyang Wang, Martin Hoffmann, Jay Borkenhagen, Amreesh Phokeer, Aftab Siddiqui, Dai Zhibin, Doug Montgomery, Padma Krishnaswamy, Rich Compton, Andrei Robachevsky, Rudiger Volk, Iljitsch van Beijnum, Tassilo Tanneberger, Matthias Waehlisch, Moritz Schulz, and Carl Seifert for comments, suggestions, and discussion on the path verification procedures or the text in the document.
+        The authors wish to thank Claudio Jeker, Jakob Heitz, Amir Herzberg, Igor Lubashev, Ben Maddison, Russ Housley, Jeff Haas, Nan Geng, Mingqing Huang, Nick Hilliard, Shunwan Zhuang, Yangyang Wang, Martin Hoffmann, Jay Borkenhagen, Amreesh Phokeer, Aftab Siddiqui, Dai Zhibin, Doug Montgomery, Padma Krishnaswamy, Rich Compton, Andrei Robachevsky, Rudiger Volk, Iljitsch van Beijnum, Tassilo Tanneberger, Matthias Waehlisch, Moritz Schulz, and Carl Seifert for comments, suggestions, and discussion on the path verification procedures or the text in the document.
         For the implementation and testing of the procedures in the document, the authors wish to thank Claudio Jeker and Theo Buehler <xref target="bgpd"/>, Kyehwan Lee and Oliver Borchert <xref target="BGP-SRx"/>, and Katerina Kubecova and Maria Matejka <xref target="BIRD"/>.
       </t>
     </section>
@@ -772,7 +777,7 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
              The ASPA-based path verification at AS B always detects such a forged-path-segment prefix hijack.
              For a chance to be successful (remain undetected by AS B), the hijacker may resort to a forged-path-segment with three ASes including a provider AS of AS P (or AS Q).
              But even that can be foiled (detected) if the providers of AS P and AS Q also register ASPA.
-             The forged-path-segment hijack in consideration is entirely prevented (for any forged-path-segment length) if all ASes in the contiguous C2P hops from AS A up to its Tier 1 have ASPA registrations.
+             The forged-path-segment hijack in consideration is entirely prevented (for any forged-path-segment length) if all ASes in the contiguous customer-to-provider (C2P) hops from AS A up to and including the topmost tier AS have ASPA registrations.
           </t>
         </list>
       </t>
