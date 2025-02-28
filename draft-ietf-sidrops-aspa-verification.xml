@@ -603,6 +603,10 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
           Implementation of ASPA-based AS path verification in the BIRD Internet Routing Daemon [BIRD] is provided in a side branch (branch mq-aspa) by Katerina Kubecova and Maria Matejka. 
           Its release is expected after RTR v2 is finalized.
         </li>
+        <li>
+          Implementation of ASPA-based AS path verification in the FreeRTR <xref target="FreeRTR"/> is provided by Csaba Mate. 
+          Csaba reports that this implementation has passsed all the unit tests listed in <xref target="aspa-examples"/>.
+        </li>
       </ul>
       </t>
     </section>
@@ -733,12 +737,18 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
           </front>
           <seriesInfo name="CZ.NIC BIRD Open-Source Software" value=""  />
         </reference>
+        <reference anchor="FreeRTR" target= "https://www.freertr.org/">
+          <front>
+            <title>FreeRTR </title>
+            <author initials="C." surname="Mate"><organization /></author>
+          </front>
+        </reference>
     </references>
 
     <section anchor="Acknowledgments" title="Acknowledgments">
       <t>
         The authors wish to thank Claudio Jeker, Jakob Heitz, Amir Herzberg, Igor Lubashev, Ben Maddison, Russ Housley, Jeff Haas, Nan Geng, Mingqing Huang, Nick Hilliard, Shunwan Zhuang, Yangyang Wang, Martin Hoffmann, Jay Borkenhagen, Amreesh Phokeer, Aftab Siddiqui, Dai Zhibin, Doug Montgomery, Padma Krishnaswamy, Rich Compton, Andrei Robachevsky, Rudiger Volk, Iljitsch van Beijnum, Tassilo Tanneberger, Matthias Waehlisch, Moritz Schulz, and Carl Seifert for comments, suggestions, and discussion on the path verification procedures or the text in the document.
-        For the implementation and testing of the procedures in the document, the authors wish to thank Claudio Jeker and Theo Buehler <xref target="bgpd"/>, Kyehwan Lee and Oliver Borchert <xref target="BGP-SRx"/>, and Katerina Kubecova and Maria Matejka <xref target="BIRD"/>.
+        For the implementation and testing of the procedures in the document, the authors wish to thank Claudio Jeker and Theo Buehler <xref target="bgpd"/>, Kyehwan Lee and Oliver Borchert <xref target="BGP-SRx"/>, Katerina Kubecova and Maria Matejka <xref target="BIRD"/>, and Csaba Mate <xref target="FreeRTR"/>.
       </t>
     </section>
 
