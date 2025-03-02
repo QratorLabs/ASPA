@@ -73,7 +73,7 @@
       </address>
     </author>
     <author fullname="Job Snijders" initials="J." surname="Snijders">
-      <organization showOnFrontPage="true">Fastly</organization>
+      <organization />
       <address>
         <postal>
           <street/>
@@ -81,7 +81,7 @@
           <city>Amsterdam</city>
           <country>Netherlands</country>
         </postal>
-        <email>job@fastly.com</email>
+        <email>job@sobornost.net</email>
       </address>
     </author>
     <author fullname="Kotikalapudi Sriram" initials="K." surname="Sriram">
@@ -273,7 +273,7 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
         See <xref target="mitigation"/> for how routes with Invalid AS_PATH are handled.
       </t>
 
-      <section title="Principles" anchor="principles">
+	  <section title="Principles" anchor="principles">
         <t>
           Let the sequence {AS(N), AS(N-1),..., AS(2), AS(1)} represent the AS_PATH in terms of unique ASNs, where AS(1) is the origin AS and AS(N) is the most recently added AS and neighbor of the receiving/verifying AS.
           N is the length of the received AS_PATH in unique ASes.
@@ -500,6 +500,12 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
         <t>
           Network operators must keep their ASPA objects correct and up to date (<xref target="rec1"/>).
           An incorrect or outdated ASPA may affect route propagation or limit route leak detection capabilities.
+        </t>
+        <t>
+          An ASPA-aware AS operator SHOULD periodically monitor all ASPAs in global RPKI repositories to check if their AS number is incorrectly included in the SPAS in an ASPA (cryptographically valid), and if so, they SHOULD report it to the responsible party (or parties) for resolution.
+        </t>
+        <t>
+          An ASPA-aware AS operator SHOULD periodically check if their AS number is incorrectly not included in the U-SPAS of a known CAS, and if so, they SHOULD report it to the CAS for resolution.
         </t>
       </section>
     </section>
