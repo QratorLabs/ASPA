@@ -11,7 +11,7 @@
 <?rfc subcompact="no" ?>
 
 <rfc category="std"
-     docName="draft-ietf-sidrops-aspa-verification-20"
+     docName="draft-ietf-sidrops-aspa-verification-21"
      submissionType="IETF"
      consensus="true"
      ipr="trust200902">
@@ -237,7 +237,7 @@
                            | "No Attestation" if there is no entry
                            |   in U-SPAS table for CAS = AS x
                            |
-authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
+authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
                            \   for CAS = AS x includes AS y
                            |
                            | Else, "Not Provider+"
@@ -277,7 +277,7 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
         <t>
           Let the sequence {AS(N), AS(N-1),..., AS(2), AS(1)} represent the AS_PATH in terms of unique ASNs, where AS(1) is the origin AS and AS(N) is the most recently added AS and neighbor of the receiving/verifying AS.
           N is the length of the received AS_PATH in unique ASes.
-          Let AS(N+1) represent the receiving/verifying AS.
+          AS(N+1) represents the local (receiving/verifying) AS; it does not explicitly appear in the description of the AS path verification procedures.  
         </t>
         <t>
           <figure anchor="fig2" align="left" suppress-title="false" pn="figure-2">
@@ -307,10 +307,11 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
         </t>
         <t>
           The AS_PATH may in general have both an up-ramp (on the right starting at AS(1)) and a down-ramp (on the left starting at AS(N)).
-          The up-ramp starts at AS(1) and each hop AS(i) to AS(i+1) represents Customer and Provider peering relationship.
+          The up-ramp starts at AS(1) and each hop AS(i) to AS(i+1) represents a customer-to-provider peering relationship.
           The down-ramp runs backward from AS(N) to AS(L).
-          In the down-ramp, each pair AS(j) to AS(j-1) represents Customer and Provider peering relationship.
-          If there are no hops or just one hop between the apexes of the up-ramp and the down-ramp, then the AS_PATH is valid (valley free).
+          In the down-ramp, each pair AS(j) to AS(j-1) represents a customer-to-provider peering relationship.
+          If the AS_PATH has no up-ramp, it means that K = 1.
+          If the AS_PATH has no down-ramp, it means that L = N.
         </t>
         <t>
           If the sum of lengths of up-ramp and down-ramp is less than N, it is invalid: the prefix was leaked or AS_PATH was malformed.
@@ -431,6 +432,12 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
         This section describes practical deployment recommendations.
       </t>
 
+      <section title="ASPA Verification Examples" anchor="examples">
+        <t>
+         A set of examples of AS path verification using the above procedures (<xref target="principles"/>, <xref target="Upflow"/>, and <xref target="Downflow"/>) for an illustrative network topology are provided online (see <xref target="aspa-examples"/>).
+        </t>
+      </section>
+
       <section title="Application of Verification Procedures" anchor="impl-verif">
         <t>
           The verification procedures described in this document MUST be applied to BGP routes with {AFI, SAFI} combinations {AFI 1 (IPv4), SAFI 1} and {AFI 2 (IPv6), SAFI 1} <xref target="IANA-AF"/> <xref target="IANA-SAF"/>.
@@ -456,8 +463,8 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
           If multiple eBGP sessions can segregate the Complex peering relationship into eBGP sessions with normal peering relationships the receiving/verifying AS SHOULD select the algorithm (per <xref target="Upflow"/> or <xref target="Downflow"/>) for each of the normal sessions based on its peering relation type.
         </t>
         <t>
-          If a Complex peering relation cannot be segregated (i.e., when a Complex BGP relationship occurs within one single BGP session),an operator may want to achieve an equivalent outcome by applying an appropriate algorithm (<xref target="Upflow"/> or <xref target="Downflow"/>) on a per-prefix basis corresponding to the peering relation for the prefix.
-          If this option is not feasible, the operator MAY apply the algorithm for downstream paths (<xref target="Downflow"/>) to avoid false positive outcomes.
+          If a Complex peering relation cannot be segregated (i.e., when a Complex BGP relationship occurs within one single BGP session), an operator may want to achieve an equivalent outcome by applying an appropriate algorithm (<xref target="Upflow"/> or <xref target="Downflow"/>) on a per-prefix basis corresponding to the peering relation for the prefix.
+          If this option is not feasible, then an operator MAY apply the algorithm for downstream paths (<xref target="Downflow"/>) to avoid false positive outcomes.
         </t>
       </section>
 
@@ -479,12 +486,14 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
         </t>
       </section>
 
-      <section title="Provider as Trusted Point">
+      <section title="Manipulation of AS Path by Provider">
         <t>
-          Since an upstream provider becomes a trusted point, in theory, it might be able to propagate some instances of hijacked prefixes with forged-origin or forged-path-segment or even routes with manipulated AS_PATHs, and such attacks might go undetected by its customers or upper providers.
+          A Provider may hijack prefixes of its direct or indirect customers by using forged-origin/forged-segment AS_PATH.
+          It may also manipulate AS_PATH of routes that are sent to its customers.
+          Such attacks will be not detectable with ASPA.
         </t>
         <t>
-          While such attacks may happen, it does not seem to be a realistic scenario.
+          While such attacks may happen in theory, it does not seem to be a realistic scenario.
           Normally a customer and their transit provider would have a signed agreement, and a policy violation (of the above kind) should have legal consequences or the customer can just drop the relationship with such a provider and remove the corresponding ASPA record.
         </t>
       </section>
@@ -513,9 +522,9 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
     <section title="Comparison to Other Technologies">
       <section title="ROA">
         <t>
-          ROAs <xref target="RFC6482"/> are digitally signed objects that bind an address to an AS number, and are signed by the address holder.
-          ROV procedure <xref target="RFC6483"/> works by verifying that an AS is authorized to originate a specific prefix.
-          The joint use of ROA and ASPA records and their corresponding verification procedures may establish security trusted chain capable to detect not only accidental route leaks but also AS_PATH manipulations <xref target="bgp-cycling"/>.
+          A ROA <xref target="RFC6482"/> is a digitally signed object that binds an IP prefix to an AS number and is signed by the prefix holder.
+          The RPKI-ROV procedure <xref target="RFC6483"/> <xref target="RFC6811"/> uses ROAs to verify that an AS is authorized to originate a specific prefix.
+          The joint use of ROA and ASPA records and their corresponding verification procedures can establish a security trusted chain capable of detecting not only accidental route leaks but also malicious AS_PATH manipulations <xref target="bgp-cycling"/>.
         </t>
       </section>
 
@@ -573,21 +582,25 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
         It is up to the individual working groups to use this information as they see fit".
       </t>
       <t>
-      <ul>
-        <li>
-          A BGP implementation <xref target="bgpd">OpenBGPD</xref> (version 7.8 and higher), written in C, was provided by Claudio Jeker, Theo Buehler, and Job Snijders.
-        </li>
-        <li>
-          The implementation NIST-BGP-SRx <xref target="BGP-SRx"/> is a software suite that provides a validation engine (BGP-SRx) and a Quagga-based BGP router (Quagga-SRx).
-          It includes unit test cases for testing the ASPA-based path verification.
-          It was provided by Oliver Borchert, Kyehwan Lee, and their colleagues at US NIST.
-          It requires some additional work to incorporate the latest changes in the draft specifications related to IXP RS AS and RS-client.
-        </li>
-        <li>
-          Implementation of ASPA-based AS path verification in the BIRD Internet Routing Daemon [BIRD] is provided in a side branch (branch mq-aspa) by Katerina Kubecova and Maria Matejka. 
-          Its release is expected after RTR v2 is finalized.
-        </li>
-      </ul>
+        <ul>
+          <li>
+            A BGP implementation <xref target="bgpd">OpenBGPD</xref> (version 7.8 and higher), written in C, was provided by Claudio Jeker, Theo Buehler, and Job Snijders.
+          </li>
+          <li>
+            The implementation NIST-BGP-SRx <xref target="BGP-SRx"/> is a software suite that provides a validation engine (BGP-SRx) and a Quagga-based BGP router (Quagga-SRx).
+            It includes unit test cases for testing the ASPA-based path verification.
+            It was provided by Oliver Borchert, Kyehwan Lee, and their colleagues at US NIST.
+            It requires some additional work to incorporate the latest changes in the draft specifications related to IXP RS AS and RS-client.
+          </li>
+          <li>
+            Implementation of ASPA-based AS path verification in the BIRD Internet Routing Daemon [BIRD] is provided in a side branch (branch mq-aspa) by Katerina Kubecova and Maria Matejka.
+            Its release is expected after RTR v2 is finalized.
+          </li>
+          <li>
+            Implementation of ASPA-based AS path verification in the FreeRTR <xref target="FreeRTR"/> is provided by Csaba Mate.
+            Csaba reports that this implementation has passsed all the unit tests listed in <xref target="aspa-examples"/>.
+          </li>
+        </ul>
       </t>
     </section>
   </middle>
@@ -609,15 +622,12 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
     </references>
 
     <references title="Informative References">
-      <?rfc include="reference.RFC.3779.xml"?>
-      <?rfc include="reference.RFC.5280.xml"?>
       <?rfc include="reference.RFC.8205.xml"?>
       <?rfc include="reference.RFC.7942.xml"?>
       <?rfc include="reference.RFC.9319.xml"?>
       <?rfc include="reference.RFC.6483.xml"?>
       <?rfc include="reference.I-D.ietf-grow-route-leak-detection-mitigation.xml"?>
       <?rfc include="reference.I-D.ietf-idr-deprecate-as-set-confed-set.xml"?>
-      <?rfc include="reference.I-D.ietf-sidrops-aspa-notation.xml"?>
       <reference anchor="Peerlock" target="https://www.nanog.org/sites/default/files/Snijders_Everyday_Practical_Bgp.pdf">
         <front>
           <title>Peerlock</title>
@@ -661,6 +671,16 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
         </front>
         <seriesInfo name="NANOG-89, North American Network Operator Group Meeting," value="Slides/video archives from NANOG" />
       </reference>
+
+      <reference anchor="aspa-examples" target="https://github.com/ksriram25/IETF/blob/main/ASPA_path_verification_examples.pdf">
+        <front>
+          <title>ASPA-based AS Path Verification Examples</title>
+            <author initials="" surname="">
+              <organization></organization>
+            </author>
+            <date/>
+          </front>
+        </reference>
 
       <reference anchor="IANA-AF" target="https://www.iana.org/assignments/address-family-numbers/address-family-numbers.xhtml" quote-title="true">
         <front>
@@ -710,12 +730,18 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
           </front>
           <seriesInfo name="CZ.NIC BIRD Open-Source Software" value=""  />
         </reference>
+        <reference anchor="FreeRTR" target= "http://www.freertr.org/">
+          <front>
+            <title>FreeRTR </title>
+            <author initials="C." surname="Mate"><organization /></author>
+          </front>
+        </reference>
     </references>
 
     <section anchor="Acknowledgments" title="Acknowledgments">
       <t>
-        The authors wish to thank Claudio Jeker, Jakob Heitz, Amir Herzberg, Igor Lubashev, Ben Maddison, Russ Housley, Jeff Haas, Nan Geng, Nick Hilliard, Shunwan Zhuang, Yangyang Wang, Martin Hoffmann, Jay Borkenhagen, Amreesh Phokeer, Aftab Siddiqui, Dai Zhibin, Doug Montgomery, Padma Krishnaswamy, Rich Compton, Andrei Robachevsky, Rudiger Volk, Iljitsch van Beijnum, Tassilo Tanneberger, Matthias Waehlisch, Moritz Schulz, and Carl Seifert for comments, suggestions, and discussion on the path verification procedures or the text in the document.
-        For the implementation and testing of the procedures in the document, the authors wish to thank Claudio Jeker and Theo Buehler <xref target="bgpd"/>, Kyehwan Lee and Oliver Borchert <xref target="BGP-SRx"/>, and Katerina Kubecova and Maria Matejka <xref target="BIRD"/>.
+        The authors wish to thank Claudio Jeker, Jakob Heitz, Amir Herzberg, Igor Lubashev, Ben Maddison, Russ Housley, Jeff Haas, Nan Geng, Mingqing Huang, Nick Hilliard, Shunwan Zhuang, Yangyang Wang, Martin Hoffmann, Jay Borkenhagen, Amreesh Phokeer, Aftab Siddiqui, Dai Zhibin, Doug Montgomery, Padma Krishnaswamy, Rich Compton, Andrei Robachevsky, Rudiger Volk, Iljitsch van Beijnum, Tassilo Tanneberger, Matthias Waehlisch, Moritz Schulz, and Carl Seifert for comments, suggestions, and discussion on the path verification procedures or the text in the document.
+        For the implementation and testing of the procedures in the document, the authors wish to thank Claudio Jeker and Theo Buehler <xref target="bgpd"/>, Kyehwan Lee and Oliver Borchert <xref target="BGP-SRx"/>, Katerina Kubecova and Maria Matejka <xref target="BIRD"/>, and Csaba Mate <xref target="FreeRTR"/>.
       </t>
     </section>
 
@@ -755,7 +781,7 @@ authorized(AS x, AS y) =  / Else, "Provider+" if the U-SPAS entry
              The ASPA-based path verification at AS B always detects such a forged-path-segment prefix hijack.
              For a chance to be successful (remain undetected by AS B), the hijacker may resort to a forged-path-segment with three ASes including a provider AS of AS P (or AS Q).
              But even that can be foiled (detected) if the providers of AS P and AS Q also register ASPA.
-             The forged-path-segment hijack in consideration is entirely prevented (for any forged-path-segment length) if all ASes in the contiguous C2P hops from AS A up to its Tier 1 have ASPA registrations.
+             The forged-path-segment hijack in consideration is entirely prevented (for any forged-path-segment length) if all ASes in the contiguous customer-to-provider (C2P) hops from AS A up to and including the topmost tier AS have ASPA registrations.
           </t>
         </list>
       </t>
