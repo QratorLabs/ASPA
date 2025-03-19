@@ -11,7 +11,7 @@
 <?rfc subcompact="no" ?>
 
 <rfc category="std"
-     docName="draft-ietf-sidrops-aspa-verification-21"
+     docName="draft-ietf-sidrops-aspa-verification-22"
      submissionType="IETF"
      consensus="true"
      ipr="trust200902">
@@ -286,36 +286,40 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
       <![CDATA[
 
                       AS(L) ............. AS(K)
-                       /                     \
-                   AS(L+1)                  AS(K-1)
-                      .                       .
+                      /                      \
                      .                         .
-      (down-ramp)   .                           .  (up-ramp)
+      (down-ramp)   .                           .   (up-ramp)
                    .                             .
-                  .                               .
-                AS(N-1)                          AS(2)
-                  /                                \
-               AS(N)                               AS(1)
-                /                                (Origin AS)
+                  /                               \
+               AS(N)                              AS(1)
+                /                               (Origin AS)
       Receiving & verifying AS (AS(N+1))
              (Customer)
 
-          Each ramp has consecutive customer-to-provider hops in the bottom-to-top direction
+          Each ramp has consecutive customer-to-provider hops
+          in the bottom-to-top direction
       ]]>
       </artwork>
           </figure>
         </t>
         <t>
           The AS_PATH may in general have both an up-ramp (on the right starting at AS(1)) and a down-ramp (on the left starting at AS(N)).
-          The up-ramp starts at AS(1) and each hop AS(i) to AS(i+1) represents a customer-to-provider peering relationship.
+          The up-ramp runs from AS(1) to AS(K).
+          In this ramp, each hop AS(i) to AS(i+1) represents a customer-to-provider peering relationship.
           The down-ramp runs backward from AS(N) to AS(L).
           In the down-ramp, each pair AS(j) to AS(j-1) represents a customer-to-provider peering relationship.
-          If the AS_PATH has no up-ramp, it means that K = 1.
-          If the AS_PATH has no down-ramp, it means that L = N.
         </t>
+
         <t>
-          If the sum of lengths of up-ramp and down-ramp is less than N, it is invalid: the prefix was leaked or AS_PATH was malformed.
+          In the valid AS_PATH the apex AS(L) and AS(K) may be two different ASes or one AS.
+          If they are the same AS, the up-ramp and down-ramp will have an overlap and the combined length of the up-ramp and down-ramp (measured in the number of ASes) will be equal to N+1.
+          If AS(L) and AS(K) are different ASes, the combined length of the up-ramp and down-ramp will be equal to N.
         </t>
+
+        <t>
+          Equivalently, if the combined length of the up-ramp and down-ramp is less than N the prefix was leaked or the AS_PATH was malformed.
+        </t>
+
         <t>
           ASPA can be used to check if AS y is an attested provider of AS x, and thus the provider authorization function can be used to measure the bounds on up-ramp and down-ramp lengths.
           The "Not Provider+" outcome of the provider authorization function can be used to calculate the upper boundary of ramp length and the 'No Attestation' outcome can be used to calculate its lower boundary.
@@ -489,8 +493,8 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
       <section title="Manipulation of AS Path by Provider">
         <t>
           A Provider may hijack prefixes of its direct or indirect customers by using forged-origin/forged-segment AS_PATH.
-          It may also manipulate AS_PATH of routes that are sent to its customers.
-          Such attacks will be not detectable with ASPA.
+          It may also manipulate the AS_PATH of routes that are sent to its customers.
+          Such attacks may not be detectable with ASPA.
         </t>
         <t>
           While such attacks may happen in theory, it does not seem to be a realistic scenario.
@@ -598,7 +602,7 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
           </li>
           <li>
             Implementation of ASPA-based AS path verification in the FreeRTR <xref target="FreeRTR"/> is provided by Csaba Mate.
-            Csaba reports that this implementation has passsed all the unit tests listed in <xref target="aspa-examples"/>.
+            Csaba reports that this implementation has passed all the unit tests listed in <xref target="aspa-examples"/>.
           </li>
         </ul>
       </t>
