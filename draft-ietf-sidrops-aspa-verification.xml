@@ -107,7 +107,7 @@
     <abstract>
       <t>
         This document describes procedures that make use of Autonomous System Provider Authorization (ASPA) objects in the Resource Public Key Infrastructure (RPKI) to verify the Border Gateway Protocol (BGP) AS_PATH attribute of advertised routes.
-        This AS_PATH verification enhances routing security by adding means to detect and mitigate route leaks and AS path manipulations.
+        This AS_PATH verification enhances routing security by adding means to detect and mitigate route leaks and AS_PATH manipulations.
       </t>
     </abstract>
 
@@ -180,13 +180,13 @@
 
     <section title="ASPA Registration Recommendations" anchor="rec1">
       <t>
-        A compliant AS or Route Server AS (RS AS) MUST have an ASPA.
+        An AS SHOULD register an ASPA.
         An AS MUST list in its SPAS the union of all its Provider AS(es) and non-transparent RS AS(es) at which it is an RS-client.
         An AS MUST include a Provider AS in its SPAS regardless of whether it provides connectivity for only IPv4 or only IPv6 or both.
       </t>
       <t>
-        In the Complex relationship case (<xref target="terminology"/> and <xref target="RFC9234"/>), a compliant AS MUST include the neighbor AS in its SPAS if the neighbor plays Provider role for all or a subset of received or sent prefixes.
-        Thus, if two compliant ASes are exporting both customer and non-customer routes to each other, each AS registers its ASPA including the other AS in its SPAS.
+        In the Complex relationship case (<xref target="terminology"/> and <xref target="RFC9234"/>), an AS MUST include the neighbor AS in its SPAS if the neighbor plays Provider role for all or a subset of received or sent prefixes.
+        Thus, if two ASes are exporting both customer and non-customer routes to each other, each AS registers its ASPA including the other AS in its SPAS.
       </t>
       <t>
         The ASes on the boundary of an AS Confederation MUST register ASPAs using the Confederation's global AS number (ASN) as the CAS.
@@ -198,10 +198,10 @@
         If that statement is true, then the AS MUST register an AS0 ASPA.
       </t>
       <t>
-        Normally, a SPAS (see <xref target="terminology"/>) is not expected to contain both an AS 0 and other Provider ASes, but an unexpected presence of AS 0 has no influence on the AS path verification procedures (see <xref target="pair-validation"/>, <xref target="verif"/>).
+        Normally, a SPAS (see <xref target="terminology"/>) is not expected to contain both an AS 0 and other Provider ASes, but an unexpected presence of AS 0 has no influence on the AS_PATH verification procedures (see <xref target="pair-validation"/>, <xref target="verif"/>).
       </t>
       <t>
-        A compliant AS SHOULD register a single ASPA object.
+        An AS SHOULD register a single ASPA object.
         A single ASPA record for an AS ought to prevent race conditions during ASPA updates that might affect prefix propagation.
         The CA software that provides hosting for ASPA records SHOULD support enforcement of this practice.
       </t>
@@ -256,16 +256,14 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
     <section title="AS_PATH Verification" anchor="verif">
       <t>
         The procedures described in this document are applicable only to four-octet AS number compatible BGP speakers <xref target="RFC6793"/>.
-        If such a BGP speaker receives both AS_PATH and AS4_PATH attributes in an UPDATE, then the procedures are applied on the reconstructed AS path (Section 4.2.3 of <xref target="RFC6793"/>).
-        So, the term AS_PATH is used in this document to refer to the usual AS_PATH <xref target="RFC4271"/> as well as the reconstructed AS path.
+        If such a BGP speaker receives both AS_PATH and AS4_PATH attributes in an UPDATE, then the procedures are applied on the reconstructed AS_PATH (Section 4.2.3 of <xref target="RFC6793"/>).
+        So, the term AS_PATH is used in this document to refer to the usual AS_PATH <xref target="RFC4271"/> as well as the reconstructed AS_PATH.
       </t>
       <t>
         If an attacker creates a route leak intentionally, they may try to strip their AS from the AS_PATH.
         To partly guard against that, a check is necessary to match the most recently added AS in the AS_PATH to the BGP neighbor's ASN.
-        This check MUST be performed as specified in Section 6.3 of <xref target="RFC4271"/>.
-        If the check fails, then the AS_PATH is considered a Malformed AS_PATH and the UPDATE is considered to be in error (Section 6.3 of <xref target="RFC4271"/>).
-        The case of transparent RS MUST also be appropriately taken care of (e.g., by suspending the neighbor ASN check).
-        If the AS_PATH is empty (zero length), then also the UPDATE is considered to be an error.
+        This check SHOULD be performed as specified in Section 6.3 of <xref target="RFC4271"/> with the exception when a route is received from transparent IX.
+        If the check fails, then the AS_PATH is considered a Malformed AS_PATH and the UPDATE SHALL be handled using the approach of "treat-as-withdraw" <xref target="RFC7606"/>.
       </t>
       <t>
         <xref target="I-D.ietf-idr-deprecate-as-set-confed-set"/> specifies that "treat-as-withdraw" error handling <xref target="RFC7606"/> SHOULD be applied to routes with AS_SET in the AS_PATH.
@@ -277,7 +275,7 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
         <t>
           Let the sequence {AS(N), AS(N-1),..., AS(2), AS(1)} represent the AS_PATH in terms of unique ASNs, where AS(1) is the origin AS and AS(N) is the most recently added AS and neighbor of the receiving/verifying AS.
           N is the length of the received AS_PATH in unique ASes.
-          AS(N+1) represents the local (receiving/verifying) AS; it does not explicitly appear in the description of the AS path verification procedures.  
+          AS(N+1) represents the local (receiving/verifying) AS; it does not explicitly appear in the description of the AS_PATH verification procedures.
         </t>
         <t>
           <figure anchor="fig2" align="left" suppress-title="false" pn="figure-2">
@@ -343,9 +341,9 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
         </t>
 
         <t>
-          If the sum of max_up_ramp and max_down_ramp is less than N, the AS path is Invalid.
-          Else, if the sum of min_up_ramp and min_down_ramp is less than N, enough information is not available to perform full AS path verification, and the outcome is set to Unknown.
-          Else, the AS path is Valid.
+          If the sum of max_up_ramp and max_down_ramp is less than N, the AS_PATH is Invalid.
+          Else, if the sum of min_up_ramp and min_down_ramp is less than N, enough information is not available to perform full AS_PATH verification, and the outcome is set to Unknown.
+          Else, the AS_PATH is Valid.
         </t>
 
         <t>
@@ -418,7 +416,7 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
       <section title="Mitigation Policy" anchor="mitigation">
         <t>
          The specific configuration of a mitigation policy based on AS_PATH verification using ASPA is at the discretion of the network operator.
-         However, the following mitigation policy is highly recommended.
+         However, the following mitigation policy is RECOMMENDED.
         </t>
         <t>
         <strong>Invalid</strong>:
@@ -433,12 +431,12 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
 
     <section title="Deployment Recommendations" anchor="deployment">
       <t>
-        This section describes practical deployment recommendations.
+        This section describes practical deployment recommendations for applying verification procedures.
       </t>
 
       <section title="ASPA Verification Examples" anchor="examples">
         <t>
-         A set of examples of AS path verification using the above procedures (<xref target="principles"/>, <xref target="Upflow"/>, and <xref target="Downflow"/>) for an illustrative network topology are provided online (see <xref target="aspa-examples"/>).
+         A set of examples of AS_PATH verification using the above procedures (<xref target="principles"/>, <xref target="Upflow"/>, and <xref target="Downflow"/>) for an illustrative network topology are provided online (see <xref target="aspa-examples"/>).
         </t>
       </section>
 
@@ -457,7 +455,7 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
       <section title="BGP Roles" anchor="role">
         <t>
           The BGP Role configuration parameter and its cross-check in BGP OPEN message as specified in <xref target="RFC9234"/> are RECOMMENDED.
-          The configured BGP Roles SHOULD be used to automate the use of the above-described AS path verification procedures helping to distinguish whether upstream or downstream procedures should be applied.
+          The configured BGP Roles SHOULD be used to automate the use of the above-described AS_PATH verification procedures helping to distinguish whether upstream or downstream procedures should be applied.
           The automatic BGP Role cross-check <xref target="RFC9234"/> should facilitate more accurate and effective deployment of ASPA. 
         </t>
       </section>
@@ -490,7 +488,17 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
         </t>
       </section>
 
-      <section title="Manipulation of AS Path by Provider">
+      <section title="Correctness of the ASPA">
+        <t>
+          Network operators must keep their ASPA objects correct and up to date (<xref target="rec1"/>).
+          An incorrect or outdated ASPA may affect route propagation or limit route leak detection capabilities.
+        </t>
+        <t>
+          An AS SHOULD periodically monitor all ASPAs in global RPKI repositories to check if their AS number is included in the SPAS of their Customer ASes.
+        </t>
+      </section>
+
+      <section title="Manipulation of AS_PATH by Provider">
         <t>
           A Provider may hijack prefixes of its direct or indirect customers by using forged-origin/forged-segment AS_PATH.
           It may also manipulate the AS_PATH of routes that are sent to its customers.
@@ -504,26 +512,13 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
 
       <section anchor="prepend" title="Manipulating AS_PATH Prepends">
         <t>
-          The ASPA verification procedures cannot detect the removal (or addition) of repeats of AS numbers in the AS path.
+          The ASPA verification procedures cannot detect the removal (or addition) of repeats of AS numbers in the AS_PATH.
           However, this attack by itself does not affect ASPA's route leak detection capability.
-        </t>
-      </section>
-
-      <section title="Correctness of the ASPA">
-        <t>
-          Network operators must keep their ASPA objects correct and up to date (<xref target="rec1"/>).
-          An incorrect or outdated ASPA may affect route propagation or limit route leak detection capabilities.
-        </t>
-        <t>
-          An ASPA-aware AS operator SHOULD periodically monitor all ASPAs in global RPKI repositories to check if their AS number is incorrectly included in the SPAS in an ASPA (cryptographically valid), and if so, they SHOULD report it to the responsible party (or parties) for resolution.
-        </t>
-        <t>
-          An ASPA-aware AS operator SHOULD periodically check if their AS number is incorrectly not included in the U-SPAS of a known CAS, and if so, they SHOULD report it to the CAS for resolution.
         </t>
       </section>
     </section>
 
-    <section title="Comparison to Other Technologies">
+    <section title="Relation to Other Technologies">
       <section title="ROA">
         <t>
           A ROA <xref target="RFC6482"/> is a digitally signed object that binds an IP prefix to an AS number and is signed by the prefix holder.
@@ -597,11 +592,11 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
             It requires some additional work to incorporate the latest changes in the draft specifications related to IXP RS AS and RS-client.
           </li>
           <li>
-            Implementation of ASPA-based AS path verification in the BIRD Internet Routing Daemon [BIRD] is provided in a side branch (branch mq-aspa) by Katerina Kubecova and Maria Matejka.
+            Implementation of ASPA-based AS_PATH verification in the BIRD Internet Routing Daemon [BIRD] is provided in a side branch (branch mq-aspa) by Katerina Kubecova and Maria Matejka.
             Its release is expected after RTR v2 is finalized.
           </li>
           <li>
-            Implementation of ASPA-based AS path verification in the FreeRTR <xref target="FreeRTR"/> is provided by Csaba Mate.
+            Implementation of ASPA-based AS_PATH verification in the FreeRTR <xref target="FreeRTR"/> is provided by Csaba Mate.
             Csaba reports that this implementation has passed all the unit tests listed in <xref target="aspa-examples"/>.
           </li>
         </ul>
@@ -753,7 +748,7 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
       <t>
         The ASPA method has the properties (i.e., anomaly detection capabilities) listed below.
         Partial deployment scenarios and early adoption benefits are considered.
-        In the case of Property 1, it is assumed that the attacks involve route leaks but not malicious removal of ASes with ASPA records from the AS path.
+        In the case of Property 1, it is assumed that the attacks involve route leaks but not malicious removal of ASes with ASPA records from the AS_PATH.
       </t>
       <t>
         <list style="">
