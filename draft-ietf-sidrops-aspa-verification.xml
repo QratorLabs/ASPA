@@ -586,6 +586,9 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
             A BGP implementation <xref target="bgpd">OpenBGPD</xref> (version 7.8 and higher), written in C, was provided by Claudio Jeker, Theo Buehler, and Job Snijders.
           </li>
           <li>
+            <xref target="RTRlib">RTRLib provides an implementation of version 22 in C. The implementation was created by Tassilo Tanneberger, Carl Seifer, Moritz Schulz, Matthias Braeuer supervised by Thomas Schmidt and Matthias Waehlisch and reviewed by Fabian Holler.
+          </li>
+          <li>
             The implementation NIST-BGP-SRx <xref target="BGP-SRx"/> is a software suite that provides a validation engine (BGP-SRx) and a Quagga-based BGP router (Quagga-SRx).
             It includes unit test cases for testing the ASPA-based path verification.
             It was provided by Oliver Borchert, Kyehwan Lee, and their colleagues at US NIST.
@@ -660,6 +663,19 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
           <date month="October" year="2019"/>
         </front>
         <seriesInfo name="NANOG-76, North American Network Operator Group Meeting," value="Slides archives from NANOG" />
+      </reference>
+
+      <reference anchor="RTRlib" target= "https://rtrlib.realmv6.org/">
+        <front>
+          <title> RTRlib. The RPKI RTR Client C Library. </title>
+          <author initials="M." surname="Braeuer"><organization /></author>
+          <author initials="F." surname="Holler"><organization /></author>
+          <author initials="C." surname="Seifert"><organization /></author>
+          <author initials="T." surname="Schmidt"><organization /></author>
+          <author initials="M." surname="Schulz"><organization /></author>
+          <author initials="T." surname="Tanneberger"><organization /></author>
+          <author initials="M." surname="Waehlisch"><organization /></author>
+        </front>
       </reference>
 
       <reference anchor="nanog-aspa" target="https://storage.googleapis.com/site-media-prod/meetings/NANOG89/4809/20231017_Sriram_Aspa-Based_Bgp_As_Path_v1.pdf (slides)  https://www.youtube.com/watch?v=GdVnZGd7jMo (video)">
