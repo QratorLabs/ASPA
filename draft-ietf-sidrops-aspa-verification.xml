@@ -638,7 +638,7 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
       <t>
         <ul>
           <li>
-            Cisco has reported an engineering implementation of ASPA in their IOS-XR 24.3.2 release.
+            In 2025, Cisco has reported an Early Field Trial implementation of ASPA based on their IOS-XR. 
           </li>
           <li>
             A BGP implementation <xref target="bgpd">OpenBGPD</xref> (version 7.8 and higher), written in C, was provided by Claudio Jeker, Theo Buehler, and Job Snijders.
