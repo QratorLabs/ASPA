@@ -11,7 +11,7 @@
 <?rfc subcompact="no" ?>
 
 <rfc category="std"
-     docName="draft-ietf-sidrops-aspa-verification-23"
+     docName="draft-ietf-sidrops-aspa-verification-24"
      submissionType="IETF"
      consensus="true"
      ipr="trust200902">
@@ -471,10 +471,8 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
       <section title="AS Migration" anchor="migration">
         <t>
           During AS migration, an AS is in a transition phase when it may be configured at eBGP neighbor ASes with its globally configured ASN (i.e., migrated ASN) or a legacy ASN <xref target="RFC7705"/>.
-          So, both globally configured ASN and legacy ASN are in use. During this time, the AS MUST register ASPAs having customer AS (CAS) value equal to the globally configured ASN and register separate ASPAs (as appropriate) with CAS value equal to the legacy ASN.
-          The AS MUST communicate with its customer ASes that know only the legacy ASN to inform them about the globally configured ASN. 
-          The communication MUST include advice to register ASPAs including both the globally configured ASN and the legacy ASN in the SPAS. 
-          The communication may be in any form (e.g., email) mutually preferred by the concerned parties.
+          The AS operator MUST notify its customer ASes and advise them to update ASPA records to include both the globally configured ASN and the legacy ASN in their SPAS.
+          For any existing or new ASPA records of their own, the AS operator MUST also ensure that the ASPAs correctly reflect the effects of their AS migration procedures (e.g., <xref target="RFC7705"/>).
         </t>
       </section>
 
@@ -504,7 +502,7 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
           Similar problems may arise from BGP Role misconfiguration when used to determine the ASPA verification algorithm (<xref target="verif"/>).
         </t>
         <t>
-          Therefore, an AS SHOULD deploy one or both proactive measures described below in <xref target="periodic"/> and <xref target="router-tool"/> to prevent mismatch between BGP session configuration and ASPA. 
+          Therefore, an AS should deploy one or both proactive measures described below in <xref target="periodic"/> and <xref target="router-tool"/> to prevent mismatch between BGP session configuration and ASPA. 
           Further, <xref target="creation"/> provides recommendations for the broader community of   participants in routing security.  
         </t>
       <section anchor="periodic" title="Periodic Monitoring">
