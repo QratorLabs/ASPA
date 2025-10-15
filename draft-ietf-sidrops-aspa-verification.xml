@@ -11,7 +11,7 @@
 <?rfc subcompact="no" ?>
 
 <rfc category="std"
-     docName="draft-ietf-sidrops-aspa-verification-22"
+     docName="draft-ietf-sidrops-aspa-verification-24"
      submissionType="IETF"
      consensus="true"
      ipr="trust200902">
@@ -262,19 +262,18 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
       <t>
         If an attacker creates a route leak intentionally, they may try to strip their AS from the AS_PATH.
         To partly guard against that, a check is necessary to match the most recently added AS in the AS_PATH to the BGP neighbor's ASN.
-        This check SHOULD be performed as specified in Section 6.3 of <xref target="RFC4271"/> with the exception when a route is received from transparent IX.
+        This check SHOULD be performed as specified in Section 6.3 of <xref target="RFC4271"/> with the exception when a route is received from a transparent IX.
         If the check fails, then the AS_PATH is considered a Malformed AS_PATH and the UPDATE SHALL be handled using the approach of "treat-as-withdraw" <xref target="RFC7606"/>.
       </t>
       <t>
-        <xref target="I-D.ietf-idr-deprecate-as-set-confed-set"/> specifies that "treat-as-withdraw" error handling <xref target="RFC7606"/> SHOULD be applied to routes with AS_SET in the AS_PATH.
+        <xref target="RFC9774"/> specifies that "treat-as-withdraw" error handling <xref target="RFC7606"/> MUST be applied to routes with AS_SET in the AS_PATH.
         In the current document, routes with AS_SET are given Invalid evaluation in the AS_PATH verification procedures (<xref target="Upflow"/> and <xref target="Downflow"/>).
         See <xref target="mitigation"/> for how routes with Invalid AS_PATH are handled.
       </t>
 
-	  <section title="Principles" anchor="principles">
+      <section title="Principles" anchor="principles">
         <t>
-          Let the sequence {AS(N), AS(N-1),..., AS(2), AS(1)} represent the AS_PATH in terms of unique ASNs, where AS(1) is the origin AS and AS(N) is the most recently added AS and neighbor of the receiving/verifying AS.
-          N is the length of the received AS_PATH in unique ASes.
+          Let the sequence COMPRESSED_AS_PATH {AS(N), AS(N-1),..., AS(2), AS(1)} represent the AS_PATH in terms of unique ASNs, where AS(1) is the origin AS and AS(N) is the most recently added AS and neighbor of the receiving/verifying AS.
           AS(N+1) represents the local (receiving/verifying) AS; it does not explicitly appear in the description of the AS_PATH verification procedures.
         </t>
         <t>
@@ -300,22 +299,22 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
       </artwork>
           </figure>
         </t>
+
         <t>
-          The AS_PATH may in general have both an up-ramp (on the right starting at AS(1)) and a down-ramp (on the left starting at AS(N)).
+          The COMPRESSED_AS_PATH may in general have both an up-ramp (on the right starting at AS(1)) and a down-ramp (on the left starting at AS(N)).
           The up-ramp runs from AS(1) to AS(K).
           In this ramp, each hop AS(i) to AS(i+1) represents a customer-to-provider peering relationship.
           The down-ramp runs backward from AS(N) to AS(L).
           In the down-ramp, each pair AS(j) to AS(j-1) represents a customer-to-provider peering relationship.
+          AS(K) is the apex of the up-ramp, and AS(L) is the apex of the down-ramp.
+          If the COMPRESSED_AS_PATH has no up-ramp, it results in that K = 1.
+          If the COMPRESSED_AS_PATH has no down-ramp, it results in that L = N.
         </t>
 
         <t>
-          In the valid AS_PATH the apex AS(L) and AS(K) may be two different ASes or one AS.
-          If they are the same AS, the up-ramp and down-ramp will have an overlap and the combined length of the up-ramp and down-ramp (measured in the number of ASes) will be equal to N+1.
-          If AS(L) and AS(K) are different ASes, the combined length of the up-ramp and down-ramp will be equal to N.
-        </t>
-
-        <t>
-          Equivalently, if the combined length of the up-ramp and down-ramp is less than N the prefix was leaked or the AS_PATH was malformed.
+          The AS_PATH is invalid if apexes of the up-ramp and down-ramp (AS(K) and AS(L), respectively) of COMPRESSED_AS_PATH are apart by more than one hop; else, it is valid.
+          In other words, if the combined length of the up-ramp and down-ramp of COMPRESSED_AS_PATH is equal to N or greater, the AS_PATH is valid (route leak free).
+          If the combined length is less than N, the prefix was leaked or the AS_PATH was malformed (i.e., the AS_PATH is invalid).
         </t>
 
         <t>
@@ -326,17 +325,18 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
 
         <t>
           Determine the maximum up-ramp length as I, where I is the minimum index for which authorized(A(I), A(I+1)) returns "Not Provider+".
-          If there is no such I, the maximum up-ramp length is set equal to the AS_PATH length N.
+          If there is no such I, the maximum up-ramp length is set equal to the COMPRESSED_AS_PATH length N.
           This parameter is abbreviated as max_up_ramp.
           The minimum up-ramp length can be determined as I, where I is the minimum index for which authorized(A(I), A(I+1)) returns "No Attestation" or "Not Provider+".
-          If there is no such I, the AS_PATH consists of only "Provider+" pairs; so the minimum up-ramp length is set equal to the AS_PATH length N.
+          If there is no such I, the COMPRESSED_AS_PATH consists of only "Provider+" pairs; so the minimum up-ramp length is set equal to the COMPRESSED_AS_PATH length N.
           This parameter is abbreviated as min_up_ramp.
         </t>
+
         <t>
           Similarly, the maximum down-ramp length can be determined as N - J + 1 where J is the maximum index for which authorized(A(J), A(J-1)) returns "Not Provider+".
-          If there is no such J, the maximum down-ramp length is set equal to the AS_PATH length N.
+          If there is no such J, the maximum down-ramp length is set equal to the COMPRESSED_AS_PATH length N.
           This parameter is abbreviated as max_down_ramp.
-          The minimum down-ramp length can be determined as N - J + 1 where J is the maximum index for which authorized(A(J), A(J-1)) returns "No Attestation" or "Not Provider+". If there is no such J, the minimum down-ramp length is set equal to the AS_PATH length N.
+          The minimum down-ramp length can be determined as N - J + 1 where J is the maximum index for which authorized(A(J), A(J-1)) returns "No Attestation" or "Not Provider+". If there is no such J, the minimum down-ramp length is set equal to the COMPRESSED_AS_PATH length N.
           This parameter is abbreviated as min_down_ramp.
         </t>
 
@@ -348,14 +348,14 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
 
         <t>
           Below are formal procedures for path verification depending on the peering relationship between the receiving AS and its neighbor.
-          These procedures use the compressed sequence representation of AS_PATH {AS(N), AS(N-1),..., AS(2), AS(1)} and the above-defined parameters max_up_ramp, min_up_ramp, max_down_ramp, and min_up_ramp
+          These procedures use COMPRESSED_AS_PATH and the above-defined parameters max_up_ramp, min_up_ramp, max_down_ramp, and min_up_ramp.
         </t>
       </section>
 
       <section title="Algorithm for Upstream Paths" anchor="Upflow">
         <t>
           The upstream verification algorithm described here is applied when a route is received from a Customer or Peer, or is received by an RS from an RS-client, or is received by an RS-client from an RS.
-          In all these cases, the receiving/validating eBGP router expects the AS_PATH to have only an up-ramp (no down-ramp) for it to be Valid.
+          In all these cases, the receiving/validating eBGP router expects the COMPRESSED_AS_PATH to have only an up-ramp (no down-ramp) for it to be Valid.
           Therefore, max_down_ramp and min_down_ramp are set to 0.
         </t>
         <t>
@@ -436,7 +436,7 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
 
       <section title="ASPA Verification Examples" anchor="examples">
         <t>
-         A set of examples of AS_PATH verification using the above procedures (<xref target="principles"/>, <xref target="Upflow"/>, and <xref target="Downflow"/>) for an illustrative network topology are provided online (see <xref target="aspa-examples"/>).
+         A set of examples of AS_PATH verification using the above procedures (<xref target="principles"/>, <xref target="Upflow"/>, and <xref target="Downflow"/>) for illustrative network topologies are provided online (see <xref target="aspa-examples"/>).
         </t>
       </section>
 
@@ -470,6 +470,13 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
         </t>
       </section>
 
+      <section title="AS Migration" anchor="migration">
+        <t>
+          During AS migration, an AS is in a transition phase when it may be configured at eBGP neighbor ASes with its globally configured ASN (i.e., migrated ASN) or a legacy ASN <xref target="RFC7705"/>.
+          The AS operator MUST notify its customer ASes and advise them to update ASPA records to include both the globally configured ASN and the legacy ASN in their SPAS.
+        </t>
+      </section>
+
       <section title="Logging" anchor="logging">
         <t>
           For any route with an Invalid AS_PATH, the cause of the Invalid state SHOULD be logged for monitoring and diagnostic purposes.
@@ -490,11 +497,12 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
 
       <section title="Correctness of the ASPA">
         <t>
-          Network operators must keep their ASPA objects correct and up to date (<xref target="rec1"/>).
-          An incorrect or outdated ASPA may affect route propagation or limit route leak detection capabilities.
+          Network operators must keep their ASPA objects correct and up to date (<xref target="rec1"/>). 
+          If a provider is included erroneously in the ASPA, route leak detection capabilities are reduced.
+          If a provider is missing from the ASPA, routes may become falsely ASPA Invalid later on.
         </t>
         <t>
-          An AS SHOULD periodically monitor all ASPAs in global RPKI repositories to check if their AS number is included in the SPAS of their Customer ASes.
+          Providers should monitor that their AS number is included in the SPAS of their Customer ASes.
         </t>
       </section>
 
@@ -572,7 +580,8 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
         The inclusion of this section here follows the process described in <xref target="RFC7942"/>.
         The description of implementations in this section is intended to assist the IETF in its decision processes in progressing drafts to RFCs.
         Please note that the listing of any individual implementation here does not imply endorsement by the IETF.
-        Furthermore, no effort has been spent to verify the information presented here that was supplied by IETF contributors.
+        Furthermore, no effort has been spent to independently verify the information presented here that was supplied by IETF contributors.
+        Most contributors have reported that they verified their implementations using the test cases provided in <xref target="aspa-examples"/>.  
         This is not intended as, and must not be construed to be, a catalog of available implementations or their features.
         Readers are advised to note that other implementations may exist.
       </t>
@@ -583,21 +592,26 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
       <t>
         <ul>
           <li>
+            In 2025, Cisco has reported an Early Field Trial implementation of ASPA based on their IOS-XR. 
+          </li>
+          <li>
             A BGP implementation <xref target="bgpd">OpenBGPD</xref> (version 7.8 and higher), written in C, was provided by Claudio Jeker, Theo Buehler, and Job Snijders.
+          </li>
+          <li>
+            Implementation of ASPA-based AS_PATH verification in the BIRD Internet Routing Daemon <xref target="BIRD"/> is provided in a side branch (branch mq-aspa) by Katerina Kubecova and Maria Matejka.
+            Its release is expected after RTR v2 is finalized.
+          </li>
+          <li>
+            RTRLib <xref target="RTRlib"/> provides an implementation of version 22 in C. The implementation was created by Tassilo Tanneberger, Carl Seifer, Moritz Schulz, Matthias Braeuer supervised by Thomas Schmidt and Matthias Waehlisch and reviewed by Fabian Holler.
           </li>
           <li>
             The implementation NIST-BGP-SRx <xref target="BGP-SRx"/> is a software suite that provides a validation engine (BGP-SRx) and a Quagga-based BGP router (Quagga-SRx).
             It includes unit test cases for testing the ASPA-based path verification.
             It was provided by Oliver Borchert, Kyehwan Lee, and their colleagues at US NIST.
-            It requires some additional work to incorporate the latest changes in the draft specifications related to IXP RS AS and RS-client.
-          </li>
-          <li>
-            Implementation of ASPA-based AS_PATH verification in the BIRD Internet Routing Daemon [BIRD] is provided in a side branch (branch mq-aspa) by Katerina Kubecova and Maria Matejka.
-            Its release is expected after RTR v2 is finalized.
+            The current implementation does not support IXP/RS enhancements to the algorithm.
           </li>
           <li>
             Implementation of ASPA-based AS_PATH verification in the FreeRTR <xref target="FreeRTR"/> is provided by Csaba Mate.
-            Csaba reports that this implementation has passed all the unit tests listed in <xref target="aspa-examples"/>.
           </li>
         </ul>
       </t>
@@ -613,10 +627,11 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
       <?rfc include="reference.RFC.4271.xml"?>
       <?rfc include="reference.RFC.6793.xml"?>
       <?rfc include="reference.RFC.7606.xml"?>
+      <?rfc include="reference.RFC.7705.xml"?>
       <?rfc include="reference.RFC.7908.xml"?>
       <?rfc include="reference.RFC.8174.xml"?>
       <?rfc include="reference.RFC.9234.xml"?>
-      <?rfc include="reference.RFC.9324.xml"?>
+      <?rfc include="reference.RFC.9774.xml"?>
       <?rfc include="reference.I-D.ietf-sidrops-aspa-profile.xml"?>
     </references>
 
@@ -624,9 +639,9 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
       <?rfc include="reference.RFC.8205.xml"?>
       <?rfc include="reference.RFC.7942.xml"?>
       <?rfc include="reference.RFC.9319.xml"?>
+      <?rfc include="reference.RFC.9324.xml"?>
       <?rfc include="reference.RFC.6483.xml"?>
       <?rfc include="reference.I-D.ietf-grow-route-leak-detection-mitigation.xml"?>
-      <?rfc include="reference.I-D.ietf-idr-deprecate-as-set-confed-set.xml"?>
       <reference anchor="Peerlock" target="https://www.nanog.org/sites/default/files/Snijders_Everyday_Practical_Bgp.pdf">
         <front>
           <title>Peerlock</title>
@@ -660,6 +675,19 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
           <date month="October" year="2019"/>
         </front>
         <seriesInfo name="NANOG-76, North American Network Operator Group Meeting," value="Slides archives from NANOG" />
+      </reference>
+
+      <reference anchor="RTRlib" target= "https://rtrlib.realmv6.org/">
+        <front>
+          <title> RTRlib - The RPKI RTR Client C Library. </title>
+          <author initials="M." surname="Braeuer"><organization /></author>
+          <author initials="F." surname="Holler"><organization /></author>
+          <author initials="C." surname="Seifert"><organization /></author>
+          <author initials="T." surname="Schmidt"><organization /></author>
+          <author initials="M." surname="Schulz"><organization /></author>
+          <author initials="T." surname="Tanneberger"><organization /></author>
+          <author initials="M." surname="Waehlisch"><organization /></author>
+        </front>
       </reference>
 
       <reference anchor="nanog-aspa" target="https://storage.googleapis.com/site-media-prod/meetings/NANOG89/4809/20231017_Sriram_Aspa-Based_Bgp_As_Path_v1.pdf (slides)  https://www.youtube.com/watch?v=GdVnZGd7jMo (video)">
@@ -739,8 +767,8 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
 
     <section anchor="Acknowledgments" title="Acknowledgments">
       <t>
-        The authors wish to thank Claudio Jeker, Jakob Heitz, Amir Herzberg, Igor Lubashev, Ben Maddison, Russ Housley, Jeff Haas, Nan Geng, Mingqing Huang, Nick Hilliard, Shunwan Zhuang, Yangyang Wang, Martin Hoffmann, Jay Borkenhagen, Amreesh Phokeer, Aftab Siddiqui, Dai Zhibin, Doug Montgomery, Padma Krishnaswamy, Rich Compton, Andrei Robachevsky, Rudiger Volk, Iljitsch van Beijnum, Tassilo Tanneberger, Matthias Waehlisch, Moritz Schulz, and Carl Seifert for comments, suggestions, and discussion on the path verification procedures or the text in the document.
-        For the implementation and testing of the procedures in the document, the authors wish to thank Claudio Jeker and Theo Buehler <xref target="bgpd"/>, Kyehwan Lee and Oliver Borchert <xref target="BGP-SRx"/>, Katerina Kubecova and Maria Matejka <xref target="BIRD"/>, and Csaba Mate <xref target="FreeRTR"/>.
+        The authors wish to thank Maria Matejka, Claudio Jeker, Jakob Heitz, Amir Herzberg, Igor Lubashev, Ben Maddison, Russ Housley, Jeff Haas, Nan Geng, Mingqing Huang, Jia Zhang, Nick Hilliard, Shunwan Zhuang, Yangyang Wang, Martin Hoffmann, Jay Borkenhagen, Amreesh Phokeer, Aftab Siddiqui, Dai Zhibin, Doug Montgomery, Padma Krishnaswamy, Rich Compton, Andrei Robachevsky, Rudiger Volk, Iljitsch van Beijnum, Tassilo Tanneberger, Matthias Waehlisch, Moritz Schulz, and Carl Seifert for comments, suggestions, and discussion on the path verification procedures or the text in the document.
+        For the implementation and testing of the procedures in the document, the authors wish to thank Claudio Jeker and Theo Buehler <xref target="bgpd"/>; Kyehwan Lee and Oliver Borchert <xref target="BGP-SRx"/>; Katerina Kubecova and Maria Matejka <xref target="BIRD"/>; Tassilo Tanneberger, Carl Seifer, Moritz Schulz, and Matthias Braeuerand <xref target="RTRlib"/>; and Csaba Mate <xref target="FreeRTR"/>.
       </t>
     </section>
 
@@ -786,7 +814,7 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
       </t>
       <t>
         The above properties show that ASPA-based path verification offers significant benefits to early adopters (also see <xref target="nanog-aspa"/>).
-        Limitations of the method with regard to some forms of malicious AS path manipulations are discussed in <xref target="security"/>.
+        Limitations of the method regarding some forms of malicious AS path manipulations are discussed in <xref target="security"/>.
       </t>
     </section>
   </back>
