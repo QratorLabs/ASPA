@@ -497,7 +497,7 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
 
       <section title="Correctness of the ASPA">
         <t>
-          Network operators must keep their ASPA objects correct and up to date (<xref target="rec1"/>). 
+          Network operators must keep their ASPA objects correct and up to date (<xref target="rec1"/>).
           If a provider is included erroneously in the ASPA, route leak detection capabilities are reduced.
           If a provider is missing from the ASPA, routes may become falsely ASPA Invalid later on.
         </t>
@@ -581,7 +581,7 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
         The description of implementations in this section is intended to assist the IETF in its decision processes in progressing drafts to RFCs.
         Please note that the listing of any individual implementation here does not imply endorsement by the IETF.
         Furthermore, no effort has been spent to independently verify the information presented here that was supplied by IETF contributors.
-        Most contributors have reported that they verified their implementations using the test cases provided in <xref target="aspa-examples"/>.  
+        Most contributors have reported that they verified their implementations using the test cases provided in <xref target="aspa-examples"/>.
         This is not intended as, and must not be construed to be, a catalog of available implementations or their features.
         Readers are advised to note that other implementations may exist.
       </t>
@@ -592,7 +592,7 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
       <t>
         <ul>
           <li>
-            In 2025, Cisco has reported an Early Field Trial implementation of ASPA based on their IOS-XR. 
+            In 2025, Cisco has reported an Early Field Trial implementation of ASPA based on their IOS-XR.
           </li>
           <li>
             A BGP implementation <xref target="bgpd">OpenBGPD</xref> (version 7.8 and higher), written in C, was provided by Claudio Jeker, Theo Buehler, and Job Snijders.
