@@ -94,7 +94,7 @@
           <code>20899</code>
           <country>United States of America</country>
         </postal>
-        <email>ksriram@nist.gov</email>
+        <email>sriram.ietf@gmail.com</email>
       </address>
     </author>
 
@@ -312,8 +312,8 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
         </t>
 
         <t>
-          The AS_PATH is invalid if apexes of the up-ramp and down-ramp (AS(K) and AS(L), respectively) of COMPRESSED_AS_PATH are apart by more than one hop; else, it is valid.
-          In other words, if the combined length of the up-ramp and down-ramp of COMPRESSED_AS_PATH is equal to N or greater, the AS_PATH is valid (route leak free).
+          The AS_PATH is invalid if apexes of the up-ramp and down-ramp (AS(K) and AS(L), respectively) of the COMPRESSED_AS_PATH are apart by more than one hop; else, it is valid.
+          In other words, if the combined length of the up-ramp and down-ramp of the COMPRESSED_AS_PATH is equal to N or greater, the AS_PATH is valid (route leak free).
           If the combined length is less than N, the prefix was leaked or the AS_PATH was malformed (i.e., the AS_PATH is invalid).
         </t>
 
@@ -348,7 +348,7 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
 
         <t>
           Below are formal procedures for path verification depending on the peering relationship between the receiving AS and its neighbor.
-          These procedures use COMPRESSED_AS_PATH and the above-defined parameters max_up_ramp, min_up_ramp, max_down_ramp, and min_up_ramp.
+          These procedures use the COMPRESSED_AS_PATH and the above-defined parameters max_up_ramp, min_up_ramp, max_down_ramp, and min_up_ramp.
         </t>
       </section>
 
