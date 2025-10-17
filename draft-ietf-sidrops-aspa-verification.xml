@@ -214,45 +214,6 @@
       </t>
     </section>
 
-    <section title="Provider Authorization Function" anchor="pair-validation">
-      <t>
-        A CAS is expected to register a single ASPA listing all its Provider ASes (see <xref target="rec1"/>).
-        If a CAS has a single cryptographically valid ASPA, then the Union SPAS (U-SPAS) for the CAS equals to SPAS.
-        In case a CAS has multiple cryptographically valid ASPAs, then the U-SPAS for the CAS is the union of AS listed in all SPAS of these ASPAs.
-      </t>
-
-      <t>
-        Let AS x and AS y represent two unique ASes.
-        A provider authorization function, authorized(AS x, AS y), checks if the ordered pair of ASNs, (AS x, AS y), has the property that AS y is an attested provider of AS x per U-SPAS of AS x.
-        By the term "Provider+", the function signals that AS y plays the role of Provider or non-transparent RS.
-        This function is specified as follows:
-      </t>
-      <t>
-        <figure anchor="fig1" align="left" suppress-title="true" pn="figure-1">
-          <name slugifiedName="HFC-illustration">Provider authorization function.</name>
-          <artwork align="left" name="" type="" alt="">
-<![CDATA[
-
-                           /
-                           | "No Attestation" if there is no entry
-                           |   in U-SPAS table for CAS = AS x
-                           |
-authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
-                           \   for CAS = AS x includes AS y
-                           |
-                           | Else, "Not Provider+"
-                           \
-]]>
-</artwork>
-        </figure>
-       </t>
-      <t>
-        The "No Attestation" result is returned only when no ASPA is retrieved for the CAS or none of its ASPAs are cryptographically valid.
-        The provider authorization function is used in the ASPA-based AS_PATH verification algorithms described in <xref target="Upflow"/> and <xref target="Downflow"/>.
-      </t>
-
-    </section>
-
     <section title="AS_PATH Verification" anchor="verif">
       <t>
         The procedures described in this document are applicable only to four-octet AS number compatible BGP speakers <xref target="RFC6793"/>.
@@ -316,13 +277,53 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
           In other words, if the combined length of the up-ramp and down-ramp of the COMPRESSED_AS_PATH is equal to N or greater, the AS_PATH is valid (route leak free).
           If the combined length is less than N, the prefix was leaked or the AS_PATH was malformed (i.e., the AS_PATH is invalid).
         </t>
+      </section>
 
+      <section title="Provider Authorization Function" anchor="pair-validation">
         <t>
-          ASPA can be used to check if AS y is an attested provider of AS x, and thus the provider authorization function can be used to measure the bounds on up-ramp and down-ramp lengths.
-          The "Not Provider+" outcome of the provider authorization function can be used to calculate the upper boundary of ramp length and the 'No Attestation' outcome can be used to calculate its lower boundary.
-          Below are the formal definitions.
+          This section defines how ASPA can be used to check if AS y is an attested provider of AS x, and thus to measure the bounds on up-ramp and down-ramp lengths.
         </t>
 
+        <t>
+          A CAS is expected to register a single ASPA listing all its Provider ASes (see <xref target="rec1"/>).
+          If a CAS has a single cryptographically valid ASPA, then the Union SPAS (U-SPAS) for the CAS equals to SPAS.
+          In case a CAS has multiple cryptographically valid ASPAs, then the U-SPAS for the CAS is the union of AS listed in all SPAS of these ASPAs.
+        </t>
+
+        <t>
+          Let AS x and AS y represent two unique ASes.
+          A provider authorization function, authorized(AS x, AS y), checks if the ordered pair of ASNs, (AS x, AS y), has the property that AS y is an attested provider of AS x per U-SPAS of AS x.
+          By the term "Provider+", the function signals that AS y plays the role of Provider or non-transparent RS.
+          This function is specified as follows:
+        </t>
+        <t>
+          <figure anchor="fig1" align="left" suppress-title="true" pn="figure-1">
+            <name slugifiedName="HFC-illustration">Provider authorization function.</name>
+            <artwork align="left" name="" type="" alt="">
+  <![CDATA[
+
+                           /
+                           | "No Attestation" if there is no entry
+                           |   in U-SPAS table for CAS = AS x
+                           |
+authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
+                           \   for CAS = AS x includes AS y
+                           |
+                           | Else, "Not Provider+"
+                           \
+]]>
+            </artwork>
+          </figure>
+        </t>
+        <t>
+          The "No Attestation" result is returned only when no ASPA is retrieved for the CAS or none of its ASPAs are cryptographically valid.
+        </t>
+        <t>
+          The "Not Provider+" outcome of the provider authorization function can be used to calculate the upper boundary of ramp length and the 'No Attestation' outcome can be used to calculate its lower boundary.
+        </t>
+      </section>
+
+      <section title="Up and Down Ramp Boundaries" anchor="estimations">
         <t>
           Determine the maximum up-ramp length as I, where I is the minimum index for which authorized(A(I), A(I+1)) returns "Not Provider+".
           If there is no such I, the maximum up-ramp length is set equal to the COMPRESSED_AS_PATH length N.
