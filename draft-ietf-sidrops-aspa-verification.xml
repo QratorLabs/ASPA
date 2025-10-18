@@ -281,17 +281,17 @@
 
       <section title="Provider Authorization Function" anchor="pair-validation">
         <t>
-          This section defines how ASPA can be used to check if AS y is an attested provider of AS x, and thus to measure the bounds on up-ramp and down-ramp lengths.
+          This section defines the provider authorization function that uses ASPA to check, for a given pair (AS x, AS y), if AS y is an attested provider of AS x. The function can be used to measure the bounds on the up-ramp and down-ramp lengths (<xref target="principles"/>).
         </t>
 
         <t>
           A CAS is expected to register a single ASPA listing all its Provider ASes (see <xref target="rec1"/>).
           If a CAS has a single cryptographically valid ASPA, then the Union SPAS (U-SPAS) for the CAS equals to SPAS.
-          In case a CAS has multiple cryptographically valid ASPAs, then the U-SPAS for the CAS is the union of AS listed in all SPAS of these ASPAs.
+          In case a CAS has multiple cryptographically valid ASPAs, then the U-SPAS for the CAS is the union of ASes listed in all SPAS of these ASPAs.
         </t>
 
         <t>
-          Let AS x and AS y represent two unique ASes.
+          Let AS x and AS y represent two distinct ASes.
           A provider authorization function, authorized(AS x, AS y), checks if the ordered pair of ASNs, (AS x, AS y), has the property that AS y is an attested provider of AS x per U-SPAS of AS x.
           By the term "Provider+", the function signals that AS y plays the role of Provider or non-transparent RS.
           This function is specified as follows:
@@ -319,11 +319,11 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
           The "No Attestation" result is returned only when no ASPA is retrieved for the CAS or none of its ASPAs are cryptographically valid.
         </t>
         <t>
-          The "Not Provider+" outcome of the provider authorization function can be used to calculate the upper boundary of ramp length and the 'No Attestation' outcome can be used to calculate its lower boundary.
+          The "Not Provider+" outcome of the provider authorization function can be used to calculate the upper bound of the ramp (up-ramp/down-ramp) length (<xref target="principles"/>) and the 'No Attestation' outcome can be used to calculate its lower bound.
         </t>
       </section>
 
-      <section title="Up and Down Ramp Boundaries" anchor="estimations">
+      <section title="Bounds on Up-Ramp and Down-Ramp Lengths" anchor="estimations">
         <t>
           Determine the maximum up-ramp length as I, where I is the minimum index for which authorized(A(I), A(I+1)) returns "Not Provider+".
           If there is no such I, the maximum up-ramp length is set equal to the COMPRESSED_AS_PATH length N.
