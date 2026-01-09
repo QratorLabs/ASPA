@@ -11,7 +11,7 @@
 
 <rfc xmlns:xi="http://www.w3.org/2001/XInclude"
      category="std"
-     docName="draft-ietf-sidrops-aspa-profile-19"
+     docName="draft-ietf-sidrops-aspa-profile-21"
      ipr="trust200902"
      consensus="true"
      submissionType="IETF">
@@ -40,7 +40,7 @@
       </address>
     </author>
     <author fullname="Job Snijders" initials="J." surname="Snijders">
-      <organization/>
+      <organization abbrev="BSD">BSD Software Development</organization>
       <address>
         <postal>
           <street/>
@@ -48,7 +48,8 @@
           <code/>
           <country>NL</country>
         </postal>
-        <email>job@sobornost.net</email>
+        <email>job@bsd.nl</email>
+        <uri>https://www.bsd.nl</uri>
       </address>
     </author>
     <author fullname="Russ Housley" initials="R" surname="Housley">
@@ -215,10 +216,10 @@
         To validate an ASPA, the relying party MUST perform all the validation checks specified in <xref target="RFC6488"/> as well as the following additional ASPA-specific validation steps.
         <list style="symbols">
           <t>
-            The Autonomous System Identifier Delegation Extension <xref target="RFC3779"/> MUST be present in the end-entity (EE) certificate (contained within the ASPA), and the Customer ASID in the ASPA eContent MUST be contained within the set of AS numbers specified by the EE certificate's Autonomous System Identifier Delegation Extension.
+            The Autonomous System Identifier Delegation Extension <xref target="RFC3779"/> MUST be present in the end-entity (EE) certificate (contained within the ASPA), and the Customer ASID in the ASPA eContent MUST match the ASId specified by the EE certificate's Autonomous System Identifier Delegation Extension.
           </t>
           <t>
-            The EE certificate's Autonomous System Identifier Delegation Extension MUST NOT contain any "inherit" elements.
+            The Autonomous System Identifier Delegation Extension MUST contain exactly one "id" element (<xref target="RFC3779" section="3.2.3.6"/>) and MUST NOT contain any "inherit" elements (<xref target="RFC3779" section="3.2.3.3"/>) or "range" elements (<xref target="RFC3779" section="3.2.3.7"/>).
           </t>
           <t>
             The IP Address Delegation Extension <xref target="RFC3779"/> MUST be absent.
