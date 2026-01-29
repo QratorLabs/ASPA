@@ -205,6 +205,9 @@
           <t>
             Each value of ASID MUST be unique (with respect to the other elements of providers).
           </t>
+          <t>
+            An ASID value of 0 can only be encoded in the providers field as a single item list, i.e., an element for AS 0 MUST NOT appear alongside any other elements.
+          </t>
           </list>
         </t>
       </section>
