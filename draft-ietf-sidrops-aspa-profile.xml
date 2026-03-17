@@ -181,7 +181,7 @@
 
       <section title="customerASID">
         <t>
-          The customerASID field contains the AS number of the Customer Autonomous System that is the authorizing entity.
+          The customerASID field contains a positive integer that represents the AS number of the Customer Autonomous System that is the authorizing entity.
         </t>
       </section>
 

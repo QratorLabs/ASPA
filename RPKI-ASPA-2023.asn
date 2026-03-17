@@ -20,8 +20,10 @@ ct-ASPA CONTENT-TYPE ::=
 
 ASProviderAttestation ::= SEQUENCE {
   version [0]   INTEGER DEFAULT 0,
-  customerASID  ASID,
+  customerASID  CAS,
   providers     ProviderASSet }
+
+CAS ::= INTEGER (1..4294967295)
 
 ProviderASSet ::= SEQUENCE (SIZE(1..MAX)) OF ASID
 
