@@ -21,6 +21,19 @@
       A Profile for Autonomous System Provider Authorization
     </title>
 
+    <author fullname="Job Snijders" initials="J." surname="Snijders">
+      <organization abbrev="BSD">BSD Software Development</organization>
+      <address>
+        <postal>
+          <street/>
+          <city>Amsterdam</city>
+          <code/>
+          <country>NL</country>
+        </postal>
+        <email>job@bsd.nl</email>
+        <uri>https://www.bsd.nl</uri>
+      </address>
+    </author>
     <author fullname="Alexander Azimov" initials="A" surname="Azimov">
       <organization>Yandex</organization>
       <address>
@@ -37,19 +50,6 @@
       <organization>Internet Initiative Japan</organization>
       <address>
         <email>randy@psg.com</email>
-      </address>
-    </author>
-    <author fullname="Job Snijders" initials="J." surname="Snijders">
-      <organization abbrev="BSD">BSD Software Development</organization>
-      <address>
-        <postal>
-          <street/>
-          <city>Amsterdam</city>
-          <code/>
-          <country>NL</country>
-        </postal>
-        <email>job@bsd.nl</email>
-        <uri>https://www.bsd.nl</uri>
       </address>
     </author>
     <author fullname="Russ Housley" initials="R" surname="Housley">
