@@ -230,63 +230,70 @@
         </list>
       </t>
     </section>
+
     <section anchor="IANA" title="IANA Considerations">
-      <section title="SMI Security for S/MIME Module Identifier registry">
+
+      <section title="SMI Security for S/MIME Module Identifier registry" toc="exclude">
         <t>
-          Please add the id-mod-rpki-aspa-2023 to the SMI Security for S/MIME Module Identifier (1.2.840.113549.1.9.16.0) registry (https://www.iana.org/assignments/smi-numbers/smi-numbers.xml#security-smime-0) as follows:
+          IANA is requested to allocate for <tt>id-mod-rpki-aspa-2023</tt> in the "SMI Security for S/MIME Module Identifier (1.2.840.113549.1.9.16.0)" registry as follows:
         </t>
-        <figure>
-<artwork type="text">
-    Decimal   | Description                   | Specification
-    -----------------------------------------------------------
-    TBD2      | id-mod-rpki-aspa-2023         | [RFC-to-be]
-</artwork>
-        </figure>
-    </section>
-    <section title="SMI Security for S/MIME CMS Content Type registry">
-      <t>
-        Please add the ASPA to the SMI Security for S/MIME CMS Content Type (1.2.840.113549.1.9.16.1) registry (https://www.iana.org/assignments/smi-numbers/smi-numbers.xml#security-smime-1) as follows:
-      </t>
-      <figure>
-<artwork type="text">
-    Decimal   | Description                   | Specification
-    -----------------------------------------------------------
-    49        | id-ct-ASPA                    | [RFC-to-be]
-</artwork>
-      </figure>
-    </section>
-    <section title="RPKI Signed Object registry">
-      <t>
-        Please add Autonomous System Provider Authorization to the RPKI Signed Object registry (https://www.iana.org/assignments/rpki/rpki.xhtml#signed-objects) as follows:
-      </t>
-      <figure>
-<artwork type="text">
-    Name                                     | OID                         | Specification
-    --------------------------------------------------------------------------------------
-    Autonomous System Provider Authorization | 1.2.840.113549.1.9.16.1.49  | [RFC-to-be]
-</artwork>
-      </figure>
-    </section>
-    <section title="RPKI Repository Name Scheme registry">
-      <t>
-        Please add an item for the Autonomous System Provider Authorization file extension to the "RPKI Repository Name Scheme" registry created by <xref target="RFC6481"/> as follows:
-      </t>
-      <figure>
+        <table>
+          <thead>
+            <tr><td>Decimal</td><td>Description</td><td>Specification</td></tr>
+          </thead>
+          <tbody>
+            <tr><td>TBD2</td><td>id-mod-rpki-aspa-2023</td><td>[RFC-to-be]</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section title="SMI Security for S/MIME CMS Content Type registry" toc="exclude">
+        <t>
+          IANA is requested to make permanent in the "SMI Security for S/MIME CMS Content Type (1.2.840.113549.1.9.16.1)" registry as follows:
+        </t>
+        <table>
+          <thead>
+            <tr><td>Decimal</td><td>Description</td><td>Specification</td></tr>
+          </thead>
+          <tbody>
+            <tr><td>49</td><td>id-ct-ASPA</td><td>[RFC-to-be]</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section title="RPKI Signed Object registry" toc="exclude">
+        <t>
+          IANA is requested to make permanent in the "RPKI Signed Object" registry as follows:
+        </t>
+        <table>
+          <thead>
+            <tr><td>Name</td><td>OID</td><td>Specification</td></tr>
+          </thead>
+          <tbody>
+            <tr><td>Autonomous System Provider Authorization</td><td>1.2.840.113549.1.9.16.1.49</td><td>[RFC-to-be]</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section title="RPKI Repository Name Scheme registry" toc="exclude">
+        <t>
+          IANA is requested to make permanent in the "RPKI Repository Name Scheme" registry <xref target="RFC6481"/> as follows:
+        </t>
+        <table>
+          <thead>
+            <tr><td>Filename Extension</td><td>RPKI Object</td><td>Reference</td></tr>
+          </thead>
+          <tbody>
+            <tr><td>.asa</td><td>Autonomous System Provider Authorization</td><td>[RFC-to-be]</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section title="Media Type registry" toc="exclude">
+        <t>
+          The IANA is requested to register the media type application/rpki-aspa in the "Media Type" registry as follows:
+        </t>
         <artwork>
-<![CDATA[
-   Filename
-   Extension  RPKI Object                               Reference
-   --------------------------------------------------------------------------------------
-      .asa    Autonomous System Provider Authorization  [RFC-to-be]
-]]>
-                </artwork>
-      </figure>
-    </section>
-    <section title="Media Type registry">
-      <t>
-        The IANA is requested to register the media type application/rpki-aspa in the "Media Type" registry as follows:
-      </t>
-      <artwork>
 <![CDATA[
    Type name: application
    Subtype name: rpki-aspa
@@ -374,22 +381,22 @@
       </t>
       <ul>
         <li>
-          A validator implementation <xref target="rpki-client"/> (version 8.5 and higher), written in C was provided by Job Snijders.
+          A validator implementation <xref target="rpki-client"/> written in C was provided by Job Snijders.
         </li>
         <li>
-          A validator implementation <xref target="routinator"/>, written in Rust was provided by Martin Hoffman from NLnet Labs.
+          A validator implementation <xref target="routinator"/> written in Rust was provided by Martin Hoffman from NLnet Labs.
         </li>
         <li>
-          A validator implementation <xref target="rpki-prover"/>, written in Haskell was provided by Mikhail Puzanov.
+          A validator implementation <xref target="rpki-prover"/> written in Haskell was provided by Mikhail Puzanov.
         </li>
         <li>
-          A Signer implementation <xref target="rpki-aspa-demo"/> in Perl was reported on Tom Harrison from APNIC.
+          A signer implementation <xref target="rpki-aspa-demo"/> written in Perl was provided by Tom Harrison from APNIC.
         </li>
         <li>
           A signer implementation <xref target="rpki-commons"/> in Java was reported on by Ties de Kock from RIPE NCC.
         </li>
         <li>
-          A signer implementation <xref target="krill"/> in Rust was reported on by Tim Bruijnzeels from NLnet Labs.
+          A signer implementation <xref target="krill"/> in Rust was reported on by Tim Bruijnzeels.
         </li>
       </ul>
     </section>
@@ -594,10 +601,10 @@ yk5CFeQWetsX7D7XRNSdKwrrW6qWK/KxGF38SsuGeTyDQiNcOhwqvSfFc388ge/G
 <![CDATA[
 
 Object SHA256 hash:          S6B+jKOCFXPlRn7ws6Kd5tgpsSx609tJZpw60CVaf9Y=
-EE Subject key identifier:   2B:87:C7:6F:5E:EE:F6:20:44:F5:28:B8:2C:92:9B:28:D5:57:32:AC
+EE Subject key identifier:   2B87C76F5EEEF62044F528B82C929B28D55732AC
 EE Certificate issuer:       /CN=root
 EE Certificate serial:       04
-EE Authority key identifier: 36:9A:D0:19:2C:67:4E:78:32:22:CD:32:85:66:B7:94:12:B1:8F:26
+EE Authority key identifier: 369AD0192C674E783222CD328566B79412B18F26
 EE Authority info access:    rsync://localhost/repo/369AD0192C674E783222CD328566B79412B18F26.cer
 EE Subject info access:      rsync://localhost/ta/an-object.asa
 CMS Signing time:            Mon 06 Jan 2025 10:26:48 +0000
