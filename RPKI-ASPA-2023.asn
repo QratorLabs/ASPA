@@ -7,7 +7,7 @@ BEGIN
 
 IMPORTS
   CONTENT-TYPE
-  FROM CryptographicMessageSyntax-2010  -- RFC 6268
+  FROM CryptographicMessageSyntax-2010 -- From RFC 6268
     { iso(1) member-body(2) us(840) rsadsi(113549) pkcs(1)
        pkcs-9(9) smime(16) modules(0) id-mod-cms-2009(58) } ;
 
