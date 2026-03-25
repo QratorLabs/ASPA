@@ -107,8 +107,8 @@
         As part of this infrastructure, a mechanism is needed to facilitate holders of Autonomous System (AS) identifiers in their capacity as Customer to authorize other ASes as their Provider(s).
         A Provider AS (PAS) is a network that:
         <list style="letters">
-          <t>offers its customers outbound (customer to Internet) data traffic connectivity and/or</t>
-          <t>further propagates in all directions (towards providers, lateral peers, and customers) any BGP Updates that the customer may send.</t>
+          <t>advertises towards the customer any Network Layer Reachability Information (NLRI) received from any directions (e.g. routes the provider learned from its providers, lateral peers, and other customers)</t>
+          <t>further propagates in any direction (e.g. towards providers, lateral peers, and other customers) any NLRI that the customer may send.</t>
         </list>
         The digitally signed Autonomous System Provider Authorization (ASPA) object described in this document provides the above-mentioned authorization mechanism.
       </t>
@@ -117,7 +117,7 @@
         An ASPA contains a list of one or more ASes, each listing meaning the listed AS is authorized to act as Provider network.
         When the CAS has multiple Providers, all Provider ASes are listed in the ASPA, including any non-transparent Internet Exchange Point (IXP) Route Server (RS) ASes.
         The common case for RS ASes at IXPs is to operate transparently (see Section 2.2.2.1 <xref target="RFC7947"/>), and in those instances the ASNs of IXP Route Servers are not listed as PAS in ASPAs.
-	  </t>
+      </t>
       <t>
         The BGP Roles that an Autonomous System (AS) may have in its peering relationships with eBGP neighbors are discussed in <xref target="I-D.ietf-sidrops-aspa-verification"/>.
         The details of ASPA registration requirements for ASes in different scenarios are also specified in that document.
@@ -405,7 +405,7 @@
       <t>
         The authors would like to thank Keyur Patel for helping kick-start the ASPA profile project,
         Ties de Kock &amp; Tim Bruijnzeels for suggesting that the ProviderASSet be in a canonical form,
-        and Claudio Jeker &amp; Martin Hoffman for review and several suggestions for improvements.
+        and Claudio Jeker, Martin Hoffman &amp; Lancheng Qin for review and several suggestions for improvements.
       </t>
     </section>
 	
