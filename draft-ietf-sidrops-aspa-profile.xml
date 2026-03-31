@@ -11,7 +11,7 @@
 
 <rfc xmlns:xi="http://www.w3.org/2001/XInclude"
      category="std"
-     docName="draft-ietf-sidrops-aspa-profile-23"
+     docName="draft-ietf-sidrops-aspa-profile-24"
      ipr="trust200902"
      consensus="true"
      submissionType="IETF">
@@ -83,7 +83,7 @@
     <abstract>
       <t>
         This document defines a Cryptographic Message Syntax (CMS) protected content type for Autonomous System Provider Authorization (ASPA) objects for use with the Resource Public Key Infrastructure (RPKI).
-        An ASPA is a digitally signed object through which the issuer (the holder of an Autonomous System identifier), can authorize one or more other Autonomous Systems (ASes) as its upstream providers.
+        An ASPA is a digitally signed object through which the issuer (the holder of an Autonomous System identifier), can authorize one or more other Autonomous Systems (ASes) as its transit providers.
         When validated, an ASPA's eContent can be used for detection and mitigation of route leaks.
       </t>
     </abstract>
@@ -103,20 +103,22 @@
   <middle>
     <section title="Introduction" anchor="intro">
       <t>
-        The primary purpose of the Resource Public Key Infrastructure (RPKI) is to improve routing security <xref target="RFC6480"/>.
-        As part of this infrastructure, a mechanism is needed to facilitate holders of Autonomous System (AS) identifiers in their capacity as Customer to authorize other ASes as their Provider(s).
-        A Provider AS (PAS) is a network that:
+        The primary purpose of the Resource Public Key Infrastructure (RPKI) <xref target="RFC6480"/> is to improve security in the global Internet routing system.
+        As part of this infrastructure, a mechanism is needed for Autonomous Systems (AS) operators, in their capacity as customer, to designate and authorize other ASes as their Provider(s).
+        A Provider AS (PAS) is a network providing connectivity between networks - it provides transit services to the customer, that is:
         <list style="letters">
-          <t>advertises towards the customer any Network Layer Reachability Information (NLRI) received from any directions (e.g. routes the provider learned from its providers, lateral peers, and other customers)</t>
-          <t>further propagates in any direction (e.g. towards providers, lateral peers, and other customers) any NLRI that the customer may send.</t>
+          <t>the provider may propagate Network Layer Reachability Information (NLRI) received from any direction (e.g., routes the provider learned from its own providers, lateral peers, and other customers), or default route advertisements, towards the customer;</t>
+          <t>the provider may propagate NLRI received from the customer towards any direction (e.g. towards the provider's providers, lateral peers, and other customers).</t>
         </list>
-        The digitally signed Autonomous System Provider Authorization (ASPA) object described in this document provides the above-mentioned authorization mechanism.
+      </t>
+      <t>
+        The digitally signed Autonomous System Provider Authorization (ASPA) object profile specified in this document provides the authorization mechanism mentioned above and can be used to facilitate detection and mitigation of route leaks.
       </t>
       <t>
         An ASPA object is a cryptographically verifiable attestation signed by the holder of an Autonomous System identifier (hereafter called the "Customer AS", or CAS).
-        An ASPA contains a list of one or more ASes, each listing meaning the listed AS is authorized to act as Provider network.
-        When the CAS has multiple Providers, all Provider ASes are listed in the ASPA, including any non-transparent Internet Exchange Point (IXP) Route Server (RS) ASes.
-        The common case for RS ASes at IXPs is to operate transparently (see Section 2.2.2.1 <xref target="RFC7947"/>), and in those instances the ASNs of IXP Route Servers are not listed as PAS in ASPAs.
+        An ASPA contains a list of one or more ASes, each entry meaning the listed AS is authorized to act as Provider network for the CAS.
+        When the CAS makes use of multiple providers, all Provider ASes are to be listed in the ASPA, including any non-transparent Internet Exchange Point (IXP) Route Server (RS) ASes.
+        Note that the common case for RS ASes at IXPs is to operate transparently (see Section 2.2.2.1 <xref target="RFC7947"/>), and transparent IXP Route Servers need not be listed as PAS in ASPAs.
       </t>
       <t>
         The BGP Roles that an Autonomous System (AS) may have in its peering relationships with eBGP neighbors are discussed in <xref target="I-D.ietf-sidrops-aspa-verification"/>.
