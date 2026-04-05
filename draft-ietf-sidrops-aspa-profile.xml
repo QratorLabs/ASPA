@@ -104,24 +104,26 @@
     <section title="Introduction" anchor="intro">
       <t>
         The primary purpose of the Resource Public Key Infrastructure (RPKI) <xref target="RFC6480"/> is to improve security in the global Internet routing system.
-        As part of this infrastructure, a mechanism is needed for Autonomous Systems (AS) operators, in their capacity as customer, to designate and authorize other ASes as their Provider(s).
-        A Provider AS (PAS) is a network providing connectivity between networks - it provides transit services to the customer, that is:
+        As part of this infrastructure, a mechanism is needed for Autonomous Systems (AS) operators, in their capacity as customers, to designate and authorize other ASes as their Provider(s).
+        A Provider AS (PAS) is a network providing connectivity between networks - it provides transit services to the customer. That is:
         <list style="letters">
-          <t>the provider may propagate Network Layer Reachability Information (NLRI) received from any direction (e.g., routes the provider learned from its own providers, lateral peers, and other customers), or default route advertisements, towards the customer;</t>
-          <t>the provider may propagate NLRI received from the customer towards any direction (e.g. towards the provider's providers, lateral peers, and other customers).</t>
+          <t>The provider may propagate BGP routes received from any direction. For example, routes the provider learned from its own providers, lateral peers, and other customers. The provider may also announce a default route to their customers.</t>
+          <t>The provider may propagate BGP routes received from the customer in any direction. For example, to the provider's providers, lateral peers, and other customers.</t>
         </list>
       </t>
       <t>
-        The digitally signed Autonomous System Provider Authorization (ASPA) object profile specified in this document provides the authorization mechanism mentioned above and can be used to facilitate detection and mitigation of route leaks.
+        This document specifies a digitally signed Autonomous System Provider Authorization (ASPA) object profile.  This profile provides the authorization mechanism mentioned above and can be used to facilitate detection and mitigation of route leaks.
       </t>
       <t>
-        An ASPA object is a cryptographically verifiable attestation signed by the holder of an Autonomous System identifier (hereafter called the "Customer AS", or CAS).
-        An ASPA contains a list of one or more ASes, each entry meaning the listed AS is authorized to act as Provider network for the CAS.
-        When the CAS makes use of multiple providers, all Provider ASes are to be listed in the ASPA, including any non-transparent Internet Exchange Point (IXP) Route Server (RS) ASes.
-        Note that the common case for RS ASes at IXPs is to operate transparently (see Section 2.2.2.1 <xref target="RFC7947"/>), and transparent IXP Route Servers need not be listed as PAS in ASPAs.
+        An ASPA object is a cryptographically verifiable attestation signed by the holder of an Autonomous System identifier, hereafter called the "Customer AS", or CAS.
+        An ASPA object contains a list of one or more Provider ASes where each entry of this list authorizes that AS to act as a Provider network for the Customer AS.
       </t>
       <t>
-        The BGP Roles that an Autonomous System (AS) may have in its peering relationships with eBGP neighbors are discussed in <xref target="I-D.ietf-sidrops-aspa-verification"/>.
+        When the Customer AS makes use of multiple providers, all Provider ASes are to be listed in the ASPA object, including any non-transparent Internet Exchange Point (IXP) Route Server (RS) ASes.
+        Note that the common case for RS ASes at IXPs is to operate transparently (see Section 2.2.2.1 <xref target="RFC7947"/>), and transparent IXP Route Servers do not need to be listed as PAS in ASPAs.
+      </t>
+      <t>
+        The BGP Roles that an Autonomous System may have in its peering relationships with eBGP neighbors are discussed in <xref target="I-D.ietf-sidrops-aspa-verification"/>.
         The details of ASPA registration requirements for ASes in different scenarios are also specified in that document.
         In addition, the procedures for verifying AS_PATHs in BGP UPDATE messages using Validated ASPA Payloads (VAPs) are described in that document.
       </t>
@@ -156,14 +158,15 @@
         The content of an ASPA identifies the Customer AS (CAS) as well as the Set of Provider ASes (SPAS) that are authorized by the CAS to be its Providers.
       </t>
       <t>
-        A user registering ASPA(s) must be cognizant of Sections 2, 3, and 4 of <xref target="I-D.ietf-sidrops-aspa-verification"/> and the user (or their software tool) must comply with the ASPA registration recommendations in Section 4 of that document.
+        Operators registering ASPA(s) must be cognizant of Sections 2, 3, and 4 of <xref target="I-D.ietf-sidrops-aspa-verification"/> and the operator (or their software tool) must comply with the ASPA registration recommendations in Section 4 of that document.
       </t>
       <t>
-        It is highly recommended that for a given Customer AS, a single ASPA object be maintained which contains all providers, including any non-transparent RS ASes.
-        Such a practice helps prevent race conditions during ASPA updates.
-        Otherwise, said race conditions might affect route propagation.
+        It is RECOMMENDED that for a given Customer AS, a single ASPA object be maintained which contains all providers, including any non-transparent RS ASes.
+        This practice avoids race conditions during ASPA updates that might impact BGP route propagation.
         The software that provides hosting for ASPA records SHOULD support enforcement of this recommendation.
-        In the case of the transition process between different CA registries, the ASPA records SHOULD be kept identical in all registries in terms of their authorization contents.
+      </t>
+      <t>
+	The authorization contents of ASPA records that are being migrated between different CA registries SHOULD be identical.
       </t>
       <t>
         The eContent of an ASPA is an instance of ASProviderAttestation, formally defined by the following ASN.1 <xref target="X.680"/> module:
@@ -218,7 +221,7 @@
     <section title="ASPA Validation" anchor="validation">
       <t>
         Before a relying party can use an ASPA to validate a routing announcement, the relying party MUST first validate the ASPA object itself.
-        To validate an ASPA, the relying party MUST perform all the validation checks specified in <xref target="RFC6488"/> as well as the following additional ASPA-specific validation steps.
+        To validate an ASPA, the relying party MUST perform all the validation checks specified in <xref target="RFC6488"/> as well as the following additional ASPA-specific validation steps:
         <list style="symbols">
           <t>
             The Autonomous System Identifier Delegation Extension <xref target="RFC3779"/> MUST be present in the end-entity (EE) certificate (contained within the ASPA), and the Customer ASID in the ASPA eContent MUST match the ASId specified by the EE certificate's Autonomous System Identifier Delegation Extension.
@@ -345,9 +348,9 @@
       <section>
         <name>Upper Bound on the Number of Providers</name>
         <t>
-          While the ASN.1 profile specified in <xref target="content"/> imposes no limit on the number of Provider ASes that can be listed for a given Customer ASID, consideration will need to be given to limitations existing in validators and elsewhere in the RPKI supply chain.
-          For example, the number of Provider ASes that can be listed in a single RPKI-To-Router protocol ASPA PDU (following the Length field constraints in <xref target="I-D.ietf-sidrops-8210bis" section="5.1"/>) is 16,380 providers.
-          In addition to protocol limitations in the supply chain, locally defined restrictions could exist for the maximum file size of signed objects a Relying Party implementation is willing to accept.
+          While the ASN.1 profile specified in <xref target="content"/> imposes no limit on the number of Provider ASes that can be listed for a given Customer ASID, consideration will need to be given to limitations existing in validators and elsewhere in the RPKI ecosystem.
+          For example, the number of Provider ASes that can be listed in a single RPKI-To-Router protocol ASPA PDU following the Length field constraints in <xref target="I-D.ietf-sidrops-8210bis" section="5.1"/> is 16,380 providers.
+          In addition to protocol limitations in the ecosystem, locally defined restrictions could exist for the maximum file size of signed objects a Relying Party implementation is willing to accept.
         </t>
         <t>
           Relying Party implementations are RECOMMENDED to impose an upper bound on the number of Provider ASes for a given Customer ASID.
