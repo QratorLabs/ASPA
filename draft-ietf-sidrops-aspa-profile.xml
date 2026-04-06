@@ -205,9 +205,6 @@
             The CustomerASID value MUST NOT appear in any ASID in the providers field.
           </t>
           <t>
-            The providers field MUST contain at least one element (ASID).
-          </t>
-          <t>
             The elements of providers MUST be ordered in ascending numerical order.
           </t>
           <t>
