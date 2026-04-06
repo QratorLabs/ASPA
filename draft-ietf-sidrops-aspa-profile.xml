@@ -11,7 +11,7 @@
 
 <rfc xmlns:xi="http://www.w3.org/2001/XInclude"
      category="std"
-     docName="draft-ietf-sidrops-aspa-profile-24"
+     docName="draft-ietf-sidrops-aspa-profile-25"
      ipr="trust200902"
      consensus="true"
      submissionType="IETF">
@@ -112,7 +112,7 @@
         </list>
       </t>
       <t>
-        This document specifies a digitally signed Autonomous System Provider Authorization (ASPA) object profile.  This profile provides the authorization mechanism mentioned above and can be used to facilitate detection and mitigation of route leaks.
+        This document specifies a digitally signed Autonomous System Provider Authorization (ASPA) object profile.  This profile provides the authorization mechanism mentioned above and can be used to facilitate detection and mitigation of route leaks <xref target="I-D.ietf-sidrops-aspa-verification"/>.
       </t>
       <t>
         An ASPA object is a cryptographically verifiable attestation signed by the holder of an Autonomous System identifier, hereafter called the "Customer AS", or CAS.
@@ -123,9 +123,9 @@
         Note that the common case for RS ASes at IXPs is to operate transparently (see Section 2.2.2.1 <xref target="RFC7947"/>), and transparent IXP Route Servers do not need to be listed as PAS in ASPAs.
       </t>
       <t>
-        The BGP Roles that an Autonomous System may have in its peering relationships with eBGP neighbors are discussed in <xref target="I-D.ietf-sidrops-aspa-verification"/>.
-        The details of ASPA registration requirements for ASes in different scenarios are also specified in that document.
-        In addition, the procedures for verifying AS_PATHs in BGP UPDATE messages using Validated ASPA Payloads (VAPs) are described in that document.
+        The peering relationships and BGP Roles that an Autonomous System may have with eBGP neighbors are discussed in Sections 3 and 6 of <xref target="I-D.ietf-sidrops-aspa-verification"/>.
+        The details of ASPA registration recommendations for ASes in different scenarios are also specified in that document (Section 4).
+        In addition, the procedures for verifying AS_PATHs in BGP UPDATE messages using ASPAs are described in that document.
       </t>
       <t>
         This CMS <xref target="RFC5652"/> protected content type definition conforms to the <xref target="RFC6488"/> template for RPKI signed objects.
@@ -158,7 +158,7 @@
         The content of an ASPA identifies the Customer AS (CAS) as well as the Set of Provider ASes (SPAS) that are authorized by the CAS to be its Providers.
       </t>
       <t>
-        Operators registering ASPA(s) must be cognizant of Sections 2, 3, and 4 of <xref target="I-D.ietf-sidrops-aspa-verification"/> and the operator (or their software tool) must comply with the ASPA registration recommendations in Section 4 of that document.
+        Operators registering ASPA(s) must be cognizant of Section 4 of <xref target="I-D.ietf-sidrops-aspa-verification"/> and the operator (or their software tool) must comply with the ASPA registration recommendations in that section.
       </t>
       <t>
         It is RECOMMENDED that for a given Customer AS, a single ASPA object be maintained which contains all providers, including any non-transparent RS ASes.
@@ -166,7 +166,7 @@
         The software that provides hosting for ASPA records SHOULD support enforcement of this recommendation.
       </t>
       <t>
-	The authorization contents of ASPA records that are being migrated between different CA registries SHOULD be identical.
+   The authorization contents of ASPA records that are being migrated between different CA registries SHOULD be identical.
       </t>
       <t>
         The eContent of an ASPA is an instance of ASProviderAttestation, formally defined by the following ASN.1 <xref target="X.680"/> module:
@@ -203,6 +203,9 @@
         <list style="symbols">
           <t>
             The CustomerASID value MUST NOT appear in any ASID in the providers field.
+          </t>
+          <t>
+            The providers field MUST contain at least one element (ASID).
           </t>
           <t>
             The elements of providers MUST be ordered in ascending numerical order.
@@ -413,7 +416,7 @@
         and Claudio Jeker, Martin Hoffman, Lancheng Qin, and Jeff Haas for review and several suggestions for improvements.
       </t>
     </section>
-	
+
     <section title="Contributors" numbered="no">
       <t>
         The following people made significant contributions to this document:
