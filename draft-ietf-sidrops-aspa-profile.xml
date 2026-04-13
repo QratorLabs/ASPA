@@ -262,8 +262,6 @@
           An upper bound value between 4,000 and 10,000 Provider ASes is suggested.
           If this threshold is exceeded, Relying Party implementations <bcp14>SHOULD</bcp14> treat all ASPA objects related to the Customer ASID invalid; e.g. not emit a partial list of Provider ASes.
           Additionally, an error <bcp14>SHOULD</bcp14> be logged in the local system, indicating the Customer ASID for which the threshold was exceeded.
-        </t>
-        <t>
           Implementers and operators <bcp14>SHOULD</bcp14> periodically review whether imposed upper bounds still are reasonable in context of the global Internet routing system.
         </t>
       </section>
