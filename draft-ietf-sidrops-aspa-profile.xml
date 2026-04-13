@@ -601,7 +601,7 @@ yk5CFeQWetsX7D7XRNSdKwrrW6qWK/KxGF38SsuGeTyDQiNcOhwqvSfFc388ge/G
 <![CDATA[
 
 Object SHA256 hash:        S6B+jKOCFXPlRn7ws6Kd5tgpsSx609tJZpw60CVaf9Y=
-EE Subject key identifier: 2B87C76F5EEEF62044F528B82C929B28D55732AC
+EE Subject keyid:          2B87C76F5EEEF62044F528B82C929B28D55732AC
 EE Certificate issuer:     /CN=root
 EE Certificate serial:     04
 EE Authority keyid:        369AD0192C674E783222CD328566B79412B18F26
@@ -613,10 +613,8 @@ EE notBefore:              Mon 06 Jan 2025 10:26:48 +0000
 EE notAfter:               Tue 06 Jan 2026 10:26:48 +0000
 
 ASPA eContent:
-  Customer AS:             65123
-  Provider Set:            1: AS: 64512
-                           2: AS: 65551
-                           3: AS: 4200000000
+  Customer ASID:           65123
+  ProviderASSet:           64512, 65551, 4200000000
 ]]>
       </artwork>
     </section>
