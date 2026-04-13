@@ -158,12 +158,10 @@
         The content of an ASPA identifies the Customer AS (CAS) as well as the Set of Provider ASes (SPAS) that are authorized by the CAS to be its Providers.
       </t>
       <t>
-        Operators registering ASPA(s) must be cognizant of Sections 2, 3, and 4 of <xref target="I-D.ietf-sidrops-aspa-verification"/> and the operator (or their software tool) must comply with the ASPA registration recommendations in Section 4 of that document.
-      </t>
-      <t>
-        It is RECOMMENDED that for a given Customer AS, a single ASPA object be maintained which contains all providers, including any non-transparent RS ASes.
-        This practice avoids race conditions during ASPA updates that might impact BGP route propagation.
-        The software that provides hosting for ASPA records SHOULD support enforcement of this recommendation.
+        For any given Customer AS, only a single ASPA object <bcp14>SHOULD</bcp14> be maintained which contains all providers (including any non-transparent RS ASes).
+        The practise of maintaining a single object avoids race conditions during ASPA updates that might impact BGP route propagation.
+        The CA software that maintains ASPA records <bcp14>SHOULD</bcp14> support enforcement of this recommendation.
+        See <xref target="I-D.ietf-sidrops-aspa-verification" section="4"/> for all ASPA registration recommendations.
       </t>
       <t>
 	The authorization contents of ASPA records that are being migrated between different CA registries SHOULD be identical.
