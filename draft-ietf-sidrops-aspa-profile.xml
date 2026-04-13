@@ -166,38 +166,38 @@
 
       <section title="version">
         <t>
-          The version number of the ASProviderAttestation that complies with this specification <bcp14>MUST</bcp14> be 1 and <bcp14>MUST</bcp14> be explicitly encoded.
+          The <tt>version</tt> number of the ASProviderAttestation that complies with this specification <bcp14>MUST</bcp14> be 1 and <bcp14>MUST</bcp14> be explicitly encoded.
         </t>
       </section>
 
       <section title="customerASID">
         <t>
-          The customerASID field contains a positive integer that represents the AS number of the Customer Autonomous System that is the authorizing entity.
+          The <tt>customerASID</tt> field contains a positive integer that represents the AS number of the Customer Autonomous System that is the authorizing entity.
         </t>
       </section>
 
       <section title="providers">
         <t>
-          The providers field contains the listing of ASes that are authorized as providers.
+          The <tt>providers</tt> field contains the listing of ASes that are authorized as providers.
         </t>
         <t>
-          Each element contained in the providers field is an instance of ASID.
-          Each ASID element contains the AS number of an AS that has been authorized by the customer AS as its provider or RS.
+          Each element contained in the <tt>providers</tt> field is an instance of <tt>PAS</tt>.
+          Each <tt>PAS</tt> element contains the AS number of an AS that has been authorized by the customer AS as its provider or non-transparent RS.
         </t>
         <t>
-          In addition to the constraints described by the formal ASN.1 definition, the contents of the providers field <bcp14>MUST</bcp14> satisfy the following constraints:
+          In addition to the constraints described by the formal ASN.1 definition, the contents of the <tt>providers</tt> field <bcp14>MUST</bcp14> satisfy the following constraints:
         <list style="symbols">
           <t>
-            The CustomerASID value <bcp14>MUST NOT</bcp14> appear in any ASID in the providers field.
+            The CustomerASID value <bcp14>MUST NOT</bcp14> appear in any <tt>PAS</tt> in the <tt>providers</tt> field.
           </t>
           <t>
-            The elements of providers <bcp14>MUST</bcp14> be ordered in ascending numerical order.
+            The elements of <tt>providers</tt> <bcp14>MUST</bcp14> be ordered in ascending numerical order.
           </t>
           <t>
-            Each value of ASID <bcp14>MUST</bcp14> be unique (with respect to the other elements of providers).
+            Each value of <tt>PAS</tt> <bcp14>MUST</bcp14> be unique (with respect to the other elements of providers).
           </t>
           <t>
-            An ASID value of 0 can only be encoded in the providers field as a single item list, i.e., an element for AS 0 <bcp14>MUST NOT</bcp14> appear alongside any other elements.
+            An <tt>PAS</tt> value of 0 can only be encoded in the <tt>providers</tt> field as a single item list, i.e., an element for AS 0 <bcp14>MUST NOT</bcp14> appear alongside any other elements.
           </t>
           </list>
         </t>
