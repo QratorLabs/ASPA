@@ -90,11 +90,7 @@
 
     <note title="Requirements Language">
       <t>
-                The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-                "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
-                "OPTIONAL" in this document are to be interpreted as described in
-                BCP 14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and
-                only when, they appear in all capitals, as shown here.
+        The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only when, they appear in all capitals, as shown here.
       </t>
     </note>
 
@@ -141,12 +137,15 @@
           </t>
         </list>
       </t>
+      <t>
+        This document also provides implementation guidance in <xref target="implementation"/>.
+      </t>
     </section>
 
     <section title="ASPA Content Type" anchor="content-type">
       <t>
         The content-type for an ASPA is defined as id-ct-ASPA, which has the numerical value of 1.2.840.113549.1.9.16.1.49.
-        This OID MUST appear both within the eContentType in the encapContentInfo structure as well as the content-type signed attribute within the signerInfo structure (see <xref target="RFC6488"/>).
+        This OID <bcp14>MUST</bcp14> appear both within the eContentType in the encapContentInfo structure as well as the content-type signed attribute within the signerInfo structure (see <xref target="RFC6488"/>).
       </t>
     </section>
 
@@ -167,7 +166,7 @@
 
       <section title="version">
         <t>
-          The version number of the ASProviderAttestation that complies with this specification MUST be 1 and MUST be explicitly encoded.
+          The version number of the ASProviderAttestation that complies with this specification <bcp14>MUST</bcp14> be 1 and <bcp14>MUST</bcp14> be explicitly encoded.
         </t>
       </section>
 
@@ -186,19 +185,19 @@
           Each ASID element contains the AS number of an AS that has been authorized by the customer AS as its provider or RS.
         </t>
         <t>
-          In addition to the constraints described by the formal ASN.1 definition, the contents of the providers field MUST satisfy the following constraints:
+          In addition to the constraints described by the formal ASN.1 definition, the contents of the providers field <bcp14>MUST</bcp14> satisfy the following constraints:
         <list style="symbols">
           <t>
-            The CustomerASID value MUST NOT appear in any ASID in the providers field.
+            The CustomerASID value <bcp14>MUST NOT</bcp14> appear in any ASID in the providers field.
           </t>
           <t>
-            The elements of providers MUST be ordered in ascending numerical order.
+            The elements of providers <bcp14>MUST</bcp14> be ordered in ascending numerical order.
           </t>
           <t>
-            Each value of ASID MUST be unique (with respect to the other elements of providers).
+            Each value of ASID <bcp14>MUST</bcp14> be unique (with respect to the other elements of providers).
           </t>
           <t>
-            An ASID value of 0 can only be encoded in the providers field as a single item list, i.e., an element for AS 0 MUST NOT appear alongside any other elements.
+            An ASID value of 0 can only be encoded in the providers field as a single item list, i.e., an element for AS 0 <bcp14>MUST NOT</bcp14> appear alongside any other elements.
           </t>
           </list>
         </t>
@@ -207,23 +206,23 @@
 
     <section title="ASPA Validation" anchor="validation">
       <t>
-        Before a relying party can use an ASPA to validate a routing announcement, the relying party MUST first validate the ASPA object itself.
-        To validate an ASPA, the relying party MUST perform all the validation checks specified in <xref target="RFC6488"/> as well as the following additional ASPA-specific validation steps:
+        Before a relying party can use an ASPA to validate a routing announcement, the relying party <bcp14>MUST</bcp14> first validate the ASPA object itself.
+        To validate an ASPA, the relying party <bcp14>MUST</bcp14> perform all the validation checks specified in <xref target="RFC6488"/> as well as the following additional ASPA-specific validation steps:
         <list style="symbols">
           <t>
-            The Autonomous System Identifier Delegation Extension <xref target="RFC3779"/> MUST be present in the end-entity (EE) certificate (contained within the ASPA), and the Customer ASID in the ASPA eContent MUST match the ASId specified by the EE certificate's Autonomous System Identifier Delegation Extension.
+            The Autonomous System Identifier Delegation Extension <xref target="RFC3779"/> <bcp14>MUST</bcp14> be present in the end-entity (EE) certificate (contained within the ASPA), and the Customer ASID in the ASPA eContent <bcp14>MUST</bcp14> match the ASId specified by the EE certificate's Autonomous System Identifier Delegation Extension.
           </t>
           <t>
-            The Autonomous System Identifier Delegation Extension MUST contain exactly one "id" element (<xref target="RFC3779" section="3.2.3.6"/>) and MUST NOT contain any "inherit" elements (<xref target="RFC3779" section="3.2.3.3"/>) or "range" elements (<xref target="RFC3779" section="3.2.3.7"/>).
+            The Autonomous System Identifier Delegation Extension <bcp14>MUST</bcp14> contain exactly one "id" element (<xref target="RFC3779" section="3.2.3.6"/>) and <bcp14>MUST NOT</bcp14> contain any "inherit" elements (<xref target="RFC3779" section="3.2.3.3"/>) or "range" elements (<xref target="RFC3779" section="3.2.3.7"/>).
           </t>
           <t>
-            The IP Address Delegation Extension <xref target="RFC3779"/> MUST be absent.
+            The IP Address Delegation Extension <xref target="RFC3779"/> <bcp14>MUST</bcp14> be absent.
           </t>
         </list>
       </t>
     </section>
 
-    <section anchor="Implementation" title="Implementation Considerations">
+    <section anchor="implementation" title="Implementation Considerations">
       <section>
         <name>One ASPA Object per Customer AS</name>
         <t>
@@ -238,7 +237,7 @@
       <section>
         <name>Use of One-Time Use End Entity Certificates</name>
         <t>
-          CA are RECOMMENDED to generate a new key pair for each new ASPA and only sign one ASPA with each EE certificate.
+          CA are <bcp14>RECOMMENDED</bcp14> to generate a new key pair for each new ASPA and only sign one ASPA with each EE certificate.
           This type of EE certificate is termed a "one-time-use" EE certificate (see <xref target="RFC6487" section="3"/>).
         </t>
       </section>
@@ -246,7 +245,7 @@
       <section>
         <name>ASPA Object Filenames</name>
         <t>
-          CAs are RECOMMENDED to follow the guidelines for naming ASPA objects based on <xref target="RFC6481" section="2.2"/>, i.e., convert the 160-bit hash of the EE's public key value into a 27-character string using Base 64 Encoding with the URL and Filename Safe Alphabet (see <xref target="RFC4648" section="5"/>).
+          CAs are <bcp14>RECOMMENDED</bcp14> to follow the guidelines for naming ASPA objects based on <xref target="RFC6481" section="2.2"/>, i.e., convert the 160-bit hash of the EE's public key value into a 27-character string using Base 64 Encoding with the URL and Filename Safe Alphabet (see <xref target="RFC4648" section="5"/>).
           See <xref target="I-D.ietf-sidrops-publication-server-bcp" section="7.7"/> for more information and considerations.
         </t>
       </section>
@@ -259,13 +258,13 @@
           In addition to protocol limitations in the ecosystem, locally defined restrictions could exist for the maximum file size of signed objects a Relying Party implementation is willing to accept.
         </t>
         <t>
-          Relying Party implementations are RECOMMENDED to impose an upper bound on the number of Provider ASes for a given Customer ASID.
+          Relying Party implementations are <bcp14>RECOMMENDED</bcp14> to impose an upper bound on the number of Provider ASes for a given Customer ASID.
           An upper bound value between 4,000 and 10,000 Provider ASes is suggested.
-          If this threshold is exceeded, Relying Party implementations SHOULD treat all ASPA objects related to the Customer ASID invalid; e.g. not emit a partial list of Provider ASes.
-          Additionally, an error SHOULD be logged in the local system, indicating the Customer ASID for which the threshold was exceeded.
+          If this threshold is exceeded, Relying Party implementations <bcp14>SHOULD</bcp14> treat all ASPA objects related to the Customer ASID invalid; e.g. not emit a partial list of Provider ASes.
+          Additionally, an error <bcp14>SHOULD</bcp14> be logged in the local system, indicating the Customer ASID for which the threshold was exceeded.
         </t>
         <t>
-          Implementers and operators SHOULD periodically review whether imposed upper bounds still are reasonable in context of the global Internet routing system.
+          Implementers and operators <bcp14>SHOULD</bcp14> periodically review whether imposed upper bounds still are reasonable in context of the global Internet routing system.
         </t>
       </section>
     </section>
