@@ -112,20 +112,17 @@
         </list>
       </t>
       <t>
-        This document specifies a digitally signed Autonomous System Provider Authorization (ASPA) object profile.  This profile provides the authorization mechanism mentioned above and can be used to facilitate detection and mitigation of route leaks.
-      </t>
-      <t>
+        This document specifies a digitally signed Autonomous System Provider Authorization (ASPA) object profile.
         An ASPA object is a cryptographically verifiable attestation signed by the holder of an Autonomous System identifier, hereafter called the "Customer AS", or CAS.
         An ASPA object contains a list of one or more Provider ASes where each entry of this list authorizes that AS to act as a Provider network for the Customer AS.
       </t>
       <t>
-        When the Customer AS makes use of multiple providers, all Provider ASes are to be listed in the ASPA object, including any non-transparent Internet Exchange Point (IXP) Route Server (RS) ASes.
-        Note that the common case for RS ASes at IXPs is to operate transparently (see Section 2.2.2.1 <xref target="RFC7947"/>), and transparent IXP Route Servers do not need to be listed as PAS in ASPAs.
+        This profile provides the authorization mechanism mentioned above and can be used to facilitate detection and mitigation of route leaks.
+        The procedures for verifying AS_PATHs in BGP UPDATE messages using ASPAs are described in <xref target="I-D.ietf-sidrops-aspa-verification"/>.
       </t>
       <t>
-        The BGP Roles that an Autonomous System may have in its peering relationships with eBGP neighbors are discussed in <xref target="I-D.ietf-sidrops-aspa-verification"/>.
-        The details of ASPA registration requirements for ASes in different scenarios are also specified in that document.
-        In addition, the procedures for verifying AS_PATHs in BGP UPDATE messages using Validated ASPA Payloads (VAPs) are described in that document.
+        When the Customer AS makes use of multiple providers, all Provider ASes are to be listed in the ASPA object, including any non-transparent Internet Exchange Point (IXP) Route Server (RS) ASes.
+        Note that the common case for RS ASes at IXPs is to operate transparently (see Section 2.2.2.1 <xref target="RFC7947"/>), and transparent IXP Route Servers do not need to be listed as PAS in ASPAs.
       </t>
       <t>
         This CMS <xref target="RFC5652"/> protected content type definition conforms to the <xref target="RFC6488"/> template for RPKI signed objects.
