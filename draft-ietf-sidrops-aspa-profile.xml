@@ -154,15 +154,7 @@
       <t>
         The content of an ASPA identifies the Customer AS (CAS) as well as the Set of Provider ASes (SPAS) that are authorized by the CAS to be its Providers.
       </t>
-      <t>
-        For any given Customer AS, only a single ASPA object <bcp14>SHOULD</bcp14> be maintained which contains all providers (including any non-transparent RS ASes).
-        The practise of maintaining a single object avoids race conditions during ASPA updates that might impact BGP route propagation.
-        The CA software that maintains ASPA records <bcp14>SHOULD</bcp14> support enforcement of this recommendation.
-        See <xref target="I-D.ietf-sidrops-aspa-verification" section="4"/> for all ASPA registration recommendations.
-      </t>
-      <t>
-	The authorization contents of ASPA records that are being migrated between different CA registries SHOULD be identical.
-      </t>
+
       <t>
         The eContent of an ASPA is an instance of ASProviderAttestation, formally defined by the following ASN.1 <xref target="X.680"/> module:
       </t>
@@ -324,6 +316,17 @@
     </section>
 
     <section anchor="Implementation" title="Implementation Considerations">
+      <section>
+        <name>One ASPA Object per Customer AS</name>
+        <t>
+          For any given Customer AS, only a single ASPA object <bcp14>SHOULD</bcp14> be maintained which contains all providers (including any non-transparent RS ASes).
+          The practice of maintaining a single object per Customer AS avoids race conditions during ASPA updates that might impact BGP route propagation.
+          The authorization contents of ASPA records that are being migrated between different CA registries <bcp14>SHOULD</bcp14> be identical for the duration of the migration.
+          The CA software that maintains ASPA records <bcp14>SHOULD</bcp14> support enforcement of this recommendation.
+          See <xref target="I-D.ietf-sidrops-aspa-verification" section="4"/> for all ASPA registration recommendations.
+        </t>
+      </section>
+
       <section>
         <name>Use of One-Time Use End Entity Certificates</name>
         <t>
