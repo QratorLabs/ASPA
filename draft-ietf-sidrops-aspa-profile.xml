@@ -162,7 +162,7 @@
       <sourcecode type="asn.1" src="RPKI-ASPA-2023.asn"/>
 
       <t>
-        Note that this content appears as the eContent within the encapContentInfo as specified in <xref target="RFC6488"/>.
+        This content appears as the eContent within the encapContentInfo as specified in <xref target="RFC6488"/>.
       </t>
 
       <section title="version">
@@ -548,12 +548,12 @@ $ echo 301DA003020101020300FE633011020300FC00020301000F020500FA56EA00 \
   | xxd -r -ps | openssl asn1parse -inform DER -dump -i
   0:d=0  hl=2 l=  29 cons: SEQUENCE
   2:d=1  hl=2 l=   3 cons:  cont [ 0 ]
-  4:d=2  hl=2 l=   1 prim:   INTEGER   :01
-  7:d=1  hl=2 l=   3 prim:  INTEGER    :FE63     # Customer ASID 65123
+  4:d=2  hl=2 l=   1 prim:   INTEGER :01
+  7:d=1  hl=2 l=   3 prim:  INTEGER  :FE63     # Customer ASID 65123
  12:d=1  hl=2 l=  17 cons:  SEQUENCE
- 14:d=2  hl=2 l=   3 prim:   INTEGER   :FC00     # ProviderAS 64512
- 19:d=2  hl=2 l=   3 prim:   INTEGER   :01000F   # ProviderAS 65551
- 24:d=2  hl=2 l=   5 prim:   INTEGER   :FA56EA00 # ProviderAS 4200000000
+ 14:d=2  hl=2 l=   3 prim:   INTEGER :FC00     # ProviderAS 64512
+ 19:d=2  hl=2 l=   3 prim:   INTEGER :01000F   # ProviderAS 65551
+ 24:d=2  hl=2 l=   5 prim:   INTEGER :FA56EA00 # ProviderAS 4200000000
 ]]>
       </artwork>
 
@@ -603,22 +603,23 @@ yk5CFeQWetsX7D7XRNSdKwrrW6qWK/KxGF38SsuGeTyDQiNcOhwqvSfFc388ge/G
     <artwork>
 <![CDATA[
 
-Object SHA256 hash:          S6B+jKOCFXPlRn7ws6Kd5tgpsSx609tJZpw60CVaf9Y=
-EE Subject key identifier:   2B87C76F5EEEF62044F528B82C929B28D55732AC
-EE Certificate issuer:       /CN=root
-EE Certificate serial:       04
-EE Authority key identifier: 369AD0192C674E783222CD328566B79412B18F26
-EE Authority info access:    rsync://localhost/repo/369AD0192C674E783222CD328566B79412B18F26.cer
-EE Subject info access:      rsync://localhost/ta/an-object.asa
-CMS Signing time:            Mon 06 Jan 2025 10:26:48 +0000
-EE notBefore:                Mon 06 Jan 2025 10:26:48 +0000
-EE notAfter:                 Tue 06 Jan 2026 10:26:48 +0000
+Object SHA256 hash:        S6B+jKOCFXPlRn7ws6Kd5tgpsSx609tJZpw60CVaf9Y=
+EE Subject key identifier: 2B87C76F5EEEF62044F528B82C929B28D55732AC
+EE Certificate issuer:     /CN=root
+EE Certificate serial:     04
+EE Authority keyid:        369AD0192C674E783222CD328566B79412B18F26
+EE Authority info access:
+     rsync://localhost/repo/369AD0192C674E783222CD328566B79412B18F26.cer
+EE Subject info access:    rsync://localhost/ta/an-object.asa
+CMS Signing time:          Mon 06 Jan 2025 10:26:48 +0000
+EE notBefore:              Mon 06 Jan 2025 10:26:48 +0000
+EE notAfter:               Tue 06 Jan 2026 10:26:48 +0000
 
 ASPA eContent:
-  Customer AS:               65123
-  Provider Set:              1: AS: 64512
-                             2: AS: 65551
-                             3: AS: 4200000000
+  Customer AS:             65123
+  Provider Set:            1: AS: 64512
+                           2: AS: 65551
+                           3: AS: 4200000000
 ]]>
       </artwork>
     </section>
