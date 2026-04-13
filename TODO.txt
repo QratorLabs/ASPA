@@ -1,3 +1,0 @@
-* Incorrect use of ASPATH Segment in the verification document
-* The downstream path verification works incorrectly in case if IXes one hop away from them
-* specify verify_pair
