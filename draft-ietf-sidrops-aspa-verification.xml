@@ -120,10 +120,9 @@
       <t>
         The Border Gateway Protocol (BGP) as originally designed is known to be vulnerable to prefix (or route) hijacks and BGP route leaks <xref target="RFC7908"/>.
         Some existing BGP extensions can partially solve these problems.
-        For example, Resource Public Key Infrastructure (RPKI) based route origin validation (RPKI-ROV) <xref target="RFC6480"/> <xref target="RFC6482"/> <xref target="RFC6811"/> <xref target="RFC9319"/> can be used to detect and filter accidental mis-originations.
-        <xref target="RFC9234"/> or <xref target="I-D.ietf-grow-route-leak-detection-mitigation"/> can be used to detect and mitigate accidental route leaks.
-        While RPKI-ROV can prevent accidental prefix hijacks, malicious forged-origin prefix hijacks can still occur <xref target="RFC9319"/>.
-        RFC9319 includes some recommendations for reducing the attack surface for forged-origin prefix hijacks.
+        For example, Resource Public Key Infrastructure (RPKI) based route origin validation (RPKI-ROV) <xref target="RFC6480"/> <xref target="RFC9582"/> <xref target="RFC6811"/> <xref target="RFC9319"/> can be used to detect and filter accidental mis-originations.
+        <xref target="RFC9234"/> can be used to detect and mitigate accidental route leaks.
+        While RPKI-ROV can prevent accidental prefix hijacks, malicious forged-origin prefix hijacks can still occur, <xref target="RFC9319"/> includes some recommendations for reducing the attack surface for forged-origin prefix hijacks.
       </t>
       <t>
         This document describes procedures that make use of Autonomous System Provider Authorization (ASPA) objects <xref target="I-D.ietf-sidrops-aspa-profile"/> in the RPKI to verify properties of the BGP AS_PATH attribute of advertised routes.
@@ -203,7 +202,7 @@
       </t>
       <t>
         An AS SHOULD register a single ASPA object.
-        A single ASPA record for an AS ought to prevent race conditions during ASPA updates that might affect prefix propagation.
+        A single ASPA record for an AS ought to prevent race conditions during ASPA updates that might affect route propagation.
         The CA software that provides hosting for ASPA records SHOULD support enforcement of this practice.
       </t>
       <t>
@@ -276,7 +275,7 @@
         <t>
           The AS_PATH is invalid if apexes of the up-ramp and down-ramp (AS(K) and AS(L), respectively) of the COMPRESSED_AS_PATH are apart by more than one hop; else, it is valid.
           In other words, if the combined length of the up-ramp and down-ramp of the COMPRESSED_AS_PATH is equal to N or greater, the AS_PATH is valid (route leak free).
-          If the combined length is less than N, the prefix was leaked or the AS_PATH was malformed (i.e., the AS_PATH is invalid).
+          If the combined length is less than N, the route was leaked or the AS_PATH was malformed (i.e., the AS_PATH is invalid).
         </t>
       </section>
 
@@ -531,7 +530,7 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
     <section title="Relation to Other Technologies">
       <section title="ROA">
         <t>
-          A ROA <xref target="RFC6482"/> is a digitally signed object that binds an IP prefix to an AS number and is signed by the prefix holder.
+          A ROA <xref target="RFC9582"/> is a digitally signed object that binds an IP prefix to an AS number and is signed by the prefix holder.
           The RPKI-ROV procedure <xref target="RFC6483"/> <xref target="RFC6811"/> uses ROAs to verify that an AS is authorized to originate a specific prefix.
           The joint use of ROA and ASPA records and their corresponding verification procedures can establish a security trusted chain capable of detecting not only accidental route leaks but also malicious AS_PATH manipulations <xref target="bgp-cycling"/>.
         </t>
@@ -624,7 +623,6 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
     <references title="Normative References">
       <?rfc include="reference.RFC.2119.xml"?>
       <?rfc include="reference.RFC.6480.xml"?>
-      <?rfc include="reference.RFC.6482.xml"?>
       <?rfc include="reference.RFC.6811.xml"?>
       <?rfc include="reference.RFC.4271.xml"?>
       <?rfc include="reference.RFC.6793.xml"?>
@@ -633,6 +631,7 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
       <?rfc include="reference.RFC.7908.xml"?>
       <?rfc include="reference.RFC.8174.xml"?>
       <?rfc include="reference.RFC.9234.xml"?>
+      <?rfc include="reference.RFC.9582.xml"?>
       <?rfc include="reference.RFC.9774.xml"?>
       <?rfc include="reference.I-D.ietf-sidrops-aspa-profile.xml"?>
     </references>
@@ -643,7 +642,7 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
       <?rfc include="reference.RFC.9319.xml"?>
       <?rfc include="reference.RFC.9324.xml"?>
       <?rfc include="reference.RFC.6483.xml"?>
-      <?rfc include="reference.I-D.ietf-grow-route-leak-detection-mitigation.xml"?>
+
       <reference anchor="Peerlock" target="https://www.nanog.org/sites/default/files/Snijders_Everyday_Practical_Bgp.pdf">
         <front>
           <title>Peerlock</title>
