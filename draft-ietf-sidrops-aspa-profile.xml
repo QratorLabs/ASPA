@@ -237,7 +237,7 @@
       <section>
         <name>Use of One-Time Use End Entity Certificates</name>
         <t>
-          CA are <bcp14>RECOMMENDED</bcp14> to generate a new key pair for each new ASPA and only sign one ASPA with each EE certificate.
+          CAs are <bcp14>RECOMMENDED</bcp14> to generate a new key pair for each new ASPA and only sign one ASPA with each EE certificate.
           This type of EE certificate is termed a "one-time-use" EE certificate (see <xref target="RFC6487" section="3"/>).
         </t>
       </section>
@@ -253,15 +253,15 @@
       <section>
         <name>Upper Bound on the Number of Providers</name>
         <t>
-          While the ASN.1 profile specified in <xref target="content"/> imposes no limit on the number of Provider ASes that can be listed for a given Customer ASID, consideration will need to be given to limitations existing in validators and elsewhere in the RPKI ecosystem.
+          While the ASN.1 profile specified in <xref target="content"/> imposes no limit on the number of Provider ASes that can be listed for a given CAS, consideration will need to be given to limitations existing in validators and elsewhere in the RPKI ecosystem.
           For example, the number of Provider ASes that can be listed in a single RPKI-To-Router protocol ASPA PDU following the Length field constraints in <xref target="I-D.ietf-sidrops-8210bis" section="5.1"/> is 16,380 providers.
           In addition to protocol limitations in the ecosystem, locally defined restrictions could exist for the maximum file size of signed objects a Relying Party implementation is willing to accept.
         </t>
         <t>
-          Relying Party implementations are <bcp14>RECOMMENDED</bcp14> to impose an upper bound on the number of Provider ASes for a given Customer ASID.
+          Relying Party implementations are <bcp14>RECOMMENDED</bcp14> to impose an upper bound on the number of Provider ASes for a given CAS.
           An upper bound value between 4,000 and 10,000 Provider ASes is suggested.
-          If this threshold is exceeded, Relying Party implementations <bcp14>SHOULD</bcp14> treat all ASPA objects related to the Customer ASID invalid; e.g. not emit a partial list of Provider ASes.
-          Additionally, an error <bcp14>SHOULD</bcp14> be logged in the local system, indicating the Customer ASID for which the threshold was exceeded.
+          If this threshold is exceeded, Relying Party implementations <bcp14>SHOULD</bcp14> treat all ASPA objects related to the CAS invalid; e.g. not emit a partial list of Provider ASes.
+          Additionally, an error <bcp14>SHOULD</bcp14> be logged in the local system, indicating the CAS for which the threshold was exceeded.
           Implementers and operators <bcp14>SHOULD</bcp14> periodically review whether imposed upper bounds still are reasonable in context of the global Internet routing system.
         </t>
       </section>
@@ -546,11 +546,11 @@ $ echo 301DA003020101020300FE633011020300FC00020301000F020500FA56EA00 \
   0:d=0  hl=2 l=  29 cons: SEQUENCE
   2:d=1  hl=2 l=   3 cons:  cont [ 0 ]
   4:d=2  hl=2 l=   1 prim:   INTEGER :01
-  7:d=1  hl=2 l=   3 prim:  INTEGER  :FE63     # Customer ASID 65123
- 12:d=1  hl=2 l=  17 cons:  SEQUENCE
- 14:d=2  hl=2 l=   3 prim:   INTEGER :FC00     # ProviderAS 64512
- 19:d=2  hl=2 l=   3 prim:   INTEGER :01000F   # ProviderAS 65551
- 24:d=2  hl=2 l=   5 prim:   INTEGER :FA56EA00 # ProviderAS 4200000000
+  7:d=1  hl=2 l=   3 prim:  INTEGER  :FE63     # CAS 65123
+ 12:d=1  hl=2 l=  17 cons:  SEQUENCE           # ProviderASSet
+ 14:d=2  hl=2 l=   3 prim:   INTEGER :FC00       # PAS 64512
+ 19:d=2  hl=2 l=   3 prim:   INTEGER :01000F     # PAS 65551
+ 24:d=2  hl=2 l=   5 prim:   INTEGER :FA56EA00   # PAS 4200000000
 ]]>
       </artwork>
 
@@ -613,8 +613,8 @@ EE notBefore:              Mon 06 Jan 2025 10:26:48 +0000
 EE notAfter:               Tue 06 Jan 2026 10:26:48 +0000
 
 ASPA eContent:
-  Customer ASID:           65123
-  ProviderASSet:           64512, 65551, 4200000000
+  customerASID:            65123
+  providers:               64512, 65551, 4200000000
 ]]>
       </artwork>
     </section>
