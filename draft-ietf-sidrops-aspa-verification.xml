@@ -202,7 +202,7 @@
       </t>
       <t>
         An AS SHOULD register a single ASPA object.
-        A single ASPA record for an AS ought to prevent race conditions during ASPA updates that might affect prefix propagation.
+        A single ASPA record for an AS ought to prevent race conditions during ASPA updates that might affect route propagation.
         The CA software that provides hosting for ASPA records SHOULD support enforcement of this practice.
       </t>
       <t>
@@ -275,7 +275,7 @@
         <t>
           The AS_PATH is invalid if apexes of the up-ramp and down-ramp (AS(K) and AS(L), respectively) of the COMPRESSED_AS_PATH are apart by more than one hop; else, it is valid.
           In other words, if the combined length of the up-ramp and down-ramp of the COMPRESSED_AS_PATH is equal to N or greater, the AS_PATH is valid (route leak free).
-          If the combined length is less than N, the prefix was leaked or the AS_PATH was malformed (i.e., the AS_PATH is invalid).
+          If the combined length is less than N, the route was leaked or the AS_PATH was malformed (i.e., the AS_PATH is invalid).
         </t>
       </section>
 
