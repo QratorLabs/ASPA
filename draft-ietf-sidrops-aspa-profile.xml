@@ -11,7 +11,7 @@
 
 <rfc xmlns:xi="http://www.w3.org/2001/XInclude"
      category="std"
-     docName="draft-ietf-sidrops-aspa-profile-25"
+     docName="draft-ietf-sidrops-aspa-profile-26"
      ipr="trust200902"
      consensus="true"
      submissionType="IETF">
@@ -545,7 +545,7 @@ $ echo 301DA003020101020300FE633011020300FC00020301000F020500FA56EA00 \
   | xxd -r -ps | openssl asn1parse -inform DER -dump -i
   0:d=0  hl=2 l=  29 cons: SEQUENCE
   2:d=1  hl=2 l=   3 cons:  cont [ 0 ]
-  4:d=2  hl=2 l=   1 prim:   INTEGER :01
+  4:d=2  hl=2 l=   1 prim:   INTEGER :01       # version
   7:d=1  hl=2 l=   3 prim:  INTEGER  :FE63     # CAS 65123
  12:d=1  hl=2 l=  17 cons:  SEQUENCE           # ProviderASSet
  14:d=2  hl=2 l=   3 prim:   INTEGER :FC00       # PAS 64512
