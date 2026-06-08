@@ -11,7 +11,7 @@
 <?rfc subcompact="no" ?>
 
 <rfc category="std"
-     docName="draft-ietf-sidrops-aspa-verification-25"
+     docName="draft-ietf-sidrops-aspa-verification-26"
      submissionType="IETF"
      consensus="true"
      ipr="trust200902">
@@ -234,7 +234,7 @@
 
       <section title="Principles" anchor="principles">
         <t>
-          Let the sequence COMPRESSED_AS_PATH {AS(N), AS(N-1),..., AS(2), AS(1)} represent the AS_PATH in terms of unique ASNs, where AS(1) is the origin AS and AS(N) is the most recently added AS and neighbor of the receiving/verifying AS.
+          Let the sequence COMPRESSED_AS_PATH = {AS(N), AS(N-1),..., AS(2), AS(1)} represent the AS_PATH after collapsing consecutive duplicate ASNs, where AS(1) is the origin AS, AS(N) is the most recently added AS (and a neighbor of the receiving/verifying AS), and no two consecutive ASNs are equal.
           AS(N+1) represents the local (receiving/verifying) AS; it does not explicitly appear in the description of the AS_PATH verification procedures.
         </t>
         <t>
@@ -475,6 +475,17 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
         <t>
           During AS migration, an AS is in a transition phase when it may be configured at eBGP neighbor ASes with its globally configured ASN (i.e., migrated ASN) or a legacy ASN <xref target="RFC7705"/>.
           The AS operator MUST notify its customer ASes and advise them to update ASPA records to include both the globally configured ASN and the legacy ASN in their SPAS.
+        </t>
+      </section>
+      <section title="Partitioned AS" anchor="AS-part">
+        <t>
+          In rare scenarios where an AS becomes internally partitioned, for example, due to a physical link failure, operators may temporarily onboard a pre-designated emergency transit provider to bridge the isolated segments.
+		  To achieve this, the AS must override standard eBGP loop detection to accept its own routes via the emergency provider and it may propagate the routes (with loops) to its downstream customers.
+		  This operational workaround results in an AS_PATH containing a non-consecutive AS loop as seen by the customers (where the partitioned AS's ASN appears twice, separated by the upstream providers).
+		  The AS_PATH verification procedures (<xref target="verif"/>) work fine for such routes.
+		  To ensure these routes remain globally reachable and are not flagged as ASPA-Invalid, operators must plan for these contingencies in advance.
+		  Any backup or emergency upstream provider AS intended for partition recovery must be explicitly included in the customer AS's ASPA registration.
+		  Pre-registering these emergency providers in the ASPA record ensures that the resulting paths pass verification even when emergency topology-bridging is active.
         </t>
       </section>
 
