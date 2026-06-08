@@ -479,7 +479,13 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
       </section>
       <section title="Partitioned AS" anchor="AS-part">
         <t>
-          In rare scenarios where an AS becomes internally partitioned, for example, due to a physical link or iBGP failure, operators may temporarily onboard a pre-designated emergency transit provider to bridge the isolated segments. To achieve this, the AS must override standard eBGP loop detection to accept its own routes via the emergency provider, which it then propagates to its downstream customers. This operational workaround results in an AS_PATH containing a non-consecutive AS loop (where the partitioned AS's ASN appears twice, separated by the upstream providers). To ensure these routes remain globally reachable and are not flagged as ASPA-Invalid, operators must plan for these contingencies in advance. Any backup or emergency upstream provider AS intended for partition recovery must be explicitly included in the customer AS's ASPA registration. Pre-registering these emergency providers in the ASPA record ensures that the resulting paths pass verification even when emergency topology-bridging is active.
+          In rare scenarios where an AS becomes internally partitioned, for example, due to a physical link failure, operators may temporarily onboard a pre-designated emergency transit provider to bridge the isolated segments.
+		  To achieve this, the AS must override standard eBGP loop detection to accept its own routes via the emergency provider and it may propagate the routes (with loops) to its downstream customers.
+		  This operational workaround results in an AS_PATH containing a non-consecutive AS loop as seen by the customers (where the partitioned AS's ASN appears twice, separated by the upstream providers).
+		  The AS_PATH verification procedures (<xref target="verif"/>) work fine for such routes.
+		  To ensure these routes remain globally reachable and are not flagged as ASPA-Invalid, operators must plan for these contingencies in advance.
+		  Any backup or emergency upstream provider AS intended for partition recovery must be explicitly included in the customer AS's ASPA registration.
+		  Pre-registering these emergency providers in the ASPA record ensures that the resulting paths pass verification even when emergency topology-bridging is active.
         </t>
       </section>
 
