@@ -11,7 +11,7 @@
 <?rfc subcompact="no" ?>
 
 <rfc category="std"
-     docName="draft-ietf-sidrops-aspa-verification-25"
+     docName="draft-ietf-sidrops-aspa-verification-26"
      submissionType="IETF"
      consensus="true"
      ipr="trust200902">
@@ -33,6 +33,7 @@
         <email>a.e.azimov@gmail.com</email>
       </address>
     </author>
+<!-- Alexander: should you update your affiliation info? -->
     <author fullname="Eugene Bogomazov" initials="E." surname="Bogomazov">
       <organization showOnFrontPage="true">Qrator Labs</organization>
       <address>
@@ -206,9 +207,13 @@
         The CA software that provides hosting for ASPA records SHOULD support enforcement of this practice.
       </t>
       <t>
-        An AS may have providers that may be used on certain occasions. 
-        For an example in case of a DDoS attack, or if an AS may become internally partitioned and uses its provider to receive prefixes with its own ASN in the AS_PATH to bridge the isolated segments.
-        It is RECOMMENDED to add such providers in ASPA in advance, so there will be no race conditions between ASPA distribution and route propagation.
+        An AS may maintain standby transit providers for specific operational scenarios.
+		For example, an AS might temporarily route traffic through an emergency provider specifically for DDoS attack mitigation.
+		Another use case involves bridging an unexpected internal AS partition.
+		In this scenario, one segment of the partitioned AS continues to be served by its regular provider (AS A), while an emergency provider (AS B) is onboarded to serve the isolated segment.
+		Connectivity between the two halves of the partitioned AS is then restored via the peering link between AS A and AS B.
+		(Note: Because this bridging technique naturally results in an AS loop in the AS_PATH, it requires overriding the standard eBGP loop detection mechanisms within the partitioned AS.)
+        It is RECOMMENDED that an AS include such standby or emergency providers in its ASPA object in advance to prevent race conditions between global ASPA distribution and emergency route propagation.
       </t>
       <t>
         During a transition process between different certificate authority (CA) registries, the ASPA records SHOULD be kept identical in all relevant registries.
@@ -235,7 +240,7 @@
 
       <section title="Principles" anchor="principles">
         <t>
-          Let the sequence COMPRESSED_AS_PATH {AS(N), AS(N-1),..., AS(2), AS(1)} represent the AS_PATH after removing consecutive duplicate ASNs, where AS(1) is the origin AS, AS(N) is the most recently added AS, and a neighbor of the receiving/verifying AS.
+          Let the sequence COMPRESSED_AS_PATH {AS(N), AS(N-1),..., AS(2), AS(1)} represent the AS_PATH after removing consecutive duplicate ASNs, where AS(1) is the origin AS, and AS(N) is the most recently added AS as well as a neighbor of the receiving/verifying AS.
           AS(N+1) represents the local (receiving/verifying) AS; it does not explicitly appear in the description of the AS_PATH verification procedures.
         </t>
         <t>
