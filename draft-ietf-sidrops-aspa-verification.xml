@@ -206,7 +206,8 @@
         The CA software that provides hosting for ASPA records SHOULD support enforcement of this practice.
       </t>
       <t>
-        An AS may have providers that may be used on certain occasions, for an example in case of a DDoS attack.
+        An AS may have providers that may be used on certain occasions. 
+        For an example in case of a DDoS attack, or if an AS may become internally partitioned and uses its provider to receive prefixes with its own ASN in the AS_PATH to bridge the isolated segments.
         It is RECOMMENDED to add such providers in ASPA in advance, so there will be no race conditions between ASPA distribution and route propagation.
       </t>
       <t>
@@ -234,7 +235,7 @@
 
       <section title="Principles" anchor="principles">
         <t>
-          Let the sequence COMPRESSED_AS_PATH {AS(N), AS(N-1),..., AS(2), AS(1)} represent the AS_PATH in terms of unique ASNs, where AS(1) is the origin AS and AS(N) is the most recently added AS and neighbor of the receiving/verifying AS.
+          Let the sequence COMPRESSED_AS_PATH {AS(N), AS(N-1),..., AS(2), AS(1)} represent the AS_PATH after removing consecutive duplicate ASNs, where AS(1) is the origin AS, AS(N) is the most recently added AS, and a neighbor of the receiving/verifying AS.
           AS(N+1) represents the local (receiving/verifying) AS; it does not explicitly appear in the description of the AS_PATH verification procedures.
         </t>
         <t>
