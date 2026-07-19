@@ -414,13 +414,20 @@
           A signer implementation <xref target="krill"/> in Rust was reported on by Tim Bruijnzeels.
         </li>
       </ul>
+      <section>
+        <name>Deployment Status</name>
+        <t>
+          As of July 2026, roughly 2,400 ASPA objects have been published in the global RPKI.
+          See <tt>https://console.rpki-client.org/aspa.html</tt> for an up-to-date overview.
+        </t>
+      </section>
     </section>
 
     <section anchor="Acknowledgments" title="Acknowledgments">
       <t>
         The authors would like to thank Keyur Patel for helping kick-start the ASPA profile project,
         Ties de Kock &amp; Tim Bruijnzeels for suggesting that the ProviderASSet be in a canonical form,
-        and Claudio Jeker, Martin Hoffman, Lancheng Qin, Jeff Haas,
+        and Claudio Jeker, Martin Hoffman, Lancheng Qin, Jeff Haas, Rich Salz,
         Srihari Sangli,
         Gavin Brown,
         and
