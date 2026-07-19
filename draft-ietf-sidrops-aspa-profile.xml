@@ -120,6 +120,7 @@
       <t>
         When the Customer AS makes use of multiple providers, all Provider ASes are to be listed in the ASPA object, including any non-transparent Internet Exchange Point (IXP) Route Server (RS) ASes.
         Note that the common case for RS ASes at IXPs is to operate transparently (see <xref target="RFC7947" section="2.2.2.1"/>), and transparent IXP Route Servers do not need to be listed as <tt>PAS</tt> in ASPAs.
+        When the Customer AS does not use any providers for transit, a <tt>PAS</tt> value of 0 is used.
       </t>
       <t>
         This CMS <xref target="RFC5652"/> protected content type definition conforms to the <xref target="RFC6488"/> template for RPKI signed objects.
@@ -420,8 +421,9 @@
         The authors would like to thank Keyur Patel for helping kick-start the ASPA profile project,
         Ties de Kock &amp; Tim Bruijnzeels for suggesting that the ProviderASSet be in a canonical form,
         and Claudio Jeker, Martin Hoffman, Lancheng Qin, Jeff Haas,
-        and
         Srihari Sangli,
+        and
+        Gavin Brown,
         for review and several suggestions for improvements.
       </t>
     </section>
