@@ -103,7 +103,7 @@
         As part of this infrastructure, a mechanism is needed for Autonomous Systems (AS) operators, in their capacity as customers, to designate and authorize other ASes as their Provider(s).
         A Provider AS (PAS) is a network providing connectivity between networks - it provides transit services to the customer. That is:
         <list style="letters">
-          <t>The provider may propagate Border Gateway Protocol (BGP) routes received from any direction. For example, routes the provider learned from its own providers, lateral peers, and other customers. The provider may also announce a default route to their customers.</t>
+          <t>The provider may propagate Border Gateway Protocol (BGP) routes received from any direction to their customers. For example, routes the provider learned from its own providers, lateral peers, and other customers. The provider may also announce a default route to their customers.</t>
           <t>The provider may propagate BGP routes received from the customer in any direction. For example, to the provider's providers, lateral peers, and other customers.</t>
         </list>
       </t>
@@ -405,7 +405,10 @@
       <t>
         The authors would like to thank Keyur Patel for helping kick-start the ASPA profile project,
         Ties de Kock &amp; Tim Bruijnzeels for suggesting that the ProviderASSet be in a canonical form,
-        and Claudio Jeker, Martin Hoffman, Lancheng Qin, and Jeff Haas for review and several suggestions for improvements.
+        and Claudio Jeker, Martin Hoffman, Lancheng Qin, Jeff Haas,
+        and
+        Srihari Sangli,
+        for review and several suggestions for improvements.
       </t>
     </section>
 
