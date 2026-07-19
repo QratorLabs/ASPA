@@ -109,12 +109,12 @@
         </list>
       </t>
       <t>
-        This document specifies a digitally signed Autonomous System Provider Authorization (ASPA) object profile.
+        This document specifies a digitally signed Autonomous System Provider Authorization (ASPA) object.
         An ASPA object is a cryptographically verifiable attestation signed by the holder of an Autonomous System identifier, hereafter called the "Customer AS", or <tt>CAS</tt>.
         An ASPA object contains a list of one or more Provider ASes each of which is authorized to be a provider network for the Customer AS.
       </t>
       <t>
-        This profile provides the authorization mechanism mentioned above and can be used to facilitate detection and mitigation of route leaks.
+        This specification provides the authorization mechanism mentioned above and can be used to facilitate detection and mitigation of route leaks.
         The procedures for verifying AS_PATHs in BGP UPDATE messages using ASPAs are described in <xref target="I-D.ietf-sidrops-aspa-verification"/>.
       </t>
       <t>
@@ -123,7 +123,7 @@
         When the Customer AS does not use any providers for transit, a <tt>PAS</tt> value of 0 is used.
       </t>
       <t>
-        This CMS <xref target="RFC5652"/> protected content type definition conforms to the <xref target="RFC6488"/> template for RPKI signed objects.
+        This CMS-protected <xref target="RFC5652"/> content-type definition conforms to the <xref target="RFC6488"/> template for RPKI signed objects.
         In accordance with Section 4 of <xref target="RFC6488"/>, this document defines:
         <list style="numbers">
           <t>
@@ -190,7 +190,7 @@
           In addition to the constraints described by the formal ASN.1 definition, the contents of the <tt>providers</tt> field <bcp14>MUST</bcp14> satisfy the following constraints:
         <list style="symbols">
           <t>
-            The <tt>CustomerASID</tt> value <bcp14>MUST NOT</bcp14> appear in any <tt>PAS</tt> in the <tt>providers</tt> field.
+            The <tt>customerASID</tt> value <bcp14>MUST NOT</bcp14> appear in any <tt>PAS</tt> in the <tt>providers</tt> field.
           </t>
           <t>
             The elements of <tt>providers</tt> <bcp14>MUST</bcp14> be ordered in ascending numerical order.
@@ -262,7 +262,7 @@
         <t>
           Relying Party implementations are <bcp14>RECOMMENDED</bcp14> to impose an upper bound on the number of Provider ASes for a given <tt>CAS</tt>.
           An upper bound value between 4,000 and 10,000 Provider ASes is suggested.
-          If this threshold is exceeded, Relying Party implementations <bcp14>SHOULD</bcp14> treat all ASPA objects related to the <tt>CAS</tt> invalid; e.g. not emit a partial list of Provider ASes.
+          If this threshold is exceeded, Relying Party implementations <bcp14>SHOULD</bcp14> treat all ASPA objects related to the <tt>CAS</tt> as invalid; i.e., not emit a partial list of Provider ASes.
           Additionally, an error <bcp14>SHOULD</bcp14> be logged in the local system, indicating the <tt>CAS</tt> for which the threshold was exceeded.
           Implementers and operators <bcp14>SHOULD</bcp14> periodically review whether imposed upper bounds still are reasonable in context of the global Internet routing system.
         </t>
@@ -422,8 +422,9 @@
         Ties de Kock &amp; Tim Bruijnzeels for suggesting that the ProviderASSet be in a canonical form,
         and Claudio Jeker, Martin Hoffman, Lancheng Qin, Jeff Haas,
         Srihari Sangli,
-        and
         Gavin Brown,
+        and
+        Peter Yee,
         for review and several suggestions for improvements.
       </t>
     </section>
