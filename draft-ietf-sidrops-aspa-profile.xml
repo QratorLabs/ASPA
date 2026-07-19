@@ -270,7 +270,20 @@
 
     <section anchor="Security" title="Security Considerations">
       <t>
-        The security considerations of <xref target="RFC6481"/>, <xref target="RFC6485"/>, and <xref target="RFC6488"/> also apply to ASPAs.
+        The purpose of an ASPA is to convey authorization for a Provider AS to provide transit for the Customer AS in the ASPA.
+        Thus, the integrity of an ASPA <bcp14>MUST</bcp14> be established.
+        This ASPA specification makes use of the RPKI signed object format; thus, all security considerations discussed in <xref target="RFC6488"/> also apply to ASPAs.
+        Additionally, the signed object profile uses the CMS signed message format for integrity; thus, ASPAs inherit all security considerations associated with that data structure.
+        The security considerations of <xref target="RFC6481"/> also apply to ASPAs.
+      </t>
+      <t>
+        The right of the ASPA signer to authorize a Provider AS to provide transit to the Customer AS is established through the use of the address space and AS number PKI as described in <xref target="RFC6480"/>.
+        Specifically, one <bcp14>MUST</bcp14> verify the signature on the ASPA using an X.509 certificate issued under this PKI and check that the Customer AS in the ASPA is contained in the certificate's Autonomous System Identifier Delegation extension.
+      </t>
+      <t>
+        There is no assumption of confidentiality for the data in an ASPA.
+        There is no explicit authentication associated with an ASPA, since the PKI used for ASPA validation provides authorization but not authentication.
+        Although the ASPA is a signed, application-layer object, there is no intent to convey non-repudiation via an ASPA.
       </t>
     </section>
 
@@ -437,7 +450,6 @@
       <?rfc include="reference.RFC.3779.xml"?>
       <?rfc include="reference.RFC.5652.xml"?>
       <?rfc include="reference.RFC.6481.xml"?>
-      <?rfc include="reference.RFC.6485.xml"?>
       <?rfc include="reference.RFC.6488.xml"?>
       <?rfc include="reference.RFC.8174.xml"?>
 
