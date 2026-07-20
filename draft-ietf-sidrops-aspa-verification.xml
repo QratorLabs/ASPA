@@ -506,7 +506,7 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
           If a provider is missing from the ASPA, routes may become falsely ASPA Invalid later on.
         </t>
         <t>
-          Providers should monitor that their AS number is included in the SPAS of their Customer ASes.
+          Providers should monitor that their AS number is included in the SPAS of their customers' ASPA objects.
         </t>
       </section>
 

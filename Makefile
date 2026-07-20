@@ -15,3 +15,6 @@ $(NAME2).txt: $(NAME2).xml
 
 clean:
 	rm -f $(NAME1)*.html $(NAME2)*.html $(NAME1)*.txt $(NAME2)*.txt
+
+www:
+	cp -v $(NAME1).{exp.xml,txt,html} $(NAME2).{exp.xml,txt,html} ~/Downloads/

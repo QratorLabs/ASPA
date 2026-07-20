@@ -11,7 +11,7 @@
 
 <rfc xmlns:xi="http://www.w3.org/2001/XInclude"
      category="std"
-     docName="draft-ietf-sidrops-aspa-profile-26"
+     docName="draft-ietf-sidrops-aspa-profile-28"
      ipr="trust200902"
      consensus="true"
      submissionType="IETF">
@@ -100,36 +100,38 @@
     <section title="Introduction" anchor="intro">
       <t>
         The primary purpose of the Resource Public Key Infrastructure (RPKI) <xref target="RFC6480"/> is to improve security in the global Internet routing system.
-        As part of this infrastructure, a mechanism is needed for Autonomous Systems (AS) operators, in their capacity as customers, to designate and authorize other ASes as their Provider(s).
-        A Provider AS (PAS) is a network providing connectivity between networks - it provides transit services to the customer. That is:
+        As part of this infrastructure, a mechanism is needed for Autonomous Systems (AS) operators, in their capacity as customers, to designate and authorize other ASes as their provider(s).
+        A Provider AS (<tt>PAS</tt>) is a network providing connectivity between networks - it provides transit services to the customer.
+        That is:
         <list style="letters">
-          <t>The provider may propagate Border Gateway Protocol (BGP) routes received from any direction. For example, routes the provider learned from its own providers, lateral peers, and other customers. The provider may also announce a default route to their customers.</t>
+          <t>The provider may propagate Border Gateway Protocol (BGP) routes received from any direction to their customers. For example, routes the provider learned from its own providers, lateral peers, and other customers. The provider may also announce a default route to their customers.</t>
           <t>The provider may propagate BGP routes received from the customer in any direction. For example, to the provider's providers, lateral peers, and other customers.</t>
         </list>
       </t>
       <t>
-        This document specifies a digitally signed Autonomous System Provider Authorization (ASPA) object profile.
-        An ASPA object is a cryptographically verifiable attestation signed by the holder of an Autonomous System identifier, hereafter called the "Customer AS", or CAS.
-        An ASPA object contains a list of one or more Provider ASes each of which is authorized to be a Provider network for the CAS.
+        This document specifies a digitally signed Autonomous System Provider Authorization (ASPA) object.
+        An ASPA object is a cryptographically verifiable attestation signed by the holder of an Autonomous System identifier, hereafter called the "Customer AS", or <tt>CAS</tt>.
+        An ASPA object contains a list of one or more Provider ASes each of which is authorized to be a provider network for the Customer AS.
       </t>
       <t>
-        This profile provides the authorization mechanism mentioned above and can be used to facilitate detection and mitigation of route leaks.
+        This specification provides the authorization mechanism mentioned above and can be used to facilitate detection and mitigation of route leaks.
         The procedures for verifying AS_PATHs in BGP UPDATE messages using ASPAs are described in <xref target="I-D.ietf-sidrops-aspa-verification"/>.
       </t>
       <t>
         When the Customer AS makes use of multiple providers, all Provider ASes are to be listed in the ASPA object, including any non-transparent Internet Exchange Point (IXP) Route Server (RS) ASes.
-        Note that the common case for RS ASes at IXPs is to operate transparently (see Section 2.2.2.1 <xref target="RFC7947"/>), and transparent IXP Route Servers do not need to be listed as PAS in ASPAs.
+        Note that the common case for RS ASes at IXPs is to operate transparently (see <xref target="RFC7947" section="2.2.2.1"/>), and transparent IXP Route Servers do not need to be listed as <tt>PAS</tt> in ASPAs.
+        When the Customer AS does not use any providers for transit, a <tt>PAS</tt> value of 0 is used.
       </t>
       <t>
-        This CMS <xref target="RFC5652"/> protected content type definition conforms to the <xref target="RFC6488"/> template for RPKI signed objects.
+        This CMS-protected <xref target="RFC5652"/> content-type definition conforms to the <xref target="RFC6488"/> template for RPKI signed objects.
         In accordance with Section 4 of <xref target="RFC6488"/>, this document defines:
         <list style="numbers">
           <t>
             The object identifier (OID) that identifies the ASPA signed object.
-            This OID appears in the eContentType field of the encapContentInfo object as well as the content-type signed attribute within the signerInfo structure.
+            This OID appears in the <tt>eContentType</tt> field of the <tt>encapContentInfo</tt> object as well as the content-type signed attribute within the <tt>signerInfo</tt> structure.
           </t>
           <t>
-            The ASN.1 syntax for the ASPA content, which is the payload signed by the CAS.
+            The ASN.1 syntax for the ASPA content, which is the payload signed by the <tt>CAS</tt>.
             The ASPA content is encoded using the ASN.1 <xref target="X.680"/> Distinguished Encoding Rules (DER) <xref target="X.690"/>.
           </t>
           <t>
@@ -144,24 +146,24 @@
 
     <section title="ASPA Content Type" anchor="content-type">
       <t>
-        The content-type for an ASPA is defined as id-ct-ASPA, which has the numerical value of 1.2.840.113549.1.9.16.1.49.
-        This OID <bcp14>MUST</bcp14> appear both within the eContentType in the encapContentInfo structure as well as the content-type signed attribute within the signerInfo structure (see <xref target="RFC6488"/>).
+        The content-type for an ASPA is defined as <tt>id-ct-ASPA</tt>, which has the numerical value of <tt>1.2.840.113549.1.9.16.1.49</tt>.
+        This OID <bcp14>MUST</bcp14> appear both within the <tt>eContentType</tt> in the <tt>encapContentInfo</tt> structure as well as the content-type signed attribute within the <tt>signerInfo</tt> structure (see <xref target="RFC6488"/>).
       </t>
     </section>
 
     <section title="ASPA eContent" anchor="content">
       <t>
-        The content of an ASPA identifies the Customer AS (CAS) as well as the Set of Provider ASes (SPAS) that are authorized by the CAS to be its Providers.
+        The content of an ASPA identifies the Customer AS (<tt>CAS</tt>) as well as the set of Provider ASes (<tt>SPAS</tt>) that are authorized by the <tt>CAS</tt> to be its providers.
       </t>
 
       <t>
-        The eContent of an ASPA is an instance of ASProviderAttestation, formally defined by the following ASN.1 <xref target="X.680"/> module:
+        The eContent of an ASPA is an instance of <tt>ASProviderAttestation</tt>, formally defined by the following ASN.1 <xref target="X.680"/> module:
       </t>
 
       <sourcecode type="asn.1" src="RPKI-ASPA-2023.asn"/>
 
       <t>
-        This content appears as the eContent within the encapContentInfo as specified in <xref target="RFC6488"/>.
+        This content appears as the <tt>eContent</tt> within the <tt>encapContentInfo</tt> as specified in <xref target="RFC6488"/>.
       </t>
 
       <section title="version">
@@ -188,7 +190,7 @@
           In addition to the constraints described by the formal ASN.1 definition, the contents of the <tt>providers</tt> field <bcp14>MUST</bcp14> satisfy the following constraints:
         <list style="symbols">
           <t>
-            The CustomerASID value <bcp14>MUST NOT</bcp14> appear in any <tt>PAS</tt> in the <tt>providers</tt> field.
+            The <tt>customerASID</tt> value <bcp14>MUST NOT</bcp14> appear in any <tt>PAS</tt> in the <tt>providers</tt> field.
           </t>
           <t>
             The elements of <tt>providers</tt> <bcp14>MUST</bcp14> be ordered in ascending numerical order.
@@ -197,7 +199,7 @@
             Each value of <tt>PAS</tt> <bcp14>MUST</bcp14> be unique (with respect to the other elements of providers).
           </t>
           <t>
-            An <tt>PAS</tt> value of 0 can only be encoded in the <tt>providers</tt> field as a single item list, i.e., an element for AS 0 <bcp14>MUST NOT</bcp14> appear alongside any other elements.
+            A <tt>PAS</tt> value of 0 can only be encoded in the <tt>providers</tt> field as a single item list, i.e., an element for AS 0 <bcp14>MUST NOT</bcp14> appear alongside any other elements.
           </t>
           </list>
         </t>
@@ -210,7 +212,7 @@
         To validate an ASPA, the relying party <bcp14>MUST</bcp14> perform all the validation checks specified in <xref target="RFC6488"/> as well as the following additional ASPA-specific validation steps:
         <list style="symbols">
           <t>
-            The Autonomous System Identifier Delegation Extension <xref target="RFC3779"/> <bcp14>MUST</bcp14> be present in the end-entity (EE) certificate (contained within the ASPA), and the Customer ASID in the ASPA eContent <bcp14>MUST</bcp14> match the ASId specified by the EE certificate's Autonomous System Identifier Delegation Extension.
+            The Autonomous System Identifier Delegation Extension <xref target="RFC3779"/> <bcp14>MUST</bcp14> be present in the end-entity (EE) certificate (contained within the ASPA), and the Customer AS in the ASPA <tt>eContent</tt> <bcp14>MUST</bcp14> match the <tt>ASId</tt> specified by the EE certificate's Autonomous System Identifier Delegation Extension.
           </t>
           <t>
             The Autonomous System Identifier Delegation Extension <bcp14>MUST</bcp14> contain exactly one "id" element (<xref target="RFC3779" section="3.2.3.6"/>) and <bcp14>MUST NOT</bcp14> contain any "inherit" elements (<xref target="RFC3779" section="3.2.3.3"/>) or "range" elements (<xref target="RFC3779" section="3.2.3.7"/>).
@@ -228,8 +230,8 @@
         <t>
           For any given Customer AS, only a single ASPA object <bcp14>SHOULD</bcp14> be maintained which contains all providers (including any non-transparent RS ASes).
           The practice of maintaining a single object per Customer AS avoids race conditions during ASPA updates that might impact BGP route propagation.
-          When an ASPA record is being migrated between different CA registries, the authorization contents of its instances at those registries <bcp14>SHOULD</bcp14> be identical (remain unchanged) for the duration of the migration.
-          The CA software that maintains ASPA records <bcp14>SHOULD</bcp14> support enforcement of this recommendation.
+          When an ASPA record is being migrated between different Certification Authority registries, the authorization contents of its instances at those registries <bcp14>SHOULD</bcp14> be identical (remain unchanged) for the duration of the migration.
+          The Certification Authority software that maintains ASPA records <bcp14>SHOULD</bcp14> support enforcement of this recommendation.
           See <xref target="I-D.ietf-sidrops-aspa-verification" section="4"/> for all ASPA registration recommendations.
         </t>
       </section>
@@ -237,7 +239,7 @@
       <section>
         <name>Use of One-Time Use End Entity Certificates</name>
         <t>
-          CAs are <bcp14>RECOMMENDED</bcp14> to generate a new key pair for each new ASPA and only sign one ASPA with each EE certificate.
+          Certification Authorities are <bcp14>RECOMMENDED</bcp14> to generate a new key pair for each new ASPA and only sign one ASPA with each EE certificate.
           This type of EE certificate is termed a "one-time-use" EE certificate (see <xref target="RFC6487" section="3"/>).
         </t>
       </section>
@@ -245,7 +247,7 @@
       <section>
         <name>ASPA Object Filenames</name>
         <t>
-          CAs are <bcp14>RECOMMENDED</bcp14> to follow the guidelines for naming ASPA objects based on <xref target="RFC6481" section="2.2"/>, i.e., convert the 160-bit hash of the EE's public key value into a 27-character string using Base 64 Encoding with the URL and Filename Safe Alphabet (see <xref target="RFC4648" section="5"/>).
+          Certification Authorities are <bcp14>RECOMMENDED</bcp14> to follow the guidelines for naming ASPA objects based on <xref target="RFC6481" section="2.2"/>, i.e., convert the 160-bit hash of the EE's public key value into a 27-character string using Base 64 Encoding with the URL and Filename Safe Alphabet (see <xref target="RFC4648" section="5"/>).
           See <xref target="I-D.ietf-sidrops-publication-server-bcp" section="7.7"/> for more information and considerations.
         </t>
       </section>
@@ -253,15 +255,15 @@
       <section>
         <name>Upper Bound on the Number of Providers</name>
         <t>
-          While the ASN.1 profile specified in <xref target="content"/> imposes no limit on the number of Provider ASes that can be listed for a given CAS, consideration will need to be given to limitations existing in validators and elsewhere in the RPKI ecosystem.
+          While the ASN.1 profile specified in <xref target="content"/> imposes no limit on the number of Provider ASes that can be listed for a given <tt>CAS</tt>, consideration will need to be given to limitations existing in validators and elsewhere in the RPKI ecosystem.
           For example, the number of Provider ASes that can be listed in a single RPKI-To-Router protocol ASPA PDU following the Length field constraints in <xref target="I-D.ietf-sidrops-8210bis" section="5.1"/> is 16,380 providers.
-          In addition to protocol limitations in the ecosystem, locally defined restrictions could exist for the maximum file size of signed objects a Relying Party implementation is willing to accept.
+          In addition to limitations in the various protocols used within the ecosystem, locally defined restrictions could exist for the maximum file size of signed objects a Relying Party implementation is willing to accept.
         </t>
         <t>
-          Relying Party implementations are <bcp14>RECOMMENDED</bcp14> to impose an upper bound on the number of Provider ASes for a given CAS.
+          Relying Party implementations are <bcp14>RECOMMENDED</bcp14> to impose an upper bound on the number of Provider ASes for a given <tt>CAS</tt>.
           An upper bound value between 4,000 and 10,000 Provider ASes is suggested.
-          If this threshold is exceeded, Relying Party implementations <bcp14>SHOULD</bcp14> treat all ASPA objects related to the CAS invalid; e.g. not emit a partial list of Provider ASes.
-          Additionally, an error <bcp14>SHOULD</bcp14> be logged in the local system, indicating the CAS for which the threshold was exceeded.
+          If this threshold is exceeded, Relying Party implementations <bcp14>SHOULD</bcp14> treat all ASPA objects related to the <tt>CAS</tt> as invalid; i.e., not emit a partial list of Provider ASes.
+          Additionally, an error <bcp14>SHOULD</bcp14> be logged in the local system, indicating the <tt>CAS</tt> for which the threshold was exceeded.
           Implementers and operators <bcp14>SHOULD</bcp14> periodically review whether imposed upper bounds still are reasonable in context of the global Internet routing system.
         </t>
       </section>
@@ -269,7 +271,20 @@
 
     <section anchor="Security" title="Security Considerations">
       <t>
-        The security considerations of <xref target="RFC6481"/>, <xref target="RFC6485"/>, and <xref target="RFC6488"/> also apply to ASPAs.
+        The purpose of an ASPA is to convey authorization for a Provider AS to provide transit for the Customer AS in the ASPA.
+        Thus, the integrity of an ASPA <bcp14>MUST</bcp14> be established.
+        This ASPA specification makes use of the RPKI signed object format; thus, all security considerations discussed in <xref target="RFC6488"/> also apply to ASPAs.
+        Additionally, the signed object profile uses the CMS signed message format for integrity; thus, ASPAs inherit all security considerations associated with that data structure.
+        The security considerations of <xref target="RFC6481"/> also apply to ASPAs.
+      </t>
+      <t>
+        The right of the ASPA signer to authorize a Provider AS to provide transit to the Customer AS is established through the use of the address space and AS number PKI as described in <xref target="RFC6480"/>.
+        Specifically, one <bcp14>MUST</bcp14> verify the signature on the ASPA using an X.509 certificate issued under this PKI and check that the Customer AS in the ASPA is contained in the certificate's Autonomous System Identifier Delegation extension.
+      </t>
+      <t>
+        There is no assumption of confidentiality for the data in an ASPA.
+        There is no explicit authentication associated with an ASPA, since the PKI used for ASPA validation provides authorization but not authentication.
+        Although the ASPA is a signed, application-layer object, there is no intent to convey non-repudiation via an ASPA.
       </t>
     </section>
 
@@ -399,13 +414,25 @@
           A signer implementation <xref target="krill"/> in Rust was reported on by Tim Bruijnzeels.
         </li>
       </ul>
+      <section>
+        <name>Deployment Status</name>
+        <t>
+          As of July 2026, roughly 2,400 ASPA objects have been published in the global RPKI.
+          See <tt>https://console.rpki-client.org/aspa.html</tt> for an up-to-date overview.
+        </t>
+      </section>
     </section>
 
     <section anchor="Acknowledgments" title="Acknowledgments">
       <t>
         The authors would like to thank Keyur Patel for helping kick-start the ASPA profile project,
         Ties de Kock &amp; Tim Bruijnzeels for suggesting that the ProviderASSet be in a canonical form,
-        and Claudio Jeker, Martin Hoffman, Lancheng Qin, and Jeff Haas for review and several suggestions for improvements.
+        and Claudio Jeker, Martin Hoffman, Lancheng Qin, Jeff Haas, Rich Salz,
+        Srihari Sangli,
+        Gavin Brown,
+        and
+        Peter Yee,
+        for review and several suggestions for improvements.
       </t>
     </section>
 
@@ -433,7 +460,6 @@
       <?rfc include="reference.RFC.3779.xml"?>
       <?rfc include="reference.RFC.5652.xml"?>
       <?rfc include="reference.RFC.6481.xml"?>
-      <?rfc include="reference.RFC.6485.xml"?>
       <?rfc include="reference.RFC.6488.xml"?>
       <?rfc include="reference.RFC.8174.xml"?>
 
