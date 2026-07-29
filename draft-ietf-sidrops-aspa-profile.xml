@@ -220,6 +220,9 @@
           <t>
             The IP Address Delegation Extension <xref target="RFC3779"/> <bcp14>MUST</bcp14> be absent.
           </t>
+          <t>
+            The ASPA content fully conforms with all requirements specified in <xref target="content"/>.
+          </t>
         </list>
       </t>
     </section>
