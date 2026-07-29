@@ -272,9 +272,9 @@
           In addition to limitations in the various protocols used within the ecosystem, locally defined restrictions could exist for the maximum file size of signed objects a Relying Party implementation is willing to accept.
         </t>
         <t>
-          Relying Party implementations are <bcp14>RECOMMENDED</bcp14> to impose an upper bound on the number of Provider ASes for a given <tt>CAS</tt>.
+          Relying Party implementations are <bcp14>RECOMMENDED</bcp14> to impose an upper bound on the number of Provider ASes in the <tt>U-SPAS</tt> for a given <tt>CAS</tt>.
           An upper bound value between 4,000 and 10,000 Provider ASes is suggested.
-          If this threshold is exceeded, Relying Party implementations <bcp14>SHOULD</bcp14> treat all ASPA objects related to the <tt>CAS</tt> as invalid; i.e., not emit a partial list of Provider ASes.
+          If this threshold is exceeded, Relying Party implementations <bcp14>SHOULD</bcp14> treat <em>all</em> ASPA objects related to the <tt>CAS</tt> as invalid; i.e., not emit a partial list of Provider ASes.
           Additionally, an error <bcp14>SHOULD</bcp14> be logged in the local system, indicating the <tt>CAS</tt> for which the threshold was exceeded.
           Implementers and operators <bcp14>SHOULD</bcp14> periodically review whether imposed upper bounds still are reasonable in context of the global Internet routing system.
         </t>
@@ -444,8 +444,9 @@
         Srihari Sangli,
         Gavin Brown,
         Peter Yee,
+        Yangyang Wang,
         and
-        Yangyang Wang
+        Jia Zhang
         for review and several suggestions for improvements.
       </t>
     </section>
