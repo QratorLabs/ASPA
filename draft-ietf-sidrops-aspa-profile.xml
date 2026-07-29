@@ -259,7 +259,7 @@
       <section>
         <name>ASPA Object Filenames</name>
         <t>
-          Certification Authorities are <bcp14>RECOMMENDED</bcp14> to follow the guidelines for naming ASPA objects based on <xref target="RFC6481" section="2.2"/>, i.e., convert the 160-bit hash of the EE's public key value into a 27-character string using Base 64 Encoding with the URL and Filename Safe Alphabet (see <xref target="RFC4648" section="5"/>).
+          For optimal ASPA object propagation, Certification Authorities <bcp14>SHOULD</bcp14> follow the guidelines for naming ASPA objects based on <xref target="RFC6481" section="2.2"/>, i.e., convert the 160-bit hash of the EE's public key value into a 27-character string using Base 64 Encoding with the URL and Filename Safe Alphabet (see <xref target="RFC4648" section="5"/>).
           See <xref target="I-D.ietf-sidrops-publication-server-bcp" section="7.7"/> for more information and considerations.
         </t>
       </section>
