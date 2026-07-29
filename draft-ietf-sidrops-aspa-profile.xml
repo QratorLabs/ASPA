@@ -225,7 +225,7 @@
     </section>
 
     <section anchor="implementation" title="Implementation Considerations">
-      <section>
+      <section anchor="oneaspapercas">
         <name>One ASPA Object per Customer AS</name>
         <t>
           For any given Customer AS, only a single ASPA object <bcp14>SHOULD</bcp14> be maintained which contains all providers (including any non-transparent RS ASes).
@@ -235,6 +235,18 @@
           See <xref target="I-D.ietf-sidrops-aspa-verification" section="4"/> for all ASPA registration recommendations.
         </t>
       </section>
+
+     <section>
+       <name>Merging of ASPA objects for the same CAS</name>
+       <t>
+         Multiple ASPA objects for the same <tt>CAS</tt> can be merged by combining all <tt>PAS</tt> values into a union set of Provider ASes (<tt>U-SPAS</tt>) excluding <tt>PAS</tt> value 0.
+         That is, a <tt>U-SPAS</tt> never contains both zero and non-zero <tt>PAS</tt> values.
+         The <tt>U-SPAS</tt> for a given <tt>CAS</tt> contains AS 0 if and only if all ASPA objects for that <tt>CAS</tt> have a <tt>PAS</tt> value of 0.
+       </t>
+       <t>
+         See <xref target="oneaspapercas"/> on avoiding multiple ASPAs for the same <tt>CAS</tt>.
+       </t>
+     </section>
 
       <section>
         <name>Use of One-Time Use End Entity Certificates</name>
@@ -267,6 +279,7 @@
           Implementers and operators <bcp14>SHOULD</bcp14> periodically review whether imposed upper bounds still are reasonable in context of the global Internet routing system.
         </t>
       </section>
+
     </section>
 
     <section anchor="Security" title="Security Considerations">
@@ -430,8 +443,9 @@
         and Claudio Jeker, Martin Hoffman, Lancheng Qin, Jeff Haas, Rich Salz,
         Srihari Sangli,
         Gavin Brown,
-        and
         Peter Yee,
+        and
+        Yangyang Wang
         for review and several suggestions for improvements.
       </t>
     </section>
