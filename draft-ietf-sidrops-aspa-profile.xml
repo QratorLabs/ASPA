@@ -242,9 +242,9 @@
      <section>
        <name>Merging of ASPA objects for the same CAS</name>
        <t>
-         Multiple ASPA objects for the same <tt>CAS</tt> can be merged by combining all <tt>PAS</tt> values into a union set of Provider ASes (<tt>U-SPAS</tt>) excluding <tt>PAS</tt> value 0.
-         That is, a <tt>U-SPAS</tt> never contains both zero and non-zero <tt>PAS</tt> values.
-         The <tt>U-SPAS</tt> for a given <tt>CAS</tt> contains AS 0 if and only if all ASPA objects for that <tt>CAS</tt> have a <tt>PAS</tt> value of 0.
+         Multiple ASPA objects for the same <tt>CAS</tt> can be merged by combining all <tt>SPAS</tt> values into a union set of Provider ASes (<tt>U-SPAS</tt>).
+         If the <tt>U-SPAS</tt> contains two or more values, and one of those values is AS 0, then AS 0 must be removed from the <tt>U-SPAS</tt>.
+         In other words, the <tt>U-SPAS</tt> for a given <tt>CAS</tt> contains AS 0 if and only if all ASPA objects for that <tt>CAS</tt> have a <tt>SPAS</tt> containing only AS 0.
        </t>
        <t>
          See <xref target="oneaspapercas"/> on avoiding multiple ASPAs for the same <tt>CAS</tt>.
@@ -448,8 +448,9 @@
         Gavin Brown,
         Peter Yee,
         Yangyang Wang,
+        Jia Zhang,
         and
-        Jia Zhang
+        Tom Harrison
         for review and several suggestions for improvements.
       </t>
     </section>
