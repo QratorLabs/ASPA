@@ -441,16 +441,15 @@
 
     <section anchor="Acknowledgments" title="Acknowledgments">
       <t>
-        The authors would like to thank Keyur Patel for helping kick-start the ASPA profile project,
-        Ties de Kock &amp; Tim Bruijnzeels for suggesting that the ProviderASSet be in a canonical form,
-        and Claudio Jeker, Martin Hoffman, Lancheng Qin, Jeff Haas, Rich Salz,
-        Srihari Sangli,
-        Gavin Brown,
-        Peter Yee,
-        Yangyang Wang,
-        Jia Zhang,
+        The authors would like to thank <contact fullname="Keyur Patel"/> for helping kick-start the ASPA profile project,
+        <contact fullname="Ties de Kock"/> &amp; <contact fullname="Tim Bruijnzeels"/> for suggesting that the ProviderASSet be in a canonical form,
+        and <contact fullname="Claudio Jeker"/>, <contact fullname="Martin Hoffman"/>,
+        <contact fullname="Lancheng Qin"/>, <contact fullname="Jeff Haas"/>,
+        <contact fullname="Rich Salz"/>, <contact fullname="Srihari Sangli"/>,
+        <contact fullname="Gavin Brown"/>, <contact fullname="Peter Yee"/>,
+        <contact fullname="Yangyang Wang"/>, <contact fullname="Jia Zhang"/>,
         and
-        Tom Harrison
+        <contact fullname="Tom Harrison"/>
         for review and several suggestions for improvements.
       </t>
     </section>
