@@ -196,7 +196,6 @@
         An ASPA object showing only AS 0 as a provider AS is referred to as an AS0 ASPA.
         A non-transparent Route Server AS (RS AS) is one that includes its AS number in the AS_PATH.
         Registering as AS0 ASPA is a statement by the registering AS that it has no transit providers, and it is also not an RS-client at a non-transparent RS AS.
-        If that statement is true, then the AS MUST register an AS0 ASPA.
       </t>
       <t>
         Normally, a SPAS (see <xref target="terminology"/>) is not expected to contain both an AS 0 and other Provider ASes, but an unexpected presence of AS 0 has no influence on the AS_PATH verification procedures (see <xref target="pair-validation"/>, <xref target="verif"/>).
@@ -283,7 +282,8 @@
 
       <section title="Provider Authorization Function" anchor="pair-validation">
         <t>
-          This section defines the provider authorization function that uses ASPA to check, for a given pair (AS x, AS y), if AS y is an attested provider of AS x. The function can be used to measure the bounds on the up-ramp and down-ramp lengths (<xref target="principles"/>).
+          This section defines the provider authorization function that uses ASPA to check, for a given pair (AS x, AS y), if AS y is an attested provider of AS x. 
+          The function can be used to calculate the bounds on the up-ramp and down-ramp lengths (<xref target="principles"/>).
         </t>
 
         <t>
