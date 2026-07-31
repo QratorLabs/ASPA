@@ -11,7 +11,7 @@
 <?rfc subcompact="no" ?>
 
 <rfc category="std"
-     docName="draft-ietf-sidrops-aspa-verification-27"
+     docName="draft-ietf-sidrops-aspa-verification-28"
      submissionType="IETF"
      consensus="true"
      ipr="trust200902">
@@ -225,14 +225,13 @@
       </t>
       <t>
         If an attacker creates a route leak intentionally, they may try to strip their AS from the AS_PATH.
-        To partly guard against that, a check is necessary to match the most recently added AS in the AS_PATH to the BGP neighbor's ASN.
-        This check SHOULD be performed as specified in Section 6.3 of <xref target="RFC4271"/> with the exception when a route is received from a transparent Internet Exchange (IX).
-        If the check fails, then the AS_PATH is considered semantically invalid, and the UPDATE SHALL be handled using the approach of "treat-as-withdraw" <xref target="RFC7606"/>.
+        To partly guard against that, a check is necessary to match the most recently added AS in the AS_PATH to the BGP neighbor's ASN, with the exception when a route is received from a transparent Internet Exchange (IX).
+        In this document, routes that fail this check are given Invalid evaluation in the AS_PATH verification procedures.
       </t>
       <t>
         <xref target="RFC9774"/> specifies that "treat-as-withdraw" error handling <xref target="RFC7606"/> MUST be applied to routes with AS_SET in the AS_PATH.
-        In the current document, routes with AS_SET are given Invalid evaluation in the AS_PATH verification procedures (<xref target="Upflow"/> and <xref target="Downflow"/>).
-        See <xref target="mitigation"/> for how routes with Invalid AS_PATH are handled.
+        This AS_SET handling SHOULD be applied before ASPA procedures.
+        In case ASPA procedures are applied to AS_PATH with AS_SET present in the AS_PATH, routes are given Invalid evaluation in the AS_PATH verification procedures.
       </t>
 
       <section title="Principles" anchor="principles">
@@ -352,7 +351,7 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
 
         <t>
           Below are formal procedures for path verification depending on the peering relationship between the receiving AS and its neighbor.
-          These procedures use the COMPRESSED_AS_PATH and the above-defined parameters max_up_ramp, min_up_ramp, max_down_ramp, and min_up_ramp.
+          These procedures use the COMPRESSED_AS_PATH and the above-defined parameters max_up_ramp, min_up_ramp, max_down_ramp, and min_down_ramp.
         </t>
       </section>
 
