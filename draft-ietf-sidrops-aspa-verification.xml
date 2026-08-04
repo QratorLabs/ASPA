@@ -195,7 +195,7 @@
       <t>
         An ASPA object showing only AS 0 as a provider AS is referred to as an AS0 ASPA.
         A non-transparent Route Server AS (RS AS) is one that includes its AS number in the AS_PATH.
-        Registering as AS0 ASPA is a statement by the registering AS that it has no transit providers, and it is also not an RS-client at a non-transparent RS AS.
+        Registering an AS0 ASPA is a statement by the registering AS that it has no transit providers, and it is also not an RS-client at a non-transparent RS AS.
       </t>
       <t>
         Normally, a SPAS (see <xref target="terminology"/>) is not expected to contain both an AS 0 and other Provider ASes, but an unexpected presence of AS 0 has no influence on the AS_PATH verification procedures (see <xref target="pair-validation"/>, <xref target="verif"/>).
@@ -208,8 +208,8 @@
       <t>
         An AS may maintain standby providers for specific operational scenarios. 
         For example, an AS might temporarily route traffic through a DDoS mitigation provider. 
-        Another use case involves bridging isolated segments, where an AS might use an emergency provider to receive routes with its own ASN in the AS_PATH. 
-        It is RECOMMENDED to add  such standby or emergency providers in ASPA object in advance to prevent race conditions between global ASPA distribution and route propagation.
+        Another use case involves bridging isolated segments (in a partitioned AS), where an AS might use an emergency provider to receive routes with its own ASN in the AS_PATH. 
+        It is RECOMMENDED to add such standby or emergency providers in the ASPA object in advance to prevent race conditions between global ASPA distribution and route propagation.
       </t>
       <t>
         During a transition process between different certification authority (CA) registries, the ASPA records SHOULD be kept identical in all relevant registries.
@@ -222,6 +222,21 @@
         If such a BGP speaker receives both AS_PATH and AS4_PATH attributes in an UPDATE, then the procedures are applied on the reconstructed AS_PATH (Section 4.2.3 of <xref target="RFC6793"/>).
         So, the term AS_PATH is used in this document to refer to the usual AS_PATH <xref target="RFC4271"/> as well as the reconstructed AS_PATH.
       </t>
+
+      <t>
+        If an attacker intentionally creates a route leak, they may try to strip their AS from the AS_PATH.
+        To help guard against this, a check is necessary to match the most recently added AS in the AS_PATH to the BGP neighbor's ASN.
+        This check is performed as specified in Section 6.3 of <xref target="RFC4271"/> with an exception for routes received from a transparent RS.
+        <xref target="RFC7606"/> specifies that "a BGP implementation SHOULD also handle routes that violate this check using 'treat-as-withdraw' but MAY follow the 'session reset' behavior if configured to do so."
+        In case the <xref target="RFC7606"/> behavior is not implemented in the receiving/verifying BGP speaker, the ASPA verification procedures in this document will inherently evaluate the offending AS_PATH as Invalid (see <xref target="Upflow"/> and <xref target="Downflow"/>).
+        The handling of routes with an Invalid AS_PATH is described in
+        <xref target="mitigation"/>.
+      </t>
+      <t>
+        Per <xref target="RFC9774"/>, BGP speakers MUST apply "treat-as-withdraw" error handling <xref target="RFC7606"/> to any route containing an AS_SET in the AS_PATH. 
+        However, if an implementation does not conform to <xref target="RFC9774"/>, the ASPA verification procedures defined in this document will inherently evaluate the AS_PATH of such routes as Invalid.
+      </t>
+<!--
       <t>
         If an attacker creates a route leak intentionally, they may try to strip their AS from the AS_PATH.
         To partly guard against that, a check is necessary to match the most recently added AS in the AS_PATH to the BGP neighbor's ASN, with the exception when a route is received from a transparent Internet Exchange (IX).
@@ -232,6 +247,7 @@
         This AS_SET handling SHOULD be applied before ASPA procedures.
         In case ASPA procedures are applied to AS_PATH with AS_SET present in the AS_PATH, routes are given Invalid evaluation in the AS_PATH verification procedures.
       </t>
+-->
 
       <section title="Principles" anchor="principles">
         <t>
@@ -370,7 +386,7 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
               If the AS_PATH is empty, then the procedure halts with the outcome "Invalid".
             </t>
             <t>
-              If the receiving AS is not an RS-client and the most recently added AS in the AS_PATH does not match the neighbor AS, then the procedure halts with the outcome "Invalid".
+              If the receiving AS is not an RS-client at a transparent RS and the most recently added AS in the AS_PATH does not match the neighbor AS, then the procedure halts with the outcome "Invalid".
             </t>
             <t>
               If the AS_PATH has an AS_SET, then the procedure halts with the outcome "Invalid".
@@ -398,7 +414,7 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
               If the AS_PATH is empty, then the procedure halts with the outcome "Invalid".
             </t>
             <t>
-              If the most recently added AS in the AS_PATH does not match the neighbor AS, then the procedure halts with the outcome "Invalid".
+              If the receiving AS is not an RS-client at a transparent RS and the most recently added AS in the AS_PATH does not match the neighbor AS, then the procedure halts with the outcome "Invalid".
             </t>
             <t>
               If the AS_PATH has an AS_SET, then the procedure halts with the outcome "Invalid".
@@ -465,7 +481,7 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
 
       <section title="Complex Peering Relationships" anchor="complex">
         <t>
-          If multiple eBGP sessions can segregate the Complex peering relationship into eBGP sessions with normal peering relationships the receiving/verifying AS SHOULD select the algorithm (per <xref target="Upflow"/> or <xref target="Downflow"/>) for each of the normal sessions based on its peering relation type.
+          If multiple eBGP sessions can segregate the Complex peering relationship into eBGP sessions with normal peering relationships, the receiving/verifying AS SHOULD select the algorithm (per <xref target="Upflow"/> or <xref target="Downflow"/>) for each of the normal sessions based on its peering relation type.
         </t>
         <t>
           If a Complex peering relation cannot be segregated (i.e., when a Complex BGP relationship occurs within one single BGP session), an operator may want to achieve an equivalent outcome by applying an appropriate algorithm (<xref target="Upflow"/> or <xref target="Downflow"/>) on a per-prefix basis corresponding to the peering relation for the prefix.
@@ -511,7 +527,7 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
 
       <section title="Manipulation of AS_PATH by Provider">
         <t>
-          A Provider may hijack prefixes of its direct or indirect customers by using forged-origin/forged-segment AS_PATH.
+          A Provider may hijack prefixes of its direct or indirect customers by using a forged-origin/forged-segment AS_PATH.
           It may also manipulate the AS_PATH of routes that are sent to its customers.
           Such attacks may not be detectable with ASPA.
         </t>
@@ -563,7 +579,7 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
       <section title="Only to Customer (OTC) Attribute" anchor="otc">
         <t>
           While the ASPA-based AS_PATH verification method (<xref target="verif"/>, <xref target="mitigation"/>) detects and mitigates route leaks that were created by preceding ASes listed in the AS_PATH, it lacks the ability to prevent the local AS from initiating a route leak towards its neighbor.
-          ASPA verification may also fail to detect route leaks in case of presence of Complex relations in the AS_PATH.
+          ASPA verification may also fail to detect route leaks in the presence of Complex relations in the AS_PATH.
           The use of the Only to Customer (OTC) Attribute fills in that gap (see Section 5, <xref target="RFC9234"/>).
           The implementation of the procedures utilizing the OTC Attribute is RECOMMENDED to complement the ASPA-based AS_PATH verification.
         </t>
@@ -611,7 +627,7 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
             The implementation NIST-BGP-SRx <xref target="BGP-SRx"/> is a software suite that provides a validation engine (BGP-SRx) and a Quagga-based BGP router (Quagga-SRx).
             It includes unit test cases for testing the ASPA-based path verification.
             It was provided by Oliver Borchert, Kyehwan Lee, and their colleagues at US NIST.
-            The current implementation does not support IXP/RS enhancements to the algorithm.
+            The current implementation does not support the route server enhancements to the algorithm.
           </li>
           <li>
             Implementation of ASPA-based AS_PATH verification in the FreeRTR <xref target="FreeRTR"/> is provided by Csaba Mate.
@@ -771,7 +787,7 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
     <section anchor="Acknowledgments" title="Acknowledgments">
       <t>
         The authors wish to thank Maria Matejka, Claudio Jeker, Jakob Heitz, Amir Herzberg, Igor Lubashev, Ben Maddison, Russ Housley, Jeff Haas, Nan Geng, Mingqing Huang, Jia Zhang, Nick Hilliard, Shunwan Zhuang, Yangyang Wang, Martin Hoffmann, Jay Borkenhagen, Amreesh Phokeer, Aftab Siddiqui, Dai Zhibin, Doug Montgomery, Padma Krishnaswamy, Rich Compton, Andrei Robachevsky, Rudiger Volk, Iljitsch van Beijnum, Tassilo Tanneberger, Matthias Waehlisch, Moritz Schulz, and Carl Seifert for comments, suggestions, and discussion on the path verification procedures or the text in the document.
-        For the implementation and testing of the procedures in the document, the authors wish to thank Claudio Jeker and Theo Buehler <xref target="bgpd"/>; Kyehwan Lee and Oliver Borchert <xref target="BGP-SRx"/>; Katerina Kubecova and Maria Matejka <xref target="BIRD"/>; Tassilo Tanneberger, Carl Seifer, Moritz Schulz, and Matthias Braeuerand <xref target="RTRlib"/>; and Csaba Mate <xref target="FreeRTR"/>.
+        For the implementation and testing of the procedures in the document, the authors wish to thank Claudio Jeker and Theo Buehler <xref target="bgpd"/>; Kyehwan Lee and Oliver Borchert <xref target="BGP-SRx"/>; Katerina Kubecova and Maria Matejka <xref target="BIRD"/>; Tassilo Tanneberger, Carl Seifer, Moritz Schulz, and Matthias Braeuer <xref target="RTRlib"/>; and Csaba Mate <xref target="FreeRTR"/>.
       </t>
     </section>
 
