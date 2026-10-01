@@ -621,6 +621,9 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
           <li>
             Implementation of ASPA-based AS_PATH verification in the FreeRTR <xref target="FreeRTR"/> is provided by Csaba Mate.
           </li>
+          <li>
+            Implementation of ASPA-based AS_PATH verification in the rustbgpd <xref target="RBGP"/> is provided by Lance Tuller.
+          </li>
         </ul>
       </t>
     </section>
@@ -744,6 +747,16 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
             <title>OpenBGPD</title>
             <author initials="C." surname="Jeker">
               <organization>OpenBSD</organization>
+            </author>
+            <date/>
+          </front>
+        </reference>
+
+        <reference anchor="rbgp" target="https://www.rbgp.rs/">
+          <front>
+            <title>Rustbgpd</title>
+            <author initials="L." surname="Tuller">
+              <organization>Rustbgpd</organization>
             </author>
             <date/>
           </front>
