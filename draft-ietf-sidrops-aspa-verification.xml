@@ -514,6 +514,15 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
         </t>
       </section>
 
+     <section title="Logging invalid routes">
+     <t>
+     Logging verification failures can increase memory,
+     processing, and storage requirements. Implementations SHOULD provide
+     configurable limits that account for retained Invalid routes, and
+     SHOULD rate-limit diagnostic logging.
+     </t>
+     </section>
+
       <section title="Manipulation of AS_PATH by Provider">
         <t>
           A Provider may hijack prefixes of its direct or indirect customers by using a forged-origin/forged-segment AS_PATH.
