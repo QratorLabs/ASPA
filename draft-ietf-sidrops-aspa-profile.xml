@@ -382,7 +382,7 @@
    Additional information:
      Content: This media type is a signed object, as defined
          in [RFC6488], which contains a payload of a list of
-         AS identifers as defined in [RFC-to-be].
+         AS identifiers as defined in [RFC-to-be].
      Magic number(s): None
      File extension(s): .asa
      Macintosh file type code(s):
