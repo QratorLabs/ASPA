@@ -485,13 +485,6 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
         </t>
       </section>
 
-      <section title="Logging" anchor="logging">
-        <t>
-          For any route with an Invalid AS_PATH, the cause of the Invalid state SHOULD be logged for monitoring and diagnostic purposes.
-          The cause of the Invalid state can be recorded in the form of listing the AS hops which were evaluated by the provider authorization function to be &quot;Not Provider+&quot;.
-          The logging router, however, cannot necessarily determine the AS that caused the route leak.
-        </t>
-      </section>
     </section>
 
     <section anchor="security" title="Security Considerations">
