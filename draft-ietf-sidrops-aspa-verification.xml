@@ -11,7 +11,7 @@
 <?rfc subcompact="no" ?>
 
 <rfc category="std"
-     docName="draft-ietf-sidrops-aspa-verification-28"
+     docName="draft-ietf-sidrops-aspa-verification-29"
      submissionType="IETF"
      consensus="true"
      ipr="trust200902">
@@ -181,7 +181,7 @@
 
     <section title="ASPA Registration Recommendations" anchor="rec1">
       <t>
-        An AS SHOULD register an ASPA.
+        An AS implementing this specification MUST register an ASPA.
         An AS MUST list in its SPAS the union of all its Provider AS(es) and non-transparent RS AS(es) at which it is an RS-client.
         An AS MUST include a Provider AS in its SPAS regardless of whether it provides connectivity for only IPv4 or only IPv6 or both.
       </t>
@@ -201,9 +201,10 @@
         Normally, a SPAS (see <xref target="terminology"/>) is not expected to contain both an AS 0 and other Provider ASes, but an unexpected presence of AS 0 has no influence on the AS_PATH verification procedures (see <xref target="pair-validation"/>, <xref target="verif"/>).
       </t>
       <t>
-        An AS SHOULD register a single ASPA object.
-        A single ASPA record for an AS ought to prevent race conditions during ASPA updates that might affect route propagation.
-        The CA software that provides hosting for ASPA records SHOULD support enforcement of this practice.
+        When registering provider authorizations, an AS SHOULD use a single ASPA object.
+        While the registration of multiple ASPA objects by an AS is not prohibited, a single record is preferable.
+        Multiple ASPA objects for the same AS can introduce race conditions during updates, which may affect route propagation.
+        Implementers of Certification Authority (CA) software that hosts ASPA records are encouraged to reinforce the practice of using a single ASPA object.
       </t>
       <t>
         An AS may maintain standby providers for specific operational scenarios. 
@@ -212,7 +213,7 @@
         It is RECOMMENDED to add such standby or emergency providers in the ASPA object in advance to prevent race conditions between global ASPA distribution and route propagation.
       </t>
       <t>
-        During a transition process between different certification authority (CA) registries, the ASPA records SHOULD be kept identical in all relevant registries.
+        During a transition process between different CA registries, the ASPA records SHOULD be kept identical in all relevant registries.
       </t>
     </section>
 
@@ -223,7 +224,7 @@
         So, the term AS_PATH is used in this document to refer to the usual AS_PATH <xref target="RFC4271"/> as well as the reconstructed AS_PATH.
       </t>
 
-      <section title="Prerequisite AS_PATH Checks" anchor="aspath-syntax">
+      <section title="Interaction with Other AS_PATH Checks" anchor="aspath-syntax">
         <t>
           <xref target="RFC9774"/> specifies that "treat-as-withdraw" error handling <xref target="RFC7606"/> MUST be applied to any route containing an AS_SET in the AS_PATH.
         </t>
@@ -456,21 +457,21 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
         <t>
           The procedures for ASPA-based AS_PATH verification are intended for implementation on edge routers on the ingress side.
           This includes edge routers on the boundary of an AS Confederation facing external ASes.
-          However, the procedures are NOT RECOMMENDED for use on internal BGP (iBGP) sessions or eBGP sessions internal to an AS Confederation.
+          However, the specified procedures are not applicable for use on internal BGP (iBGP) sessions or eBGP sessions internal to an AS Confederation.
         </t>
       </section>
 
       <section title="BGP Roles" anchor="role">
         <t>
           The BGP Role configuration parameter and its cross-check in BGP OPEN message as specified in <xref target="RFC9234"/> are RECOMMENDED.
-          The configured BGP Roles SHOULD be used to automate the use of the above-described AS_PATH verification procedures helping to distinguish whether upstream or downstream procedures should be applied.
+          If configured, the BGP Roles SHOULD be used to automate the use of the above-described AS_PATH verification procedures helping to distinguish whether upstream or downstream procedures should be applied.
           The automatic BGP Role cross-check <xref target="RFC9234"/> should facilitate more accurate and effective deployment of ASPA. 
         </t>
       </section>
 
       <section title="Complex Peering Relationships" anchor="complex">
         <t>
-          If multiple eBGP sessions can segregate the Complex peering relationship into eBGP sessions with normal peering relationships, the receiving/verifying AS SHOULD select the algorithm (per <xref target="Upflow"/> or <xref target="Downflow"/>) for each of the normal sessions based on its peering relation type.
+          If multiple eBGP sessions can segregate the Complex peering relationship into eBGP sessions with normal peering relationships, the receiving/verifying AS MUST select the algorithm (per <xref target="Upflow"/> or <xref target="Downflow"/>) for each of the normal sessions based on its peering relation type.
         </t>
         <t>
           If a Complex peering relation cannot be segregated (i.e., when a Complex BGP relationship occurs within one single BGP session), an operator may want to achieve an equivalent outcome by applying an appropriate algorithm (<xref target="Upflow"/> or <xref target="Downflow"/>) on a per-prefix basis corresponding to the peering relation for the prefix.
@@ -509,7 +510,7 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
 
       <section title="Manipulation of AS_PATH by Provider">
         <t>
-          A Provider may hijack prefixes of its direct or indirect customers by using a forged-origin/forged-segment AS_PATH.
+          A Provider may hijack prefixes of its direct or indirect customers by using a forged-origin/forged-path-segment AS_PATH.
           It may also manipulate the AS_PATH of routes that are sent to its customers.
           Such attacks may not be detectable with ASPA.
         </t>
@@ -603,7 +604,7 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
             Its release is expected after RTR v2 is finalized.
           </li>
           <li>
-            RTRLib <xref target="RTRlib"/> provides an implementation of version 22 in C. The implementation was created by Tassilo Tanneberger, Carl Seifer, Moritz Schulz, Matthias Braeuer supervised by Thomas Schmidt and Matthias Waehlisch and reviewed by Fabian Holler.
+            RTRLib <xref target="RTRlib"/> provides an implementation of version 22 in C. The implementation was created by Tassilo Tanneberger, Carl Seifert, Moritz Schulz, Matthias Braeuer supervised by Thomas Schmidt and Matthias Waehlisch and reviewed by Fabian Holler.
           </li>
           <li>
             The implementation NIST-BGP-SRx <xref target="BGP-SRx"/> is a software suite that provides a validation engine (BGP-SRx) and a Quagga-based BGP router (Quagga-SRx).
@@ -769,7 +770,7 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
     <section anchor="Acknowledgments" title="Acknowledgments">
       <t>
         The authors wish to thank Maria Matejka, Claudio Jeker, Jakob Heitz, Amir Herzberg, Igor Lubashev, Ben Maddison, Russ Housley, Jeff Haas, Nan Geng, Mingqing Huang, Jia Zhang, Nick Hilliard, Shunwan Zhuang, Yangyang Wang, Martin Hoffmann, Jay Borkenhagen, Amreesh Phokeer, Aftab Siddiqui, Dai Zhibin, Doug Montgomery, Padma Krishnaswamy, Rich Compton, Andrei Robachevsky, Rudiger Volk, Iljitsch van Beijnum, Tassilo Tanneberger, Matthias Waehlisch, Moritz Schulz, and Carl Seifert for comments, suggestions, and discussion on the path verification procedures or the text in the document.
-        For the implementation and testing of the procedures in the document, the authors wish to thank Claudio Jeker and Theo Buehler <xref target="bgpd"/>; Kyehwan Lee and Oliver Borchert <xref target="BGP-SRx"/>; Katerina Kubecova and Maria Matejka <xref target="BIRD"/>; Tassilo Tanneberger, Carl Seifer, Moritz Schulz, and Matthias Braeuer <xref target="RTRlib"/>; and Csaba Mate <xref target="FreeRTR"/>.
+        For the implementation and testing of the procedures in the document, the authors wish to thank Claudio Jeker and Theo Buehler <xref target="bgpd"/>; Kyehwan Lee and Oliver Borchert <xref target="BGP-SRx"/>; Katerina Kubecova and Maria Matejka <xref target="BIRD"/>; Tassilo Tanneberger, Carl Seifert, Moritz Schulz, and Matthias Braeuer <xref target="RTRlib"/>; and Csaba Mate <xref target="FreeRTR"/>.
       </t>
     </section>
 
