@@ -11,7 +11,7 @@
 <?rfc subcompact="no" ?>
 
 <rfc category="std"
-     docName="draft-ietf-sidrops-aspa-verification-28"
+     docName="draft-ietf-sidrops-aspa-verification-29"
      submissionType="IETF"
      consensus="true"
      ipr="trust200902">
@@ -181,8 +181,8 @@
 
     <section title="ASPA Registration Recommendations" anchor="rec1">
       <t>
-        An AS SHOULD register an ASPA.
-        An AS MUST list in its SPAS the union of all its Provider AS(es) and non-transparent RS AS(es) at which it is an RS-client.
+        ASPA registration by an AS improves the accuracy of ASPA-based AS_PATH verification performed by relying parties (BGP speakers).
+        During ASPA registration, an AS MUST list in its SPAS the union of all its Provider AS(es) and non-transparent RS AS(es) at which it is an RS-client.
         An AS MUST include a Provider AS in its SPAS regardless of whether it provides connectivity for only IPv4 or only IPv6 or both.
       </t>
       <t>
@@ -198,12 +198,10 @@
         Registering an AS0 ASPA is a statement by the registering AS that it has no transit providers, and it is also not an RS-client at a non-transparent RS AS.
       </t>
       <t>
-        Normally, a SPAS (see <xref target="terminology"/>) is not expected to contain both an AS 0 and other Provider ASes, but an unexpected presence of AS 0 has no influence on the AS_PATH verification procedures (see <xref target="pair-validation"/>, <xref target="verif"/>).
-      </t>
-      <t>
-        An AS SHOULD register a single ASPA object.
-        A single ASPA record for an AS ought to prevent race conditions during ASPA updates that might affect route propagation.
-        The CA software that provides hosting for ASPA records SHOULD support enforcement of this practice.
+        When registering provider authorizations, an AS SHOULD register a single ASPA object.
+        While the registration of multiple ASPA objects by an AS is not prohibited, a single record is preferable.
+        Multiple ASPA objects for the same AS can introduce race conditions during updates, which may affect route propagation.
+        Implementers of Certification Authority (CA) software for ASPA registration are encouraged to reinforce the practice of using a single ASPA object.
       </t>
       <t>
         An AS may maintain standby providers for specific operational scenarios. 
@@ -212,7 +210,7 @@
         It is RECOMMENDED to add such standby or emergency providers in the ASPA object in advance to prevent race conditions between global ASPA distribution and route propagation.
       </t>
       <t>
-        During a transition process between different certification authority (CA) registries, the ASPA records SHOULD be kept identical in all relevant registries.
+        During a transition process between different certification authority registries, the ASPA records SHOULD be kept identical in all relevant registries.
       </t>
     </section>
 
@@ -223,7 +221,7 @@
         So, the term AS_PATH is used in this document to refer to the usual AS_PATH <xref target="RFC4271"/> as well as the reconstructed AS_PATH.
       </t>
 
-      <section title="Prerequisite AS_PATH Checks" anchor="aspath-syntax">
+      <section title="Interaction with Other AS_PATH Checks" anchor="aspath-syntax">
         <t>
           <xref target="RFC9774"/> specifies that "treat-as-withdraw" error handling <xref target="RFC7606"/> MUST be applied to any route containing an AS_SET in the AS_PATH.
         </t>
@@ -293,8 +291,9 @@
 
         <t>
           A CAS is expected to register a single ASPA listing all its Provider ASes (see <xref target="rec1"/>).
-          If a CAS has a single cryptographically valid ASPA, then the Union SPAS (U-SPAS) for the CAS is equal to SPAS.
-          In case a CAS has multiple cryptographically valid ASPAs, then the U-SPAS for the CAS is the union of ASes listed in all SPAS of these ASPAs.
+          If a CAS has a single cryptographically valid ASPA, then the Union SPAS (U-SPAS) (defined in <xref target="I-D.ietf-sidrops-aspa-profile"/>) for the CAS is equal to the SPAS of that ASPA.
+          In case a CAS has multiple cryptographically valid ASPAs, then the U-SPAS for the CAS is the union of ASes listed in all the SPAS corresponding to these ASPAs.
+          If a U-SPAS includes an AS 0 and one or more other AS numbers, then the AS 0 is removed from the U-SPAS (see <xref target="I-D.ietf-sidrops-aspa-profile"/>).  
         </t>
 
         <t>
@@ -423,8 +422,8 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
 
       <section title="Mitigation Policy" anchor="mitigation">
         <t>
-         The specific configuration of a mitigation policy based on AS_PATH verification using ASPA is at the discretion of the network operator.
-         However, the following mitigation policy is RECOMMENDED.
+         The specific configuration of a mitigation policy based on AS_PATH verification using ASPA is at the discretion of the network operator. 
+         The following policy is RECOMMENDED unless overridden by local operational requirements.
         </t>
         <t>
         <strong>Invalid</strong>:
@@ -456,21 +455,21 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
         <t>
           The procedures for ASPA-based AS_PATH verification are intended for implementation on edge routers on the ingress side.
           This includes edge routers on the boundary of an AS Confederation facing external ASes.
-          However, the procedures are NOT RECOMMENDED for use on internal BGP (iBGP) sessions or eBGP sessions internal to an AS Confederation.
+          However, the specified procedures are not applicable for use on internal BGP (iBGP) sessions or eBGP sessions internal to an AS Confederation.
         </t>
       </section>
 
       <section title="BGP Roles" anchor="role">
         <t>
           The BGP Role configuration parameter and its cross-check in BGP OPEN message as specified in <xref target="RFC9234"/> are RECOMMENDED.
-          The configured BGP Roles SHOULD be used to automate the use of the above-described AS_PATH verification procedures helping to distinguish whether upstream or downstream procedures should be applied.
+          The BGP Roles facilitate automating the use of the above-described AS_PATH verification procedures helping to distinguish whether upstream or downstream procedures should be applied.
           The automatic BGP Role cross-check <xref target="RFC9234"/> should facilitate more accurate and effective deployment of ASPA. 
         </t>
       </section>
 
       <section title="Complex Peering Relationships" anchor="complex">
         <t>
-          If multiple eBGP sessions can segregate the Complex peering relationship into eBGP sessions with normal peering relationships, the receiving/verifying AS SHOULD select the algorithm (per <xref target="Upflow"/> or <xref target="Downflow"/>) for each of the normal sessions based on its peering relation type.
+          If multiple eBGP sessions can segregate the Complex peering relationship into eBGP sessions with normal peering relationships, the receiving/verifying AS MUST select the algorithm (per <xref target="Upflow"/> or <xref target="Downflow"/>) for each of the normal sessions based on its peering relation type.
         </t>
         <t>
           If a Complex peering relation cannot be segregated (i.e., when a Complex BGP relationship occurs within one single BGP session), an operator may want to achieve an equivalent outcome by applying an appropriate algorithm (<xref target="Upflow"/> or <xref target="Downflow"/>) on a per-prefix basis corresponding to the peering relation for the prefix.
@@ -507,18 +506,9 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
         </t>
       </section>
 
-     <section title="Logging invalid routes">
-     <t>
-     Logging verification failures can increase memory,
-     processing, and storage requirements. Implementations SHOULD provide
-     configurable limits that account for retained Invalid routes, and
-     SHOULD rate-limit diagnostic logging.
-     </t>
-     </section>
-
       <section title="Manipulation of AS_PATH by Provider">
         <t>
-          A Provider may hijack prefixes of its direct or indirect customers by using a forged-origin/forged-segment AS_PATH.
+          A Provider may hijack prefixes of its direct or indirect customers by using a forged-origin/forged-path-segment AS_PATH.
           It may also manipulate the AS_PATH of routes that are sent to its customers.
           Such attacks may not be detectable with ASPA.
         </t>
@@ -612,7 +602,7 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
             Its release is expected after RTR v2 is finalized.
           </li>
           <li>
-            RTRLib <xref target="RTRlib"/> provides an implementation of version 22 in C. The implementation was created by Tassilo Tanneberger, Carl Seifer, Moritz Schulz, Matthias Braeuer supervised by Thomas Schmidt and Matthias Waehlisch and reviewed by Fabian Holler.
+            RTRLib <xref target="RTRlib"/> provides an implementation of version 22 in C. The implementation was created by Tassilo Tanneberger, Carl Seifert, Moritz Schulz, Matthias Braeuer supervised by Thomas Schmidt and Matthias Waehlisch and reviewed by Fabian Holler.
           </li>
           <li>
             The implementation NIST-BGP-SRx <xref target="BGP-SRx"/> is a software suite that provides a validation engine (BGP-SRx) and a Quagga-based BGP router (Quagga-SRx).
@@ -778,7 +768,7 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
     <section anchor="Acknowledgments" title="Acknowledgments">
       <t>
         The authors wish to thank Maria Matejka, Claudio Jeker, Jakob Heitz, Amir Herzberg, Igor Lubashev, Ben Maddison, Russ Housley, Jeff Haas, Nan Geng, Mingqing Huang, Jia Zhang, Nick Hilliard, Shunwan Zhuang, Yangyang Wang, Martin Hoffmann, Jay Borkenhagen, Amreesh Phokeer, Aftab Siddiqui, Dai Zhibin, Doug Montgomery, Padma Krishnaswamy, Rich Compton, Andrei Robachevsky, Rudiger Volk, Iljitsch van Beijnum, Tassilo Tanneberger, Matthias Waehlisch, Moritz Schulz, and Carl Seifert for comments, suggestions, and discussion on the path verification procedures or the text in the document.
-        For the implementation and testing of the procedures in the document, the authors wish to thank Claudio Jeker and Theo Buehler <xref target="bgpd"/>; Kyehwan Lee and Oliver Borchert <xref target="BGP-SRx"/>; Katerina Kubecova and Maria Matejka <xref target="BIRD"/>; Tassilo Tanneberger, Carl Seifer, Moritz Schulz, and Matthias Braeuer <xref target="RTRlib"/>; and Csaba Mate <xref target="FreeRTR"/>.
+        For the implementation and testing of the procedures in the document, the authors wish to thank Claudio Jeker and Theo Buehler <xref target="bgpd"/>; Kyehwan Lee and Oliver Borchert <xref target="BGP-SRx"/>; Katerina Kubecova and Maria Matejka <xref target="BIRD"/>; Tassilo Tanneberger, Carl Seifert, Moritz Schulz, and Matthias Braeuer <xref target="RTRlib"/>; and Csaba Mate <xref target="FreeRTR"/>.
       </t>
     </section>
 
@@ -794,7 +784,7 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
             <strong>Property 1 (Route Leak Detection):</strong> Let AS A and AS B be any two ASes in the Internet doing ASPA (registration and path verification) and no assumption is made about the ASPA deployment status of other ASes.
             Consider a route propagated from AS A to a customer or lateral peer.
             The route is subsequently leaked by an offending AS in the AS path before being received at AS B on a customer or lateral peer interface.
-            The ASPA-based path verification at AS B always detects such a route leak though it may not be able to identify the AS that caused the leak.
+            The ASPA-based path verification at AS B always detects such a route leak, though it may not be able to identify the AS that caused the leak.
           </t>
           <t>
             <strong>Corollary of Property 1:</strong> An observation that follows from Property #1 above is that if any two ISP ASes register ASPAs and implement the detection and mitigation procedures, then any route received from one of them and leaked to the other by an AS in their overlapping customer cones (ASPA compliant or not) will be automatically detected and mitigated.
