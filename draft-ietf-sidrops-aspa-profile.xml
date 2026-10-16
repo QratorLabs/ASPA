@@ -206,7 +206,7 @@
       </section>
     </section>
 
-    <section title="ASPA Validation" anchor="validation">
+    <section title="ASPA Object Validation" anchor="validation">
       <t>
         Before a relying party can use an ASPA to validate a routing announcement, the relying party <bcp14>MUST</bcp14> first validate the ASPA object itself.
         To validate an ASPA, the relying party <bcp14>MUST</bcp14> perform all the validation checks specified in <xref target="RFC6488"/> as well as the following additional ASPA-specific validation steps:
@@ -315,7 +315,7 @@
             <tr><td>Decimal</td><td>Description</td><td>Specification</td></tr>
           </thead>
           <tbody>
-            <tr><td>TBD2</td><td>id-mod-rpki-aspa-2023</td><td>[RFC-to-be]</td></tr>
+            <tr><td>TBD</td><td>id-mod-rpki-aspa-2023</td><td>[RFC-to-be]</td></tr>
           </tbody>
         </table>
       </section>
@@ -362,7 +362,7 @@
         </table>
       </section>
 
-      <section title="Media Type registry" toc="exclude">
+      <section title="Media Types registry" toc="exclude">
         <t>
           The IANA is requested to register the media type application/rpki-aspa in the "Media Type" registry as follows:
         </t>
@@ -448,8 +448,9 @@
         <contact fullname="Rich Salz"/>, <contact fullname="Srihari Sangli"/>,
         <contact fullname="Gavin Brown"/>, <contact fullname="Peter Yee"/>,
         <contact fullname="Yangyang Wang"/>, <contact fullname="Jia Zhang"/>,
+        <contact fullname="Tom Harrison"/>,
         and
-        <contact fullname="Tom Harrison"/>
+        <contact fullname="Luigi Iannone"/>
         for review and several suggestions for improvements.
       </t>
     </section>
