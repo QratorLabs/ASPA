@@ -623,6 +623,9 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
           <li>
             Implementation of ASPA-based AS_PATH verification in the FreeRTR <xref target="FreeRTR"/> is provided by Csaba Mate.
           </li>
+          <li>
+            Implementation of ASPA-based AS_PATH verification in the FRRouting <xref target="FRRouting"/> was reported on by Donatas Abraitis.
+          </li>
         </ul>
       </t>
     </section>
@@ -769,8 +772,14 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
         </reference>
         <reference anchor="FreeRTR" target= "http://www.freertr.org/">
           <front>
-            <title>FreeRTR </title>
+            <title>FreeRTR</title>
             <author initials="C." surname="Mate"><organization /></author>
+          </front>
+        </reference>
+        <reference anchor="FRRouting" target= "https://frrouting.org/">
+          <front>
+            <title>FRRouting</title>
+            <author initials="" surname="FRR Team"><organization /></author>
           </front>
         </reference>
     </references>
