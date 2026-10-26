@@ -235,7 +235,7 @@
           The practice of maintaining a single object per Customer AS avoids race conditions during ASPA updates that might impact BGP route propagation.
           When an ASPA record is being migrated between different Certification Authority registries, the authorization contents of its instances at those registries <bcp14>SHOULD</bcp14> be identical (remain unchanged) for the duration of the migration.
           The Certification Authority software that maintains ASPA records <bcp14>SHOULD</bcp14> support enforcement of this recommendation.
-          See <xref target="I-D.ietf-sidrops-aspa-verification" section="4"/> for all ASPA registration recommendations.
+          See <xref target="I-D.ietf-sidrops-aspa-verification" section="4"/> for additional ASPA registration recommendations.
         </t>
       </section>
 
@@ -256,30 +256,35 @@
         <t>
           Certification Authorities are <bcp14>RECOMMENDED</bcp14> to generate a new key pair for each new ASPA and only sign one ASPA with each EE certificate.
           This type of EE certificate is termed a "one-time-use" EE certificate (see <xref target="RFC6487" section="3"/>).
+          The newly generated keypair can be used as entropy for the filename for the new ASPA, see <xref target="filename"/>.
         </t>
       </section>
 
-      <section>
+      <section anchor="filename">
         <name>ASPA Object Filenames</name>
         <t>
           For optimal ASPA object propagation, Certification Authorities <bcp14>SHOULD</bcp14> follow the guidelines for naming ASPA objects based on <xref target="RFC6481" section="2.2"/>, i.e., convert the 160-bit hash of the EE's public key value into a 27-character string using Base 64 Encoding with the URL and Filename Safe Alphabet (see <xref target="RFC4648" section="5"/>).
-          See <xref target="I-D.ietf-sidrops-publication-server-bcp" section="7.7"/> for more information and considerations.
+          See <xref target="I-D.ietf-sidrops-publication-server-bcp" section="5.7"/> for more information and considerations.
         </t>
       </section>
 
-      <section>
-        <name>Upper Bound on the Number of Providers</name>
+      <section anchor="upperbound">
+        <name>Upper Bound on the Number of Providers per CAS</name>
         <t>
-          While the ASN.1 profile specified in <xref target="content"/> imposes no limit on the number of Provider ASes that can be listed for a given <tt>CAS</tt>, consideration will need to be given to limitations existing in validators and elsewhere in the RPKI ecosystem.
+          While the ASN.1 profile specified in <xref target="content"/> does not imposes any limit on the number of Provider ASes that can be listed for a given <tt>CAS</tt>, consideration will need to be given to limitations existing in validators and elsewhere in the RPKI ecosystem.
           For example, the number of Provider ASes that can be listed in a single RPKI-To-Router protocol ASPA PDU following the Length field constraints in <xref target="I-D.ietf-sidrops-8210bis" section="5.1"/> is 16,380 providers.
-          In addition to limitations in the various protocols used within the ecosystem, locally defined restrictions could exist for the maximum file size of signed objects a Relying Party implementation is willing to accept.
+          In addition to limitations in the various protocols used within the ecosystem, locally defined restrictions could exist for the maximum file size of signed objects a Relying Party implementation is willing to accept as well as limits to the maximum filesize a publication engine is willing to accept.
+          Limiting the number of providers per CAS also is useful to reduce denial-of-service attack vectors aimed at exhausting RPs and BGP routers.
         </t>
         <t>
-          Relying Party implementations are <bcp14>RECOMMENDED</bcp14> to impose an upper bound on the number of Provider ASes in the <tt>U-SPAS</tt> for a given <tt>CAS</tt>.
-          An upper bound value between 4,000 and 10,000 Provider ASes is suggested.
-          If this threshold is exceeded, Relying Party implementations <bcp14>SHOULD</bcp14> treat <em>all</em> ASPA objects related to the <tt>CAS</tt> as invalid; i.e., not emit a partial list of Provider ASes.
+          For the above reasons, Relying Parties <bcp14>SHOULD</bcp14> impose an upper bound on the number of Provider ASes in the <tt>U-SPAS</tt> for a given <tt>CAS</tt>.
+          At the time of writing, operational considerations suggest an upper bound value between 4,000 and 10,000 Provider ASes per <tt>CAS</tt> as default threshold.
+          If this threshold is exceeded for a given <tt>CAS</tt>, Relying Party implementations <bcp14>MUST</bcp14> treat <em>all</em> ASPA objects related to that <tt>CAS</tt> as invalid, i.e., not emit a partial list of Provider ASes for that <tt>CAS</tt>.
           Additionally, an error <bcp14>SHOULD</bcp14> be logged in the local system, indicating the <tt>CAS</tt> for which the threshold was exceeded.
-          Implementers and operators <bcp14>SHOULD</bcp14> periodically review whether imposed upper bounds still are reasonable in context of the global Internet routing system.
+        </t>
+        <t>
+          The above suggested default threshold value is deliberately specified as a range because there is no benefit to all deployments using the same threshold.
+          Implementers and operators are <bcp14>RECOMMENDED</bcp14> to periodically review whether imposed upper bounds are aligned with the growth curve of the global Internet routing system.
         </t>
       </section>
 
@@ -301,6 +306,9 @@
         There is no assumption of confidentiality for the data in an ASPA.
         There is no explicit authentication associated with an ASPA, since the PKI used for ASPA validation provides authorization but not authentication.
         Although the ASPA is a signed, application-layer object, there is no intent to convey non-repudiation via an ASPA.
+      </t>
+      <t>
+        Large ASPA objects might cause strain within the ecosystem, therefore relying parties are advised to impose a limit on the number of providers per CAS in order to limit the impact of exhaustion (see <xref target="upperbound"/>).
       </t>
     </section>
 
