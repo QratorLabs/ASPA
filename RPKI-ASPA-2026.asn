@@ -1,6 +1,6 @@
-RPKI-ASPA-2023
+RPKI-ASPA-2026
   { iso(1) member-body(2) us(840) rsadsi(113549) pkcs(1)
-     pkcs-9(9) smime(16) modules(0) id-mod-rpki-aspa-2023(TBD) }
+     pkcs-9(9) smime(16) modules(0) id-mod-rpki-aspa-2026(TBD) }
 
 DEFINITIONS EXPLICIT TAGS ::=
 BEGIN

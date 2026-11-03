@@ -11,7 +11,7 @@
 
 <rfc xmlns:xi="http://www.w3.org/2001/XInclude"
      category="std"
-     docName="draft-ietf-sidrops-aspa-profile-30"
+     docName="draft-ietf-sidrops-aspa-profile-31"
      ipr="trust200902"
      consensus="true"
      submissionType="IETF">
@@ -101,11 +101,11 @@
       <t>
         The primary purpose of the Resource Public Key Infrastructure (RPKI) <xref target="RFC6480"/> is to improve security in the global Internet routing system.
         As part of this infrastructure, a mechanism is needed for Autonomous Systems (AS) operators, in their capacity as customers, to designate and authorize other ASes as their provider(s).
-        A Provider AS (<tt>PAS</tt>) is a network providing connectivity between networks - it provides transit services to the customer.
+        A Provider AS (<tt>PAS</tt>) is a network providing connectivity between networks - it provides transit services to customers.
         That is:
         <list style="letters">
-          <t>The provider may propagate Border Gateway Protocol (BGP) routes received from any direction to their customers. For example, routes the provider learned from its own providers, lateral peers, and other customers. The provider may also announce a default route to their customers.</t>
-          <t>The provider may propagate BGP routes received from the customer in any direction. For example, to the provider's providers, lateral peers, and other customers.</t>
+          <t>The provider may propagate Border Gateway Protocol (BGP) <xref target="RFC4271"/> routes received from any direction to their customers. For example, routes that the provider learned from its own providers, lateral peers, and other customers. The provider may also announce a default route to their customers.</t>
+          <t>The provider may propagate BGP routes received from a customer in any direction. For example, to the provider's providers, lateral peers, and other customers.</t>
         </list>
       </t>
       <t>
@@ -114,11 +114,11 @@
         An ASPA object contains a list of one or more Provider ASes each of which is authorized to be a provider network for the Customer AS.
       </t>
       <t>
-        This specification provides the authorization mechanism mentioned above and can be used to facilitate detection and mitigation of route leaks.
+        This specification provides the authorization mechanism mentioned above and can be used to facilitate detection and mitigation of route leaks (see <xref target="RFC7908"/>).
         The procedures for verifying AS_PATHs in BGP UPDATE messages using ASPAs are described in <xref target="I-D.ietf-sidrops-aspa-verification"/>.
       </t>
       <t>
-        When the Customer AS makes use of multiple providers, all Provider ASes are to be listed in the ASPA object, including any non-transparent Internet Exchange Point (IXP) Route Server (RS) ASes.
+        When a Customer AS makes use of multiple providers, all Provider ASes are to be listed in the ASPA object, including any non-transparent Internet Exchange Point (IXP) Route Server (RS) ASes.
         Note that the common case for RS ASes at IXPs is to operate transparently (see <xref target="RFC7947" section="2.2.2.1"/>), and transparent IXP Route Servers do not need to be listed as <tt>PAS</tt> in ASPAs.
         When the Customer AS does not use any providers for transit, a <tt>PAS</tt> value of 0 is used.
       </t>
@@ -160,7 +160,7 @@
         The eContent of an ASPA is an instance of <tt>ASProviderAttestation</tt>, formally defined by the following ASN.1 <xref target="X.680"/> module:
       </t>
 
-      <sourcecode type="asn.1" src="RPKI-ASPA-2023.asn"/>
+      <sourcecode type="asn.1" src="RPKI-ASPA-2026.asn"/>
 
       <t>
         This content appears as the <tt>eContent</tt> within the <tt>encapContentInfo</tt> as specified in <xref target="RFC6488"/>.
@@ -174,7 +174,7 @@
 
       <section title="customerASID">
         <t>
-          The <tt>customerASID</tt> field contains a positive integer that represents the AS number of the Customer Autonomous System that is the authorizing entity.
+          The <tt>customerASID</tt> field contains a positive integer that represents the AS number of the Customer AS that is the authorizing entity.
         </t>
       </section>
 
@@ -184,7 +184,7 @@
         </t>
         <t>
           Each element contained in the <tt>providers</tt> field is an instance of <tt>PAS</tt>.
-          Each <tt>PAS</tt> element contains the AS number of an AS that has been authorized by the customer AS as its provider or non-transparent RS.
+          Each <tt>PAS</tt> element contains the AS number of an AS that has been authorized by the Customer AS as its provider or non-transparent RS.
         </t>
         <t>
           In addition to the constraints described by the formal ASN.1 definition, the contents of the <tt>providers</tt> field <bcp14>MUST</bcp14> satisfy the following constraints:
@@ -208,17 +208,17 @@
 
     <section title="ASPA Object Validation" anchor="validation">
       <t>
-        Before a relying party can use an ASPA to validate a routing announcement, the relying party <bcp14>MUST</bcp14> first validate the ASPA object itself.
-        To validate an ASPA, the relying party <bcp14>MUST</bcp14> perform all the validation checks specified in <xref target="RFC6488"/> as well as the following additional ASPA-specific validation steps:
+        Before a Relying Party can use an ASPA to validate a routing announcement, a Relying Party <bcp14>MUST</bcp14> first validate the ASPA object itself.
+        To validate an ASPA, a Relying Party <bcp14>MUST</bcp14> perform all the validation checks specified in <xref target="RFC6488"/> as well as the following additional ASPA-specific validation steps:
         <list style="symbols">
           <t>
-            The Autonomous System Identifier Delegation Extension <xref target="RFC3779"/> <bcp14>MUST</bcp14> be present in the end-entity (EE) certificate (contained within the ASPA), and the Customer AS in the ASPA <tt>eContent</tt> <bcp14>MUST</bcp14> match the <tt>ASId</tt> specified by the EE certificate's Autonomous System Identifier Delegation Extension.
+            The Autonomous System Identifier Delegation Extension (<xref target="RFC3779" section="3"/>) <bcp14>MUST</bcp14> be present in the end-entity (EE) certificate (contained within the ASPA), and the Customer AS in the ASPA <tt>eContent</tt> <bcp14>MUST</bcp14> match the <tt>ASId</tt> specified by the EE certificate's Autonomous System Identifier Delegation Extension.
           </t>
           <t>
             The Autonomous System Identifier Delegation Extension <bcp14>MUST</bcp14> contain exactly one "id" element (<xref target="RFC3779" section="3.2.3.6"/>) and <bcp14>MUST NOT</bcp14> contain any "inherit" elements (<xref target="RFC3779" section="3.2.3.3"/>) or "range" elements (<xref target="RFC3779" section="3.2.3.7"/>).
           </t>
           <t>
-            The IP Address Delegation Extension <xref target="RFC3779"/> <bcp14>MUST</bcp14> be absent.
+            The IP Address Delegation Extension (<xref target="RFC3779" section="2"/>) <bcp14>MUST</bcp14> be absent.
           </t>
           <t>
             The ASPA content fully conforms with all requirements specified in <xref target="content"/>.
@@ -299,7 +299,7 @@
       </t>
       <t>
         The right of the ASPA signer to authorize a Provider AS to provide transit to the Customer AS is established through the use of the address space and AS number PKI as described in <xref target="RFC6480"/>.
-        Specifically, one <bcp14>MUST</bcp14> verify the signature on the ASPA using an X.509 certificate issued under this PKI and check that the Customer AS in the ASPA is contained in the certificate's Autonomous System Identifier Delegation extension.
+        Specifically, a Relying Party <bcp14>MUST</bcp14> verify the signature on the ASPA using an X.509 certificate issued under this PKI and check that the Customer AS in the ASPA is contained in the certificate's Autonomous System Identifier Delegation extension.
       </t>
       <t>
         There is no assumption of confidentiality for the data in an ASPA.
@@ -315,21 +315,21 @@
 
       <section title="SMI Security for S/MIME Module Identifier registry" toc="exclude">
         <t>
-          IANA is requested to allocate for <tt>id-mod-rpki-aspa-2023</tt> in the "SMI Security for S/MIME Module Identifier (1.2.840.113549.1.9.16.0)" registry as follows:
+          IANA is requested to allocate for <tt>id-mod-rpki-aspa-2026</tt> in the "SMI Security for S/MIME Module Identifier (1.2.840.113549.1.9.16.0)" registry under the "Structure of Management Information (SMI) Numbers (MIB Module Registrations)" registry group as follows:
         </t>
         <table>
           <thead>
             <tr><td>Decimal</td><td>Description</td><td>Specification</td></tr>
           </thead>
           <tbody>
-            <tr><td>TBD</td><td>id-mod-rpki-aspa-2023</td><td>[RFC-to-be]</td></tr>
+            <tr><td>TBD</td><td>id-mod-rpki-aspa-2026</td><td>[RFC-to-be]</td></tr>
           </tbody>
         </table>
       </section>
 
       <section title="SMI Security for S/MIME CMS Content Type registry" toc="exclude">
         <t>
-          IANA is requested to make permanent in the "SMI Security for S/MIME CMS Content Type (1.2.840.113549.1.9.16.1)" registry as follows:
+          IANA is requested to make permanent in the "SMI Security for S/MIME CMS Content Type (1.2.840.113549.1.9.16.1)" registry under the "Structure of Management Information (SMI) Numbers (MIB Module Registrations)" registry group as follows:
         </t>
         <table>
           <thead>
@@ -357,7 +357,7 @@
 
       <section title="RPKI Repository Name Scheme registry" toc="exclude">
         <t>
-          IANA is requested to make permanent in the "RPKI Repository Name Scheme" registry <xref target="RFC6481"/> as follows:
+          IANA is requested to make permanent in the "RPKI Repository Name Scheme" registry under the "Resource Public Key Infrastructure (RPKI)" registry group as follows
         </t>
         <table>
           <thead>
@@ -440,7 +440,7 @@
       <section>
         <name>Deployment Status</name>
         <t>
-          As of July 2026, roughly 2,400 ASPA objects have been published in the global RPKI.
+          As of November 2026, roughly 4,000 ASPA objects have been published in the global RPKI.
           See <tt>https://console.rpki-client.org/aspa.html</tt> for an up-to-date overview.
         </t>
       </section>
@@ -457,8 +457,9 @@
         <contact fullname="Yangyang Wang"/>, <contact fullname="Jia Zhang"/>,
         <contact fullname="Tom Harrison"/>,
         <contact fullname="Luigi Iannone"/>,
+        <contact fullname="Loganaden Velvindron"/>,
         and
-        <contact fullname="Loganaden Velvindron"/>
+        <contact fullname="Mohamed Boucadair"/>,
         for review and several suggestions for improvements.
       </t>
     </section>
@@ -491,7 +492,6 @@
       <?rfc include="reference.RFC.8174.xml"?>
 
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-sidrops-aspa-verification.xml"/>
-      <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-sidrops-8210bis.xml"/>
 
       <reference anchor="X.680">
         <front>
@@ -515,16 +515,21 @@
         <seriesInfo name="ITU-T" value="Recommendation X.690"/>
       </reference>
 
+      <?rfc include="reference.RFC.4648.xml"?>
+
     </references>
 
     <references title="Informative References">
 
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-sidrops-publication-server-bcp.xml"/>
 
-      <?rfc include="reference.RFC.4648.xml"?>
+      <?rfc include="reference.RFC.4271.xml"?>
       <?rfc include="reference.RFC.6480.xml"?>
       <?rfc include="reference.RFC.6487.xml"?>
+      <?rfc include="reference.RFC.7908.xml"?>
       <?rfc include="reference.RFC.7947.xml"?>
+
+      <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-sidrops-8210bis.xml"/>
 
       <reference anchor="rpki-client" target="https://www.rpki-client.org/">
         <front>
