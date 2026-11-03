@@ -343,7 +343,7 @@
 
       <section title="RPKI Signed Object registry" toc="exclude">
         <t>
-          IANA is requested to make permanent in the "RPKI Signed Object" registry as follows:
+          IANA is requested to make permanent in the "RPKI Signed Object" registry under the "Resource Public Key Infrastructure (RPKI)" registry group as follows:
         </t>
         <table>
           <thead>
@@ -357,7 +357,7 @@
 
       <section title="RPKI Repository Name Scheme registry" toc="exclude">
         <t>
-          IANA is requested to make permanent in the "RPKI Repository Name Scheme" registry under the "Resource Public Key Infrastructure (RPKI)" registry group as follows
+          IANA is requested to make permanent in the "RPKI Repository Name Scheme" registry under the "Resource Public Key Infrastructure (RPKI)" registry group as follows:
         </t>
         <table>
           <thead>
