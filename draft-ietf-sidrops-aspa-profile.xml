@@ -385,7 +385,7 @@
        Section 4 of [RFC-to-be] for further information.
    Interoperability considerations: None
    Published specification: [RFC-to-be]
-   Applications that use this media type: RPKI operators
+   Applications that use this media type: Tools used by RPKI operators.
    Additional information:
      Content: This media type is a signed object, as defined
          in [RFC6488], which contains a payload of a list of
