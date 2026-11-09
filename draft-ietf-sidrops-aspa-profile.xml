@@ -282,7 +282,8 @@
           Additionally, an error <bcp14>SHOULD</bcp14> be logged in the local system, indicating the <tt>CAS</tt> for which the threshold was exceeded.
         </t>
         <t>
-          The above suggested default threshold value is deliberately specified as a range because there is no benefit to all deployments using the same threshold.
+          The recommended threshold range was determined following careful observations on the state at the time of writing and projected state of the global Internet routing system.
+          Specifically, the range is selected to provide ample room for growth, while also reducing the potential for DoS.
           Implementers and operators are <bcp14>RECOMMENDED</bcp14> to periodically review whether imposed upper bounds are aligned with the growth curve of the global Internet routing system.
         </t>
       </section>
