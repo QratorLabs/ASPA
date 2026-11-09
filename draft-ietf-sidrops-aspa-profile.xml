@@ -385,7 +385,8 @@
        Section 4 of [RFC-to-be] for further information.
    Interoperability considerations: None
    Published specification: [RFC-to-be]
-   Applications that use this media type: Tools used by RPKI operators.
+   Applications that use this media type: Tools used by
+       RPKI operators.
    Additional information:
      Content: This media type is a signed object, as defined
          in [RFC6488], which contains a payload of a list of
@@ -599,16 +600,16 @@
       </t>
       <artwork>
 <![CDATA[
-$ echo 301DA003020101020300FE633011020300FC00020301000F020500FA56EA00 \
-  | xxd -r -ps | openssl asn1parse -inform DER -dump -i
-  0:d=0  hl=2 l=  29 cons: SEQUENCE
+$ echo 301BA0030201010203010000300F020300FBF0020300FBFF020301000F \
+  | xxd -r -ps | openssl asn1parse -inform der -i
+  0:d=0  hl=2 l=  27 cons: SEQUENCE
   2:d=1  hl=2 l=   3 cons:  cont [ 0 ]
-  4:d=2  hl=2 l=   1 prim:   INTEGER :01       # version
-  7:d=1  hl=2 l=   3 prim:  INTEGER  :FE63     # CAS 65123
- 12:d=1  hl=2 l=  17 cons:  SEQUENCE           # ProviderASSet
- 14:d=2  hl=2 l=   3 prim:   INTEGER :FC00       # PAS 64512
- 19:d=2  hl=2 l=   3 prim:   INTEGER :01000F     # PAS 65551
- 24:d=2  hl=2 l=   5 prim:   INTEGER :FA56EA00   # PAS 4200000000
+  4:d=2  hl=2 l=   1 prim:   INTEGER :01     # version
+  7:d=1  hl=2 l=   3 prim:  INTEGER  :010000 # CAS 65536
+ 12:d=1  hl=2 l=  15 cons:  SEQUENCE         # ProviderASSet
+ 14:d=2  hl=2 l=   3 prim:   INTEGER :FBF0     # PAS 64496
+ 19:d=2  hl=2 l=   3 prim:   INTEGER :FBFF     # PAS 64511
+ 24:d=2  hl=2 l=   3 prim:   INTEGER :01000F   # PAS 65551
 ]]>
       </artwork>
 
@@ -617,39 +618,39 @@ $ echo 301DA003020101020300FE633011020300FC00020301000F020500FA56EA00 \
       </t>
       <artwork>
 <![CDATA[
-MIIGLAYJKoZIhvcNAQcCoIIGHTCCBhkCAQMxDTALBglghkgBZQMEAgEwMAYLKoZI
-hvcNAQkQATGgIQQfMB2gAwIBAQIDAP5jMBECAwD8AAIDAQAPAgUA+lbqAKCCBCMw
-ggQfMIIDB6ADAgECAgEEMA0GCSqGSIb3DQEBCwUAMA8xDTALBgNVBAMTBHJvb3Qw
-HhcNMjUwMTA2MTAyNjQ4WhcNMjYwMTA2MTAyNjQ4WjAPMQ0wCwYDVQQDEwRyb290
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmgjRVMrjafIK81cxs8GB
-ehcjlP97o3CdlhceX8ogtUE19C1v3VZQttdzaBG1ViI2+TJiyueHm2M6nq7tl7A9
-HfkPWGdvwjTUeF4ynpxNlqqoG5pGPMLuuk6HdVaKbuEeX3ZAYD2daG8qm3zkmmF3
-F7e+xPvr6nCTIQX7nr0WQyX74FmLGwlr6TV+6MGdCnp24A5aCXJo3m1vGlQUKdd/
-bMszpbfzaX1rxBKA0GSdWx/QEOxFb1BPObjF+P/GpDXOq3i0DoZiDB+omgdUAWDZ
-dmskG0l+2EyQaCS/pVCES50Y5zAagTcFabCLKnPvr3qh9tvjD/KlolYc35gNIfoX
-7wIDAQABo4IBhDCCAYAwDgYDVR0PAQH/BAQDAgeAMB0GA1UdDgQWBBQrh8dvXu72
-IET1KLgskpso1VcyrDAfBgNVHSMEGDAWgBQ2mtAZLGdOeDIizTKFZreUErGPJjAY
-BgNVHSABAf8EDjAMMAoGCCsGAQUFBw4CMF8GCCsGAQUFBwEBBFMwUTBPBggrBgEF
-BQcwAoZDcnN5bmM6Ly9sb2NhbGhvc3QvcmVwby8zNjlBRDAxOTJDNjc0RTc4MzIy
-MkNEMzI4NTY2Qjc5NDEyQjE4RjI2LmNlcjBXBgNVHR8EUDBOMEygSqBIhkZyc3lu
-YzovL2xvY2FsaG9zdC9yZXBvL3RhLzM2OUFEMDE5MkM2NzRFNzgzMjIyQ0QzMjg1
-NjZCNzk0MTJCMThGMjYuY3JsMD4GCCsGAQUFBwELBDIwMDAuBggrBgEFBQcwC4Yi
-cnN5bmM6Ly9sb2NhbGhvc3QvdGEvYW4tb2JqZWN0LmFzYTAaBggrBgEFBQcBCAEB
-/wQLMAmgBzAFAgMA/mMwDQYJKoZIhvcNAQELBQADggEBACqgWrD692DUuN1jrriv
-SGqI7JqAtbqOSvnwxNGMlPZ6oTkarf4aDMJNcwqMaOUOzZPQ9VXA48h5R8TgvAub
-s/HJ263DLtPiScwkWqLZZs6Ius2zFothzDwWOoe/rHKiecCF0YpJqFhaa6dw6vsO
-zK77Ze+Gfa1SeeuI1DTwGDjiNBtXCaRxAPmvpYGxSKQmRYCIo6vKPSZlzCPqzEZa
-MVCmxdlaDQjVPUuWLbFV/bbZmS4wM1nbikt5WLZEVHMcAyqWOb7a3KO2GIIw0Ak9
-O6JgUoex/8y0s6smSWcRe2y9d6kAhT0COW1KvFoNM5lFKSe1rYqTtMFY33XfCI7e
-IgsxggGqMIIBpgIBA4AUK4fHb17u9iBE9Si4LJKbKNVXMqwwCwYJYIZIAWUDBAIB
-oGswGgYJKoZIhvcNAQkDMQ0GCyqGSIb3DQEJEAExMBwGCSqGSIb3DQEJBTEPFw0y
-NTAxMDYxMDI2NDhaMC8GCSqGSIb3DQEJBDEiBCCLMweRYDN5u5auRQYv6+Dx+b9X
-m1t5R3gkH9c3aX40gzANBgkqhkiG9w0BAQEFAASCAQATWDI3fYgku2fJPzFXAbnz
-IKabFMRvhp9LAhvl8oPkCp0zQu4SyJsdvoWxkpHKnXGwwdgub/d4GF0weoJgauDr
-ugUsB2e40aQwFoTyPcVuS/BirhlW5j0NwYovmuJ9GiBe67/sCRBaPC5sBKRBpOIv
-IpMpAe2QhaoeDUDc0KYCM42f1kFD+PD8PnlvXRisL3A3OFhB+0LY1Z3xivRAEdtf
-qzobZT0Hq6CIlAjNeocG0gMfJj/lFyElLkJdfGHzCWLnVNX2I+9GbDDdYV13cUTG
-yk5CFeQWetsX7D7XRNSdKwrrW6qWK/KxGF38SsuGeTyDQiNcOhwqvSfFc388ge/G
+MIIGKAYJKoZIhvcNAQcCoIIGGTCCBhUCAQMxDTALBglghkgBZQMEAgEwLgYLKoZI
+hvcNAQkQATGgHwQdMBugAwIBAQIDAQAAMA8CAwD78AIDAPv/AgMBAA+gggQhMIIE
+HTCCAwWgAwIBAgIBAjANBgkqhkiG9w0BAQsFADAPMQ0wCwYDVQQDEwRyb290MB4X
+DTI2MTEwODIxNTYyOVoXDTI3MTEwODIxNTYyOVowDTELMAkGA1UEAxMCRUUwggEi
+MA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCW16IvIu6jdfGR0zw8axhfMwLa
+6s5sbEpZiNkcILry51FJ3o9Ykd7H1Td4TOzqzmTuUKu48Nd5mM7LC81C/DkFm3IN
+Ows7YNPahMNfpe9RZrXMXssAiBNPfLnJgVwP2wNupQMGLkZI8e1EVO+zuzLO8dmc
+qSVIlQBiLVKA+VUGU6y70/OJfUTMcXwZ39bhcutNQlL1wFeuAikryxO/kWg+FRdc
+rEgV6b6vOhdlhX4QllswdzIUJTaKfdk9OAu7BLXsZqIVfVVYTfmJKkZa4GY//xOK
+XYcSdVc305KlkrUcfxnB7qeCWCodRhzV/gB8CV6xhvTboFHQz507rvrrha1BAgMB
+AAGjggGEMIIBgDAOBgNVHQ8BAf8EBAMCB4AwHQYDVR0OBBYEFHrQKKVUt65mYFAD
+M3uFS+2S+o1TMB8GA1UdIwQYMBaAFLO4MN+bsg1l86GHFmfCBjOEGpedMBgGA1Ud
+IAEB/wQOMAwwCgYIKwYBBQUHDgIwVQYIKwYBBQUHAQEESTBHMEUGCCsGAQUFBzAC
+hjlyc3luYzovL2xvY2FsaG9zdC9yZXBvL3RhL3M3Z3czNXV5RFdYem9ZY1daOElH
+TTRRYWw1MC5jZXIwSgYDVR0fBEMwQTA/oD2gO4Y5cnN5bmM6Ly9sb2NhbGhvc3Qv
+cmVwby9jYS9zN2d3MzV1eURXWHpvWWNXWjhJR000UWFsNTAuY3JsMFUGCCsGAQUF
+BwELBEkwRzBFBggrBgEFBQcwC4Y5cnN5bmM6Ly9sb2NhbGhvc3QvcmVwby9jYS9l
+dEFvcFZTM3JtWmdVQU16ZTRWTDdaTDZqVk0uYXNhMBoGCCsGAQUFBwEIAQH/BAsw
+CaAHMAUCAwEAADANBgkqhkiG9w0BAQsFAAOCAQEAbiAIskkSbuzKWhyJug5h6L9B
+NDX1/UAgWJRxeMeown3maY62kCkKmGypOgifO6r2jVmrLYpBvY2OAP8g3GqHC5UI
+4DApy5zvALgmMXsxoClog7lxXonXv7gr5GLNs63cfR1olfctdkxPLZFUsBrQ0YED
+zGkUtAruLyg/9YzGTGT7K2t1ur1p8jNJ6NVrNrdtRa1iOehMg1BsFlvpZlQxz2fk
+gmhNplEg3hI6NIDGmX4VoCf/GSFILjhEgu7AuuYEXDAg4sMfBg0kT+zRuHZ9j5uu
+YMAVjD7bt8j3xJtfOFF/fYgAGIekE8Fdht2Ak7lrQlrsgAzMKfwoNXTzCXCf5TGC
+AaowggGmAgEDgBR60CilVLeuZmBQAzN7hUvtkvqNUzALBglghkgBZQMEAgGgazAa
+BgkqhkiG9w0BCQMxDQYLKoZIhvcNAQkQATEwHAYJKoZIhvcNAQkFMQ8XDTI2MTEw
+ODIxNTYyOVowLwYJKoZIhvcNAQkEMSIEIMGsqdjbYNnedoOQqrXVRnpsKAIyiy0Y
+l+QLD8GY32ytMA0GCSqGSIb3DQEBAQUABIIBAIb9Zhtm9sXW0gJiVbsjyxSkw+jz
+ET8yehhvHE9vfyeXUQCA8WkemXwJESu6eU9dXR7ee/GRCRyzQYwTlWlI5Y8YCpzz
+4FmYDwMWES2OaMfp3C8C2ZMjub6eDi4pBmgRm0+Nz49crkR0sR8l+5B3OWRV1psq
+l+vB+NFCpuDK/m7ZKWV62xICepC9YTtWeQw5MDpoSJVFtB/zGfE3GJC75QJdrWlN
+G05Xiz7FdGjJ2uuhzf4VNx8Mx7TSRQXgSSqhiL0QRdWK8Z42Fvnv95J6/OJu3Wq3
+ODQs45DOzZ5UqKhzPPZ5iAMZ3kQddEZ4OX8khoEp6wGX/fJK6C0AUvaht+Q=
 ]]>
       </artwork>
     <t>
@@ -658,21 +659,22 @@ yk5CFeQWetsX7D7XRNSdKwrrW6qWK/KxGF38SsuGeTyDQiNcOhwqvSfFc388ge/G
     <artwork>
 <![CDATA[
 
-Object SHA256 hash:        S6B+jKOCFXPlRn7ws6Kd5tgpsSx609tJZpw60CVaf9Y=
-EE Subject keyid:          2B87C76F5EEEF62044F528B82C929B28D55732AC
-EE Certificate issuer:     /CN=root
-EE Certificate serial:     04
-EE Authority keyid:        369AD0192C674E783222CD328566B79412B18F26
+Object SHA256 hash:       CnrHR+m70BlSUc8tDBeqWMcHRbCycmPC8DzjHPnJn8E=
+EE Subject keyid:         7AD028A554B7AE66605003337B854BED92FA8D53
+EE Certificate issuer:    /CN=root
+EE Certificate serial:    02
+EE Authority keyid:       B3B830DF9BB20D65F3A1871667C20633841A979D
 EE Authority info access:
-     rsync://localhost/repo/369AD0192C674E783222CD328566B79412B18F26.cer
-EE Subject info access:    rsync://localhost/ta/an-object.asa
-CMS Signing time:          Mon 06 Jan 2025 10:26:48 +0000
-EE notBefore:              Mon 06 Jan 2025 10:26:48 +0000
-EE notAfter:               Tue 06 Jan 2026 10:26:48 +0000
+     rsync://localhost/repo/ta/s7gw35uyDWXzoYcWZ8IGM4Qal50.cer
+EE Subject info access:
+     rsync://localhost/repo/ca/etAopVS3rmZgUAMze4VL7ZL6jVM.asa
+CMS Signing time:         Sun 08 Nov 2026 21:56:29 +0000
+EE notBefore:             Sun 08 Nov 2026 21:56:29 +0000
+EE notAfter:              Mon 08 Nov 2027 21:56:29 +0000
 
 ASPA eContent:
-  customerASID:            65123
-  providers:               64512, 65551, 4200000000
+  customerASID:           65536
+  providers:              64496, 64511, 65551
 ]]>
       </artwork>
     </section>
