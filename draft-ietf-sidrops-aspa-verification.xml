@@ -162,16 +162,16 @@
       <t>
         <list style="hanging">
           <t hangText="Route is ineligible:">
-            The term has the same meaning as in Section 9.1 of <xref target="RFC4271"/>, i.e., "route is ineligible to be installed in Loc-RIB and will be excluded from the next phase of route selection."
+            The term has the same meaning as in <xref target="RFC4271" section="9.1"/>, i.e., "route is ineligible to be installed in Loc-RIB and will be excluded from the next phase of route selection."
           </t>
           <t hangText="CAS:">
-            Customer AS (<xref target="I-D.ietf-sidrops-aspa-profile" sectionFormat="comma" section="1"/>).
+            Customer AS (see <xref target="I-D.ietf-sidrops-aspa-profile" section="1"/>).
           </t>
           <t hangText="PAS:">
-            Provider AS (<xref target="I-D.ietf-sidrops-aspa-profile" sectionFormat="comma" section="1"/>).
+            Provider AS (see <xref target="I-D.ietf-sidrops-aspa-profile" section="1"/>).
           </t>
           <t hangText="SPAS:">
-            Set of Provider ASes (<xref target="I-D.ietf-sidrops-aspa-profile" sectionFormat="comma" section="3"/>).
+            Set of Provider ASes (see <xref target="I-D.ietf-sidrops-aspa-profile" section="3"/>).
           </t>
           <t hangText="U-SPAS:">
             See <xref target="pair-validation"/> for the comprehensive definition of Union SPAS (U-SPAS).
@@ -190,6 +190,7 @@
         ASPA registration improves the accuracy of ASPA-based AS_PATH verification in routing systems.
         An ASPA registration MUST list the union of all non-transparent RS ASes at which the CAS is an RS-client and all Provider ASes for the CAS.
         An AS MUST include a Provider AS in its SPAS regardless of whether it provides connectivity for only IPv4 or only IPv6 or both.
+        Note that the common case for RS ASes at IXPs is to operate transparently (see <xref target="RFC7947" section="2.2.2.1"/>), and transparent IXP Route Servers do not need to be listed as Provider ASes in ASPAs.
       </t>
       <t>
         In the Complex relationship case (<xref target="terminology"/> and <xref target="RFC9234"/>), an AS MUST include the neighbor AS in its SPAS if the neighbor plays the Provider role for all or a subset of received or sent prefixes.
@@ -222,7 +223,7 @@
     <section title="AS_PATH Verification" anchor="verif">
       <t>
         The procedures described in this document are applicable only to four-octet AS number compatible BGP speakers <xref target="RFC6793"/>.
-        If such a BGP speaker receives both AS_PATH and AS4_PATH attributes in an UPDATE, then the procedures are applied on the reconstructed AS_PATH (Section 4.2.3 of <xref target="RFC6793"/>).
+        If such a BGP speaker receives both AS_PATH and AS4_PATH attributes in an UPDATE, then the procedures are applied on the reconstructed AS_PATH (<xref target="RFC6793" section="4.2.3"/>).
         So, the term AS_PATH is used in this document to refer to the usual AS_PATH <xref target="RFC4271"/> as well as the reconstructed AS_PATH.
       </t>
 
@@ -233,8 +234,8 @@
         </t>
         <t>
           If an attacker intentionally creates a route leak, they may attempt to strip their AS from the AS_PATH.
-          To mitigate this, a check is necessary to match the most recently added AS in the AS_PATH to the BGP neighbor's ASN, with a standard exception for routes received from a transparent Internet Exchange (IX) route server (Sec. 2.2.2.1 of <xref target="RFC7947"/>).
-          This AS_PATH check is specified in Section 6.3 of <xref target="RFC4271"/> and its handling is updated in <xref target="RFC7606"/>.
+          To mitigate this, a check is necessary to match the most recently added AS in the AS_PATH to the BGP neighbor's ASN, with a standard exception for routes received from a transparent Internet Exchange (IX) route server (see <xref target="RFC7947" section="2.2.2.1"/>).
+          This AS_PATH check is specified in <xref target="RFC4271" section="6.3"/> and its handling is updated in <xref target="RFC7606"/>.
         </t>
         <t>
           If the aforementioned AS_PATH checks and error handling are implemented, they MUST be applied prior to ASPA verification.
@@ -283,7 +284,7 @@
         </t>
 
         <t>
-          The AS_PATH is invalid if apexes of the up-ramp and down-ramp (AS(K) and AS(L), respectively) of the COMPRESSED_AS_PATH are apart by more than one hop; else, it is valid.
+          The AS_PATH is invalid if the apexes of the up-ramp and down-ramp (AS(K) and AS(L), respectively) of the COMPRESSED_AS_PATH are apart by more than one hop; else, it is valid.
           In other words, if the combined length of the up-ramp and down-ramp of the COMPRESSED_AS_PATH is equal to or greater than N, the AS_PATH is valid (route leak free).
           If the combined length is less than N, the route was leaked or the AS_PATH was malformed (i.e., the AS_PATH is invalid).
         </t>
@@ -299,7 +300,7 @@
           A CAS is expected to register a single ASPA listing all its Provider ASes (see <xref target="rec1"/>).
           If a CAS has a single cryptographically valid ASPA, then the Union SPAS (U-SPAS) (defined in <xref target="I-D.ietf-sidrops-aspa-profile"/>) for the CAS is equal to the SPAS of that ASPA.
           In case a CAS has multiple cryptographically valid ASPAs, then the U-SPAS for the CAS is the union of ASes listed in all the SPAS corresponding to these ASPAs.
-          If a U-SPAS includes an AS 0 and one or more other AS numbers, then the AS 0 is removed from the U-SPAS (see Sec. 5.2 of <xref target="I-D.ietf-sidrops-aspa-profile"/>).  
+          If a U-SPAS includes an AS 0 and one or more other AS numbers, then the AS 0 is removed from the U-SPAS (see <xref target="I-D.ietf-sidrops-aspa-profile" section="5.2"/>).  
         </t>
 
         <t>
@@ -468,7 +469,7 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
       <section title="BGP Roles" anchor="role">
         <t>
           When ASPA-based AS_PATH verification is deployed, the BGP Role configuration parameter and its cross-check in a BGP OPEN message as specified in <xref target="RFC9234"/> are RECOMMENDED.
-          The BGP Roles facilitate automating the use of the above-described AS_PATH verification procedures helping to distinguish whether upstream or downstream procedures should be applied.
+          The BGP Roles facilitate automating the use of the above-described AS_PATH verification procedures, helping to distinguish whether upstream or downstream procedures should be applied.
           The automatic BGP Role cross-check <xref target="RFC9234"/> should facilitate more accurate and effective deployment of ASPA. 
         </t>
       </section>
@@ -847,9 +848,7 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
       <section title="Only to Customer (OTC) Attribute" anchor="otc">
         <t>
           While the ASPA-based AS_PATH verification method (<xref target="verif"/>, <xref target="mitigation"/>) detects and mitigates route leaks that were created by preceding ASes listed in the AS_PATH, it lacks the ability to prevent the local AS from initiating a route leak towards its neighbor.
-          ASPA verification may also fail to detect route leaks in the presence of Complex relations in the AS_PATH.
-          The use of the Only to Customer (OTC) Attribute fills in that gap (see Section 5, <xref target="RFC9234"/>).
-          The implementation of the procedures utilizing the OTC Attribute is RECOMMENDED to complement the ASPA-based AS_PATH verification.
+          ASPA verification may also fail to detect route leaks in the presence of Complex relations in the AS_PATH. The Only to Customer (OTC) attribute complements ASPA by addressing these limitations (see <xref target="RFC9234" section="5"/>).
         </t>
       </section>
     </section>
