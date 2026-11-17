@@ -173,9 +173,6 @@
           <t hangText="SPAS:">
             Set of Provider ASes (see <xref target="I-D.ietf-sidrops-aspa-profile" section="3"/>).
           </t>
-          <t hangText="U-SPAS:">
-            Union SPAS (see <xref target="pair-validation"/> for the definition).
-          </t>
         </list>
       </t>
       <t>
