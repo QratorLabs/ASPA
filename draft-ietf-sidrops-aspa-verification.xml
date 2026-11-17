@@ -347,10 +347,10 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
         </t>
 
         <t>
-          Similarly, the maximum down-ramp length can be determined as N - J + 1 where J is the maximum index for which authorized(A(J), A(J-1)) returns "Not Provider+".
+          Similarly, the maximum down-ramp length can be determined as N - J + 1 where J is the maximum index for which authorized(AS(J), AS(J-1)) returns "Not Provider+".
           If there is no such J, the maximum down-ramp length is set equal to the COMPRESSED_AS_PATH length N.
           This parameter is abbreviated as max_down_ramp.
-          The minimum down-ramp length can be determined as N - J + 1 where J is the maximum index for which authorized(A(J), A(J-1)) returns "No Attestation" or "Not Provider+". If there is no such J, the minimum down-ramp length is set equal to the COMPRESSED_AS_PATH length N.
+          The minimum down-ramp length can be determined as N - J + 1 where J is the maximum index for which authorized(AS(J), AS(J-1)) returns "No Attestation" or "Not Provider+". If there is no such J, the minimum down-ramp length is set equal to the COMPRESSED_AS_PATH length N.
           This parameter is abbreviated as min_down_ramp.
         </t>
 
@@ -450,7 +450,7 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
 
       <section title="ASPA Verification Examples" anchor="examples">
         <t>
-         A set of examples of AS_PATH verification using the above procedures (<xref target="principles"/>, <xref target="Upflow"/>, and <xref target="Downflow"/>) for illustrative network topologies are provided online (see <xref target="aspa-examples"/>).
+         A set of examples of AS_PATH verification using the above procedures (Sections <xref target="principles" format="counter"/>, <xref target="Upflow" format="counter"/>, and <xref target="Downflow" format="counter"/>) for illustrative network topologies are provided online (see <xref target="aspa-examples"/>).
         </t>
       </section>
 
@@ -600,10 +600,10 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
       <?rfc include="reference.RFC.6793.xml"?>
       <?rfc include="reference.RFC.7606.xml"?>
       <?rfc include="reference.RFC.7705.xml"?>
-      <?rfc include="reference.RFC.7908.xml"?>
       <?rfc include="reference.RFC.7947.xml"?>
       <?rfc include="reference.RFC.9234.xml"?>
       <?rfc include="reference.RFC.9774.xml"?>
+      <?rfc include="reference.RFC.8174.xml"?>
       <?rfc include="reference.I-D.ietf-sidrops-aspa-profile.xml"?>
 
       <reference anchor="IANA-AF" target="https://www.iana.org/assignments/address-family-numbers/address-family-numbers.xhtml" quote-title="true">
@@ -635,8 +635,8 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
       <?rfc include="reference.RFC.9319.xml"?>
       <?rfc include="reference.RFC.9324.xml"?>
       <?rfc include="reference.RFC.6483.xml"?>
-      <?rfc include="reference.RFC.8174.xml"?>
       <?rfc include="reference.RFC.9582.xml"?>
+      <?rfc include="reference.RFC.7908.xml"?>
 
       <reference anchor="Peerlock" target="https://www.nanog.org/sites/default/files/Snijders_Everyday_Practical_Bgp.pdf">
         <front>
@@ -761,6 +761,45 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
       </t>
     </section>
 
+    <section title="Relation to Other Technologies" anchor="related-tech">
+      <section title="ROA">
+        <t>
+          A ROA <xref target="RFC9582"/> is a digitally signed object that binds an IP prefix to an AS number and is signed by the prefix holder.
+          The RPKI-ROV procedure <xref target="RFC6483"/> <xref target="RFC6811"/> uses ROAs to verify that an AS is authorized to originate a specific prefix.
+          The joint use of ROA and ASPA records and their corresponding verification procedures can establish a  trusted security chain capable of detecting not only accidental route leaks but also malicious AS_PATH manipulations <xref target="bgp-cycling"/>.
+        </t>
+      </section>
+      <section title="Only to Customer (OTC) Attribute" anchor="OTC">
+        <t>
+          While the ASPA-based AS_PATH verification method (<xref target="verif"/>, <xref target="mitigation"/>) detects and mitigates route leaks that were created by preceding ASes listed in the AS_PATH, it lacks the ability to prevent the local AS from initiating a route leak towards its neighbor.
+          ASPA verification may also fail to detect route leaks in the presence of Complex relations in the AS_PATH. The Only to Customer (OTC) attribute complements ASPA by addressing these limitations (see <xref target="RFC9234" section="5"/>).
+        </t>
+      </section>
+
+      <section title="BGPsec">
+        <t>
+          The BGPsec <xref target="RFC8205"/> protocol was designed to solve the problem of AS_PATH verification by including cryptographic signatures in BGP UPDATE messages.
+          It offers protection against unauthorized path modifications and assures that the BGPsec UPDATE traveled the path shown in the BGPsec_PATH Attribute.
+          However, it does not detect route leaks (valley-free violations).
+          Thus, BGPsec and ASPA are complementary technologies.
+        </t>
+      </section>
+
+      <section title="Peerlock">
+        <t>
+          The Peerlock mechanism <xref target="Peerlock"/> <xref target="Flexsealing"/> has a similar objective as the ASPA-based route leak protection mechanism described in this document.
+          It is commonly deployed by large Internet carriers to protect each other from route leaks.
+          Peerlock depends on a laborious manual process in which operators coordinate the distribution of unstructured Provider Authorizations through out-of-band means in a many-to-many fashion.
+          On the other hand, ASPA's use of the RPKI allows for automated, scalable, and ubiquitous deployment, making the protection mechanism available to a wider range of network operators.
+        </t>
+        <t>
+          The ASPA mechanism implemented in router code (in contrast to Peerlock's AS_PATH regular expressions) also provides a way to detect anomalies propagated from transit providers and IX route servers.
+          ASPA is intended to be a complete solution and replacement for existing Peerlock deployments.
+        </t>
+      </section>
+
+    </section>
+
     <section title="Properties and Early Adoption Benefits" anchor="property">
       <t>
         The ASPA method has the properties (i.e., anomaly detection capabilities) listed below.
@@ -807,43 +846,5 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
       </t>
     </section>
 
-    <section title="Relation to Other Technologies" anchor="related-tech">
-      <section title="ROA">
-        <t>
-          A ROA <xref target="RFC9582"/> is a digitally signed object that binds an IP prefix to an AS number and is signed by the prefix holder.
-          The RPKI-ROV procedure <xref target="RFC6483"/> <xref target="RFC6811"/> uses ROAs to verify that an AS is authorized to originate a specific prefix.
-          The joint use of ROA and ASPA records and their corresponding verification procedures can establish a  trusted security chain capable of detecting not only accidental route leaks but also malicious AS_PATH manipulations <xref target="bgp-cycling"/>.
-        </t>
-      </section>
-      <section title="Only to Customer (OTC) Attribute" anchor="OTC">
-        <t>
-          While the ASPA-based AS_PATH verification method (<xref target="verif"/>, <xref target="mitigation"/>) detects and mitigates route leaks that were created by preceding ASes listed in the AS_PATH, it lacks the ability to prevent the local AS from initiating a route leak towards its neighbor.
-          ASPA verification may also fail to detect route leaks in the presence of Complex relations in the AS_PATH. The Only to Customer (OTC) attribute complements ASPA by addressing these limitations (see <xref target="RFC9234" section="5"/>).
-        </t>
-      </section>
-
-      <section title="BGPsec">
-        <t>
-          The BGPsec <xref target="RFC8205"/> protocol was designed to solve the problem of AS_PATH verification by including cryptographic signatures in BGP UPDATE messages.
-          It offers protection against unauthorized path modifications and assures that the BGPsec UPDATE traveled the path shown in the BGPsec_PATH Attribute.
-          However, it does not detect route leaks (valley-free violations).
-          Thus, BGPsec and ASPA are complementary technologies.
-        </t>
-      </section>
-
-      <section title="Peerlock">
-        <t>
-          The Peerlock mechanism <xref target="Peerlock"/> <xref target="Flexsealing"/> has a similar objective as the ASPA-based route leak protection mechanism described in this document.
-          It is commonly deployed by large Internet carriers to protect each other from route leaks.
-          Peerlock depends on a laborious manual process in which operators coordinate the distribution of unstructured Provider Authorizations through out-of-band means in a many-to-many fashion.
-          On the other hand, ASPA's use of the RPKI allows for automated, scalable, and ubiquitous deployment, making the protection mechanism available to a wider range of network operators.
-        </t>
-        <t>
-          The ASPA mechanism implemented in router code (in contrast to Peerlock's AS_PATH regular expressions) also provides a way to detect anomalies propagated from transit providers and IX route servers.
-          ASPA is intended to be a complete solution and replacement for existing Peerlock deployments.
-        </t>
-      </section>
-
-    </section>
   </back>
 </rfc>
