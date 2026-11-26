@@ -217,7 +217,7 @@
       </t>
     </section>
 
-    <section title="AS_PATH Validation" anchor="verif">
+    <section title="ASPA-based AS_PATH Validation" anchor="validate">
       <t>
         The procedures described in this document are applicable only to four-octet AS number compatible BGP speakers <xref target="RFC6793"/>.
         If such a BGP speaker receives both AS_PATH and AS4_PATH attributes in an UPDATE, then the procedures are applied on the reconstructed AS_PATH (<xref target="RFC6793" section="4.2.3"/>).
@@ -771,7 +771,7 @@ authorized(AS x, AS y) =   / Else, "Provider+" if the U-SPAS entry
       </section>
       <section title="Only to Customer (OTC) Attribute" anchor="OTC">
         <t>
-          While the ASPA-based AS_PATH validation method (<xref target="verif"/>, <xref target="mitigation"/>) detects and mitigates route leaks that were created by preceding ASes listed in the AS_PATH, it lacks the ability to prevent the local AS from initiating a route leak towards its neighbor.
+          While the ASPA-based AS_PATH validation method (<xref target="validate"/>, <xref target="mitigation"/>) detects and mitigates route leaks that were created by preceding ASes listed in the AS_PATH, it lacks the ability to prevent the local AS from initiating a route leak towards its neighbor.
           ASPA validation may also fail to detect route leaks in the presence of Complex relations in the AS_PATH. The Only to Customer (OTC) attribute complements ASPA by addressing these limitations (see <xref target="RFC9234" section="5"/>).
         </t>
       </section>
