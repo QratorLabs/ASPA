@@ -115,7 +115,7 @@
       </t>
       <t>
         This specification provides the authorization mechanism mentioned above and can be used to facilitate detection and mitigation of route leaks (see <xref target="RFC7908"/>).
-        The procedures for verifying AS_PATHs in BGP UPDATE messages using ASPAs are described in <xref target="I-D.ietf-sidrops-aspa-verification"/>.
+        The procedures for validating AS_PATHs in BGP UPDATE messages using ASPAs are described in <xref target="I-D.ietf-sidrops-aspa-verification"/>.
       </t>
       <t>
         When a Customer AS makes use of multiple providers, all Provider ASes are to be listed in the ASPA object, including any non-transparent Internet Exchange Point (IXP) Route Server (RS) ASes.
